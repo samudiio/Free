@@ -37,6 +37,12 @@
 /** Floatint Point Unit Enable */
 void vfnFpu_enable(void);
 
+/** Floatint Point Unit Disable */
+void vfnFpu_disable(void);
+
+/** Check if FPU is enabled */
+bool Fpu_is_enabled(void);
+
 /****************************************************************************************************/
 
 #endif /* __FPU_H */

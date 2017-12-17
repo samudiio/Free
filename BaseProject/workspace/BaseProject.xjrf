@@ -49,329 +49,327 @@
       </History>
       <PI.0>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <L>334</L>
-       <P>..\source\infrastructure\toolset\gcc\startup_sam.c</P>
-       <VL>331</VL>
+       <C>21</C>
+       <L>77</L>
+       <P>..\source\bsw\mcal\fpu\fpu.c</P>
+       <VL>60</VL>
       </PI.0>
       <PI.1>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <C>38</C>
-       <L>925</L>
-       <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\FilteringFunctions\arm_fir_f32.c</P>
-       <VL>908</VL>
-      </PI.1>
-      <PI.10>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <L>209</L>
-       <P>..\source\infrastructure\bsp\libboard_samv7-ek\source\dbg_console.c</P>
-       <VL>209</VL>
-      </PI.10>
-      <PI.11>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>19</C>
        <L>39</L>
        <P>..\source\bsw\mcal\fpu\fpu.h</P>
        <VL>3</VL>
+      </PI.1>
+      <PI.10>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <L>225</L>
+       <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\TransformFunctions\arm_cfft_radix8_f32.c</P>
+       <VL>225</VL>
+      </PI.10>
+      <PI.11>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>9</C>
+       <L>69</L>
+       <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\StatisticsFunctions\arm_max_f32.c</P>
+       <VL>67</VL>
       </PI.11>
       <PI.12>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>37</C>
+       <L>47</L>
+       <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\fft_float.c</P>
+       <VL>28</VL>
+      </PI.12>
+      <PI.13>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <L>209</L>
+       <P>..\source\infrastructure\bsp\libboard_samv7-ek\source\dbg_console.c</P>
+       <VL>209</VL>
+      </PI.13>
+      <PI.14>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>116</L>
        <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\Include\core_cm0.h</P>
        <VL>103</VL>
-      </PI.12>
-      <PI.13>
+      </PI.14>
+      <PI.15>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>304</L>
        <P>..\source\infrastructure\derivative\libchip_samv7\include\samv7\samv71q21.h</P>
        <VL>294</VL>
-      </PI.13>
-      <PI.14>
+      </PI.15>
+      <PI.16>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>219</L>
        <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\Include\core_cm7.h</P>
        <VL>205</VL>
-      </PI.14>
-      <PI.15>
+      </PI.16>
+      <PI.17>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>46</C>
        <L>219</L>
        <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\Include\core_cm4.h</P>
        <VL>201</VL>
-      </PI.15>
-      <PI.16>
+      </PI.17>
+      <PI.18>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>49</L>
        <P>..\source\infrastructure\derivative\libchip_samv7\include\samv7\samv71.h</P>
        <VL>42</VL>
-      </PI.16>
-      <PI.17>
+      </PI.18>
+      <PI.19>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>5</C>
        <L>62</L>
        <P>..\source\bsw\ecual\Afec_Ctrl.c</P>
        <VL>39</VL>
-      </PI.17>
-      <PI.18>
+      </PI.19>
+      <PI.2>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <P>..\source\infrastructure\derivative\libchip_samv7\compiler.h</P>
+      </PI.2>
+      <PI.20>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>30</C>
        <L>624</L>
        <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\TransformFunctions\arm_cfft_f32.c</P>
        <VL>608</VL>
-      </PI.18>
-      <PI.19>
+      </PI.20>
+      <PI.21>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>25</C>
        <L>34</L>
        <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\Source\fft_float.c</P>
        <VL>20</VL>
-      </PI.19>
-      <PI.2>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <L>203</L>
-       <P>..\source\bsw\mcal\exceptions\exceptions.c</P>
-       <VL>190</VL>
-      </PI.2>
-      <PI.20>
+      </PI.21>
+      <PI.22>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>44</C>
        <L>22208</L>
        <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\Source\arm_common_tables.c</P>
        <VL>22194</VL>
-      </PI.20>
-      <PI.21>
+      </PI.22>
+      <PI.23>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>11</C>
        <L>120</L>
        <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\Source\arm_cmplx_mag_f32.c</P>
        <VL>141</VL>
-      </PI.21>
-      <PI.22>
+      </PI.23>
+      <PI.24>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>7</C>
        <L>49</L>
        <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\Source\arm_const_structs.c</P>
        <VL>42</VL>
-      </PI.22>
-      <PI.23>
+      </PI.24>
+      <PI.25>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>37</C>
        <L>58</L>
        <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\Include\arm_const_structs.h</P>
        <VL>44</VL>
-      </PI.23>
-      <PI.24>
+      </PI.25>
+      <PI.26>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>430</L>
        <P>..\source\infrastructure\derivative\libchip_samv7\include\samv7\pio\pio_samv71q21.h</P>
        <VL>433</VL>
-      </PI.24>
-      <PI.25>
+      </PI.26>
+      <PI.27>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>32</L>
        <P>..\source\infrastructure\derivative\libchip_samv7\include\samv7\instance\instance_afec0.h</P>
        <VL>29</VL>
-      </PI.25>
-      <PI.26>
+      </PI.27>
+      <PI.28>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>157</L>
        <P>..\source\infrastructure\derivative\libchip_samv7\include\samv7\component\component_tc.h</P>
        <VL>142</VL>
-      </PI.26>
-      <PI.27>
+      </PI.28>
+      <PI.29>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>76</L>
        <P>..\source\infrastructure\derivative\libchip_samv7\include\samv7\component\component_afec.h</P>
        <VL>34</VL>
-      </PI.27>
-      <PI.28>
+      </PI.29>
+      <PI.3>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <L>334</L>
+       <P>..\source\infrastructure\toolset\gcc\startup_sam.c</P>
+       <VL>331</VL>
+      </PI.3>
+      <PI.30>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>96</L>
        <P>..\source\infrastructure\bsp\libboard_samv7-ek\source\s25fl1.c</P>
        <VL>82</VL>
-      </PI.28>
-      <PI.29>
+      </PI.30>
+      <PI.31>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>97</L>
        <P>..\source\infrastructure\bsp\libboard_samv7-ek\source\lcdd.c</P>
        <VL>90</VL>
-      </PI.29>
-      <PI.3>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <C>8</C>
-       <L>189</L>
-       <P>..\source\appl\main.c</P>
-       <VL>172</VL>
-      </PI.3>
-      <PI.30>
+      </PI.31>
+      <PI.32>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>139</L>
        <P>..\source\infrastructure\bsp\libboard_samv7-ek\source\ili9488_spi_dma.c</P>
        <VL>121</VL>
-      </PI.30>
-      <PI.31>
+      </PI.32>
+      <PI.33>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>222</L>
        <P>..\source\infrastructure\bsp\libboard_samv7-ek\source\ili9488_ebi_dma.c</P>
        <VL>213</VL>
-      </PI.31>
-      <PI.32>
+      </PI.33>
+      <PI.34>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>111</L>
        <P>..\source\infrastructure\bsp\libboard_samv7-ek\source\ili9488_ebi.c</P>
        <VL>102</VL>
-      </PI.32>
-      <PI.33>
+      </PI.34>
+      <PI.35>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>26</C>
        <L>105</L>
        <P>..\source\infrastructure\bsp\libboard_samv7-ek\resources\gcc\startup_sam.c</P>
        <VL>90</VL>
-      </PI.33>
-      <PI.34>
+      </PI.35>
+      <PI.36>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>49</L>
        <P>..\source\infrastructure\bsp\libboard_samv7-ek\include\ili9488_ebi_dma.h</P>
        <VL>34</VL>
-      </PI.34>
-      <PI.35>
+      </PI.36>
+      <PI.37>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>51</L>
        <P>..\source\infrastructure\bsp\libboard_samv7-ek\include\ili9488_ebi.h</P>
        <VL>36</VL>
-      </PI.35>
-      <PI.36>
+      </PI.37>
+      <PI.38>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>7</C>
        <L>68</L>
        <P>..\source\infrastructure\bsp\libboard_samv7-ek\include\ili9488_dma.h</P>
        <VL>56</VL>
-      </PI.36>
-      <PI.37>
+      </PI.38>
+      <PI.39>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>8455</L>
        <P>Debug\BaseProject.map</P>
        <VL>8453</VL>
-      </PI.37>
-      <PI.38>
+      </PI.39>
+      <PI.4>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>38</C>
+       <L>925</L>
+       <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\FilteringFunctions\arm_fir_f32.c</P>
+       <VL>908</VL>
+      </PI.4>
+      <PI.40>
        <Bookmarks type="B">PNAAAAAA</Bookmarks>
        <Bookmarks_num_>1</Bookmarks_num_>
        <C>71</C>
        <L>263</L>
        <P>..\source\infrastructure\bsp\libboard_samv7-ek\board.h</P>
        <VL>263</VL>
-      </PI.38>
-      <PI.39>
+      </PI.40>
+      <PI.41>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>132</L>
        <P>..\source\infrastructure\bsp\libboard_samv7-ek\source\syscalls.c</P>
        <VL>117</VL>
-      </PI.39>
-      <PI.4>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <C>15</C>
-       <L>5747</L>
-       <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\Include\arm_math.h</P>
-       <VL>5751</VL>
-      </PI.4>
-      <PI.40>
+      </PI.41>
+      <PI.42>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>3</C>
        <L>104</L>
        <P>..\source\bsw\services\system\timetick\timetick.c</P>
        <VL>100</VL>
-      </PI.40>
-      <PI.41>
+      </PI.42>
+      <PI.43>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>32</C>
        <L>20</L>
        <P>..\source\bsw\services\system\timer0\timer0.h</P>
-      </PI.41>
-      <PI.42>
+      </PI.43>
+      <PI.44>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>59</L>
        <P>..\source\bsw\services\system\timer0\timer0.c</P>
        <VL>37</VL>
-      </PI.42>
-      <PI.43>
+      </PI.44>
+      <PI.45>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>4</C>
        <L>56</L>
        <P>..\source\bsw\services\system\scheduler\Tasks.c</P>
        <VL>33</VL>
-      </PI.43>
-      <PI.44>
+      </PI.45>
+      <PI.46>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>43</C>
        <L>215</L>
        <P>..\source\bsw\services\system\scheduler\app_scheduler.c</P>
        <VL>208</VL>
-      </PI.44>
-      <PI.45>
+      </PI.46>
+      <PI.47>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>23</C>
        <L>39</L>
        <P>..\source\bsw\services\system\memory_allocation\Mem_Alloc.c</P>
        <VL>30</VL>
-      </PI.45>
-      <PI.46>
+      </PI.47>
+      <PI.48>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>66</L>
        <P>..\source\bsw\mcal\xdma\xdmad.h</P>
        <VL>43</VL>
-      </PI.46>
-      <PI.47>
+      </PI.48>
+      <PI.49>
        <Bookmarks type="B">IHABAAAAIIABAAAAIJABAAAAJJABAAAAJKABAAAAJPABAAAAKCABAAAAKDABAAAAKFABAAAALCABAAAA</Bookmarks>
        <Bookmarks_num_>10</Bookmarks_num_>
        <C>71</C>
        <L>415</L>
        <P>..\source\bsw\mcal\xdma\xdmad.c</P>
        <VL>394</VL>
-      </PI.47>
-      <PI.48>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <L>62</L>
-       <P>..\source\bsw\mcal\xdma\xdmac.c</P>
-       <VL>59</VL>
-      </PI.48>
-      <PI.49>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <L>200</L>
-       <P>..\source\bsw\mcal\Uart_Dma\uart_dma.c</P>
-       <VL>200</VL>
       </PI.49>
       <PI.5>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <L>203</L>
+       <P>..\source\bsw\mcal\exceptions\exceptions.c</P>
+       <VL>190</VL>
+      </PI.5>
+      <PI.6>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <L>185</L>
+       <P>..\source\appl\main.c</P>
+       <VL>172</VL>
+      </PI.6>
+      <PI.7>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>15</C>
+       <L>5747</L>
+       <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\Include\arm_math.h</P>
+       <VL>5751</VL>
+      </PI.7>
+      <PI.8>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>44</C>
        <L>69</L>
        <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\CommonTables\arm_const_structs.c</P>
        <VL>45</VL>
-      </PI.5>
-      <PI.6>
+      </PI.8>
+      <PI.9>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>2</C>
        <L>123</L>
        <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\ComplexMathFunctions\arm_cmplx_mag_f32.c</P>
        <VL>105</VL>
-      </PI.6>
-      <PI.7>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <L>225</L>
-       <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\TransformFunctions\arm_cfft_radix8_f32.c</P>
-       <VL>225</VL>
-      </PI.7>
-      <PI.8>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <C>9</C>
-       <L>69</L>
-       <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\StatisticsFunctions\arm_max_f32.c</P>
-       <VL>67</VL>
-      </PI.8>
-      <PI.9>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <C>37</C>
-       <L>47</L>
-       <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\fft_float.c</P>
-       <VL>28</VL>
       </PI.9>
      </REG_ROOT>
     </EditorOptions>
@@ -843,10 +841,10 @@
      <Documents.0>
       <ActiveDocument>
        <Maximized>True</Maximized>
-       <RelativeFileName>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\FilteringFunctions\arm_fir_f32.c</RelativeFileName>
+       <RelativeFileName>..\source\bsw\mcal\fpu\fpu.c</RelativeFileName>
       </ActiveDocument>
       <Editor.0>
-       <FileBarIndex>2</FileBarIndex>
+       <FileBarIndex>5</FileBarIndex>
        <RectPosBottom>562</RectPosBottom>
        <RectPosLeft>160</RectPosLeft>
        <RectPosRight>1516</RectPosRight>
@@ -854,7 +852,7 @@
        <RelativeFileName>..\source\appl\main.c</RelativeFileName>
       </Editor.0>
       <Editor.1>
-       <FileBarIndex>0</FileBarIndex>
+       <FileBarIndex>3</FileBarIndex>
        <RectPosBottom>484</RectPosBottom>
        <RectPosLeft>96</RectPosLeft>
        <RectPosRight>941</RectPosRight>
@@ -862,21 +860,45 @@
        <RelativeFileName>..\source\bsw\mcal\exceptions\exceptions.c</RelativeFileName>
       </Editor.1>
       <Editor.2>
-       <FileBarIndex>3</FileBarIndex>
+       <FileBarIndex>0</FileBarIndex>
+       <RectPosBottom>388</RectPosBottom>
+       <RectPosLeft>0</RectPosLeft>
+       <RectPosRight>845</RectPosRight>
+       <RectPosTop>0</RectPosTop>
+       <RelativeFileName>..\source\bsw\mcal\fpu\fpu.c</RelativeFileName>
+      </Editor.2>
+      <Editor.3>
+       <FileBarIndex>1</FileBarIndex>
+       <RectPosBottom>548</RectPosBottom>
+       <RectPosLeft>160</RectPosLeft>
+       <RectPosRight>1005</RectPosRight>
+       <RectPosTop>160</RectPosTop>
+       <RelativeFileName>..\source\bsw\mcal\fpu\fpu.h</RelativeFileName>
+      </Editor.3>
+      <Editor.4>
+       <FileBarIndex>2</FileBarIndex>
+       <RectPosBottom>516</RectPosBottom>
+       <RectPosLeft>128</RectPosLeft>
+       <RectPosRight>973</RectPosRight>
+       <RectPosTop>128</RectPosTop>
+       <RelativeFileName>..\source\infrastructure\derivative\libchip_samv7\compiler.h</RelativeFileName>
+      </Editor.4>
+      <Editor.5>
+       <FileBarIndex>6</FileBarIndex>
        <RectPosBottom>420</RectPosBottom>
        <RectPosLeft>32</RectPosLeft>
        <RectPosRight>877</RectPosRight>
        <RectPosTop>32</RectPosTop>
        <RelativeFileName>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\FilteringFunctions\arm_fir_f32.c</RelativeFileName>
-      </Editor.2>
-      <Editor.3>
-       <FileBarIndex>1</FileBarIndex>
+      </Editor.5>
+      <Editor.6>
+       <FileBarIndex>4</FileBarIndex>
        <RectPosBottom>452</RectPosBottom>
        <RectPosLeft>64</RectPosLeft>
        <RectPosRight>909</RectPosRight>
        <RectPosTop>64</RectPosTop>
        <RelativeFileName>..\source\infrastructure\toolset\gcc\startup_sam.c</RelativeFileName>
-      </Editor.3>
+      </Editor.6>
       <EditorHistoryFile.0>
        <RelativeFileName>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\ComplexMathFunctions\arm_cmplx_mag_f32.c</RelativeFileName>
       </EditorHistoryFile.0>
@@ -2061,59 +2083,65 @@
        </Items.0>
       </OSWindow>
       <ProjectWindow>
-       <Selected>arm</Selected>
+       <Selected>Mem_Alloc.h</Selected>
        <Items.0>
         <__>
          <Name>Files</Name>
-         <Options>5</Options>
+         <Options>1</Options>
          <Items.0>
           <__>
            <Name>appl</Name>
-           <Options>5</Options>
-           <Items.0>
-            <__>
-             <Name>main.c</Name>
-             <Options>4</Options>
-            </__>
-           </Items.0>
+           <Options>1</Options>
           </__>
          </Items.0>
          <Items.1>
           <__>
            <Name>arm</Name>
            <Options>1</Options>
-           <Items.0>
-            <__>
-             <Name>arm_bitreversal.c</Name>
-             <Options>4</Options>
-            </__>
-           </Items.0>
           </__>
          </Items.1>
          <Items.2>
           <__>
-           <Name>services</Name>
+           <Name>board</Name>
            <Options>1</Options>
-           <Items.0>
-            <__>
-             <Name>app_scheduler.c</Name>
-             <Options>4</Options>
-            </__>
-           </Items.0>
           </__>
          </Items.2>
          <Items.3>
           <__>
-           <Name>toolset</Name>
+           <Name>ecual</Name>
            <Options>1</Options>
           </__>
          </Items.3>
          <Items.4>
           <__>
-           <Name>Dependencies </Name>
+           <Name>mcal</Name>
            <Options>1</Options>
           </__>
          </Items.4>
+         <Items.5>
+          <__>
+           <Name>services</Name>
+           <Options>1</Options>
+          </__>
+         </Items.5>
+         <Items.6>
+          <__>
+           <Name>toolset</Name>
+           <Options>1</Options>
+          </__>
+         </Items.6>
+         <Items.7>
+          <__>
+           <Name>Dependencies </Name>
+           <Options>1</Options>
+           <Items.0>
+            <__>
+             <Name>pio_capture.h</Name>
+             <Options>4</Options>
+            </__>
+           </Items.0>
+          </__>
+         </Items.7>
         </__>
        </Items.0>
       </ProjectWindow>

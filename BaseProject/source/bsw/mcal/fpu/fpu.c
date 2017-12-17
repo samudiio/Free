@@ -39,14 +39,10 @@
 *****************************************************************************************************/
 
 /****************************************************************************************************/
+
 /**
-* \brief    Floating Point Unit Enable.
-* \         The function enables the Floating Point Unit (coprocessor) embedded in Cortex M7
-* \author   Abraham Tezmol
-* \param    none
-* \return   none
-* \todo
-*/
+ * \brief Enable FPU
+ */
 void vfnFpu_enable(void)
 {
   irqflags_t flags;
@@ -55,4 +51,27 @@ void vfnFpu_enable(void)
   __DSB();
   __ISB();
   cpu_irq_restore(flags);
+}
+
+/**
+ * \brief Disable FPU
+ */
+void vfnFpu_disable(void)
+{
+    irqflags_t flags;
+    flags = cpu_irq_save();
+    REG_CPACR &= ~(0xFu << 20);
+    __DSB();
+    __ISB();
+    cpu_irq_restore(flags);
+}
+
+/**
+ * \brief Check if FPU is enabled
+ *
+ * \return Return ture if FPU is enabled, otherwise return false.
+ */
+bool Fpu_is_enabled(void)
+{
+    return (REG_CPACR & (0xFu << 20));
 }
