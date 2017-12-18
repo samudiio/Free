@@ -737,5 +737,6 @@
  * USB pins
  */
 #define PINS_VBUS_EN   {PIO_PC16, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
+extern void board_init(void);
 #endif /* #ifndef _BOARD_H_ */
 

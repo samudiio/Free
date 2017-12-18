@@ -2,80 +2,104 @@
  *        Headers
  *----------------------------------------------------------------------------*/
 
-#include "board.h"
-#include "app_scheduler.h"
-#include "Tasks.h"
 #include "Mem_Alloc.h"
 #include "Afec_Ctrl.h"
 #include <stdbool.h>
 #include <stdio.h>
-/**  Fast fourier transform */
-#include "fft.h"
-#include "ecg_data.h"
 
-#include "arm_math.h"
-#include "arm_const_structs.h"
-
+#include <asf.h>
 /*----------------------------------------------------------------------------
  *        Local definitions
  *----------------------------------------------------------------------------*/
-/*~~~~~~  Local definitions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-#define TEST_LENGTH_SAMPLES 2048
+#define TASK_MONITOR_STACK_SIZE            (2048/sizeof(portSTACK_TYPE))
+#define TASK_MONITOR_STACK_PRIORITY        (tskIDLE_PRIORITY)
+#define TASK_LED_STACK_SIZE                (1024/sizeof(portSTACK_TYPE))
+#define TASK_LED_STACK_PRIORITY            (tskIDLE_PRIORITY)
 
-#define BLOCK_SIZE            32
-#define NUM_TAPS              9
+extern void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName);
+extern void vApplicationIdleHook(void);
+extern void vApplicationTickHook(void);
+extern void vApplicationMallocFailedHook(void);
+extern void xPortSysTickHandler(void);
+
+
+/**
+ * \brief Called if stack overflow during execution
+ */
+extern void vApplicationStackOverflowHook(xTaskHandle *pxTask,
+		signed char *pcTaskName)
+{
+	printf("stack overflow %x %s\r\n", pxTask, (portCHAR *)pcTaskName);
+	/* If the parameters have been corrupted then inspect pxCurrentTCB to
+	 * identify which task has overflowed its stack.
+	 */
+	for (;;) {
+	}
+}
+
+/**
+ * \brief This function is called by FreeRTOS idle task
+ */
+extern void vApplicationIdleHook(void)
+{
+}
+
+/**
+ * \brief This function is called by FreeRTOS each tick
+ */
+extern void vApplicationTickHook(void)
+{
+}
+
+extern void vApplicationMallocFailedHook(void)
+{
+	/* Called if a call to pvPortMalloc() fails because there is insufficient
+	free memory available in the FreeRTOS heap.  pvPortMalloc() is called
+	internally by FreeRTOS API functions that create tasks, queues, software
+	timers, and semaphores.  The size of the FreeRTOS heap is set by the
+	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+
+	/* Force an assert. */
+	configASSERT( ( volatile void * ) NULL );
+}
+
+/**
+ * \brief This task, when activated, send every ten seconds on debug UART
+ * the whole report of free heap and total tasks status
+ */
+static void task_monitor(void *pvParameters)
+{
+	static portCHAR szList[256];
+	UNUSED(pvParameters);
+
+	for (;;) {
+		printf("--- Number of active tasks ## %u\n\r", (unsigned int)uxTaskGetNumberOfTasks());
+		vTaskList((signed portCHAR *)szList);
+		printf(szList);
+		vTaskDelay(1000);
+	}
+}
+
+/**
+ * \brief This task, when activated, make LED blink at a fixed rate
+ */
+static void task_led(void *pvParameters)
+{
+    UNUSED(pvParameters);
+    for (;;)
+    {
+        LED_Toggle(0);
+        vTaskDelay(100);
+    }
+}
+
 
 /*~~~~~~  Global variables ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/** Auxiliary input buffer to accomodate data as FFT function expects it */
-float       fft_inputData[TEST_LENGTH_SAMPLES];
-/** Output magnitude data */
-float       fft_signalPower[TEST_LENGTH_SAMPLES/2];
-/** Auxiliary output variable that holds the frequency bin with the highest level of signal power */
-uint32_t    u32fft_maxPowerIndex;
-/** Auxiliary output variable that holds the maximum level of signal power */
-float       fft_maxPower;
-
-
-TaskType Tasks[]={
-/*  TaskPriority    TaskId   TaskFunctionPointer   */
-  {      5,        TASK_1MS,       vfnTsk_1ms    },
-  {      4,        TASK_2MSA,      vfnTsk_2msA   },
-  {      4,        TASK_2MSB,      vfnTsk_2msB   },
-  {      3,        TASK_10MS,      vfnTsk_10ms   },
-  {      2,        TASK_50MS,      vfnTsk_50ms   },
-  {      1,        TASK_100MS,     vfnTsk_100ms  }
-};
-
-extern float ecg_resampled[2048];
-extern float testInput_f32_10khz[TEST_LENGTH_SAMPLES];
-static float testOutput[TEST_LENGTH_SAMPLES/2];
-
 Mem_ReturnType ptr_a,ptr_b,ptr_c,ptr_d;
+uint32_t *BUFF_ADDR;
+uint8_t SAMP_PER = 100;
 
-/* -------------------------------------------------------------------
- * Declare State buffer of size (numTaps + blockSize - 1)
- * ------------------------------------------------------------------- */
-
-static float firStateF32[BLOCK_SIZE + NUM_TAPS - 1];
-
-/* ----------------------------------------------------------------------
-** FIR Coefficients buffer generated using fir1() MATLAB function.
-** fir1(28, 6/24)
-** ------------------------------------------------------------------- */
-
-const float32_t firCoeffs32[NUM_TAPS] = {
-  -0.0018225230f, -0.0015879294f, +0.0000000000f,
-  +0.0036977508f, +0.0080754303f, +0.0085302217f,
-  -0.0000000000f, -0.0173976984f, -0.0341458607f
-};
-
-/* ------------------------------------------------------------------
- * Global variables for FIR LPF Example
- * ------------------------------------------------------------------- */
-
-uint32_t blockSize = BLOCK_SIZE;
-uint32_t numBlocks = TEST_LENGTH_SAMPLES/BLOCK_SIZE;
 
 /*----------------------------------------------------------------------------
  *        Local functions
@@ -100,86 +124,47 @@ static void _ConfigureLeds( void )
  *
  *  \return Unused (ANSI-C compatibility).
  */
-uint32_t *BUFF_ADDR;
-uint16_t size = 512;
-uint32_t SAMP_PER = 100;
-float ecg_resampled2[512];
 
 extern int main( void )
 {
-    /** Auxiliary array index */
-    uint16_t u16index;
+	
+    /* Disable watchdog */
+    WDT_Disable( WDT ) ;
 
-    uint32_t *BuffAdd;
-    float factor;
-    float temp;
-    float *inputF32, *outputF32;
-    arm_fir_instance_f32 S;
-
-    /* Initialize output buffer pointers */
-    outputF32 = &testOutput[0];
-
-	/* Disable watchdog */
-	WDT_Disable( WDT ) ;
-
-	/* Enable I and D cache */
-	SCB_EnableICache();
-	SCB_EnableDCache();
+    /* Enable I and D cache */
+    SCB_EnableICache();
+    SCB_EnableDCache();
 
     Mem_Init();
 
-	_ConfigureLeds() ;
-  
-  	/* Initialize Task Scheduler */
-	vfnScheduler_Init(&Tasks[0]);
-	/* Start execution of task scheduler */
-	vfnScheduler_Start();
-   /* Enable Floating Point Unit */
+    _ConfigureLeds() ;
+
+    /* Enable Floating Point Unit */
     vfnFpu_enable();
     /* Initialize AFEC */
     AFEC_Init();
-  
-    /* Call FIR init function to initialize the instance structure. */
-    arm_fir_init_f32(&S, NUM_TAPS, (float32_t *)&firCoeffs32[0], &firStateF32[0], blockSize);
-  
-    BUFF_ADDR = (uint32_t *)Mem_Alloc(size*sizeof(uint32_t));
-  
-    SET_AFEC_SAMPLING(size,SAMP_PER,BUFF_ADDR);
 
-    BuffAdd = BUFF_ADDR;
+    BUFF_ADDR = (uint32_t *)Mem_Alloc(512*sizeof(uint32_t));
 
-    for(u16index = 0; u16index < size; u16index++)
+    SET_AFEC_SAMPLING(512,SAMP_PER,BUFF_ADDR);
+
+/*Free RTOS Example*/
+
+    /* Create task to monitor processor activity */
+    if (xTaskCreate(task_monitor, "Task Monitor", TASK_MONITOR_STACK_SIZE, NULL, TASK_MONITOR_STACK_PRIORITY, NULL) != pdPASS)
     {
-        factor = 3.3/1024;
-        temp = *(BuffAdd + u16index*4);
-        ecg_resampled2[u16index] = temp*factor;
+        printf("Failed to create Monitor task\r\n");
     }
 
-    /*Prepare data for FFT operation */
-    for (u16index = 0; u16index < (TEST_LENGTH_SAMPLES/2); u16index++)
+    /* Create task to make led blink */
+    if (xTaskCreate(task_led, "Led 0", TASK_LED_STACK_SIZE, NULL, TASK_LED_STACK_PRIORITY, NULL) != pdPASS)
     {
-        fft_inputData[(2*u16index)] = ecg_resampled2[u16index];
-        fft_inputData[(2*u16index) + 1] = 0;
-    }
-    /** Perform FFT on the input signal */
-    fft(fft_inputData, fft_signalPower, TEST_LENGTH_SAMPLES/2, &u32fft_maxPowerIndex, &fft_maxPower);
-
-    inputF32 = &fft_signalPower[0];
-
-    for(u16index =0; u16index < numBlocks; u16index++)
-    {
-        arm_fir_f32(&S, inputF32 + (u16index * blockSize), outputF32 + (u16index * blockSize), blockSize);
+        printf("Failed to create test led task\r\n");
     }
 
-    /* Publish through emulated Serial the byte that was previously sent through the regular Serial channel */
-    printf("fft_maxPowerIndex , %5d  fft_maxPower %5.4f \r\n", u32fft_maxPowerIndex, fft_maxPower);
-    printf("testOutput %5.4f \r\n", testOutput[0]);
+    /* Start the scheduler. */
+    vTaskStartScheduler();
 
-	/*-- Loop through all the periodic tasks from Task Scheduler --*/
-	for(;;)
-	{
-		/* Perform all scheduled tasks */    
-		vfnTask_Scheduler();
-	}
-
+    /* Will only get here if there was insufficient memory to create the idle task. */
+    return 0;
 }

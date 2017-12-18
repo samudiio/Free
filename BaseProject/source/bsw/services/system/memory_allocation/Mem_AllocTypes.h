@@ -11,7 +11,6 @@
 /*-- Includes ----------------------------------------------------------------*/
 #include "board.h"
 #include <stdint.h>
-#include "app_scheduler.h"
 
 
 typedef uint32_t *Mem_ReturnType;  //debe regresar 32 bits no 8 bits 
