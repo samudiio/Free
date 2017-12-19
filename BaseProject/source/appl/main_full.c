@@ -173,6 +173,8 @@ purpose of ensuring parameters are passed into tasks correctly. */
 /* The base period used by the timer test tasks. */
 #define mainTIMER_TEST_PERIOD				( 50 )
 
+#define TASK_LED_STACK_SIZE                (1024/sizeof(portSTACK_TYPE))
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -185,6 +187,8 @@ void main_full( void );
  * The check task, as described at the top of this file.
  */
 static void prvCheckTask( void *pvParameters );
+
+static void task_led(void *pvParameters);
 
 /*
  * Register check tasks, and the tasks used to write over and check the contents
@@ -206,55 +210,79 @@ then the register check tasks has not discovered any errors.  If a variable
 stops incrementing, then an error has been found. */
 volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 
+unsigned int ActiveTasks = 0;
+
 /*-----------------------------------------------------------*/
 
 void main_full( void )
 {
-	/* Start all the other standard demo/test tasks.  They have not particular
-	functionality, but do demonstrate how to use the FreeRTOS API and test the
-	kernel port. */
-	vStartInterruptQueueTasks();
-	vStartDynamicPriorityTasks();
-	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-	vCreateBlockTimeTasks();
-	vStartCountingSemaphoreTasks();
-	vStartGenericQueueTasks( tskIDLE_PRIORITY );
-	vStartRecursiveMutexTasks();
-	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-	vStartMathTasks( mainFLOP_TASK_PRIORITY );
-	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
-	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
-	vStartEventGroupTasks();
-	vStartInterruptSemaphoreTasks();
-	vStartTaskNotifyTask();
+    /* Start all the other standard demo/test tasks.  They have not particular functionality,
+       but do demonstrate how to use the FreeRTOS API and test the kernel port. */
+    vStartInterruptQueueTasks();
+    vStartDynamicPriorityTasks();
+    vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+    vCreateBlockTimeTasks();
+    vStartCountingSemaphoreTasks();
+    vStartGenericQueueTasks( tskIDLE_PRIORITY );
+    vStartRecursiveMutexTasks();
+    vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+    vStartMathTasks( mainFLOP_TASK_PRIORITY );
+    vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+    vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
+    vStartEventGroupTasks();
+    vStartInterruptSemaphoreTasks();
+    vStartTaskNotifyTask();
 
-	/* Create the register check tasks, as described at the top of this	file */
-	xTaskCreate( prvRegTestTaskEntry1, "Reg1", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_1_PARAMETER, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvRegTestTaskEntry2, "Reg2", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
+    /* Create the register check tasks, as described at the top of this	file */
+    xTaskCreate( prvRegTestTaskEntry1, "Reg1", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_1_PARAMETER, tskIDLE_PRIORITY, NULL );
+    xTaskCreate( prvRegTestTaskEntry2, "Reg2", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
 
-	/* Create the task that performs the 'check' functionality,	as described at
-	the top of this file. */
-	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+    /* Create task to make led blink */
+    if (xTaskCreate(task_led, "Led 1 tsk ", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL) != pdPASS)
+    {
+        printf("Failed to create test led task\r\n");
+    }
 
-	/* The set of tasks created by the following function call have to be
-	created last as they keep account of the number of tasks they expect to see
-	running. */
-	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+    /* Create the task that performs the 'check' functionality,	as described at
+    the top of this file. */
+    xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
-	/* Start the scheduler. */
-	vTaskStartScheduler();
+    /* The set of tasks created by the following function call have to be
+    created last as they keep account of the number of tasks they expect to see
+    running. */
+    vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
-	/* If all is well, the scheduler will now be running, and the following
-	line will never be reached.  If the following line does execute, then
-	there was either insufficient FreeRTOS heap memory available for the idle
-	and/or timer tasks to be created, or vTaskStartScheduler() was called from
-	User mode.  See the memory management section on the FreeRTOS web site for
-	more details on the FreeRTOS heap http://www.freertos.org/a00111.html.  The
-	mode from which main() is called is set in the C start up code and must be
-	a privileged mode (not user mode). */
-	for( ;; );
+    /* Start the scheduler. */
+    vTaskStartScheduler();
+
+    /* If all is well, the scheduler will now be running, and the following
+    line will never be reached.  If the following line does execute, then
+    there was either insufficient FreeRTOS heap memory available for the idle
+    and/or timer tasks to be created, or vTaskStartScheduler() was called from
+    User mode.  See the memory management section on the FreeRTOS web site for
+    more details on the FreeRTOS heap http://www.freertos.org/a00111.html.  The
+    mode from which main() is called is set in the C start up code and must be
+    a privileged mode (not user mode). */
+    for( ;; );
 }
 /*-----------------------------------------------------------*/
+
+/**
+ * \brief This task, when activated, make LED blink at a fixed rate
+ */
+static void task_led(void *pvParameters)
+{
+    /* Just to stop compiler warnings. */
+    ( void ) pvParameters;
+    for (;;)
+    {
+        LED_Toggle(1);
+        ActiveTasks = (unsigned int)uxTaskGetNumberOfTasks();
+        vTaskDelay(500);
+
+        //printf("--- Number of active tasks ## %u\n\r", (unsigned int)uxTaskGetNumberOfTasks());
+    }
+}
 
 static void prvCheckTask( void *pvParameters )
 {
@@ -281,7 +309,7 @@ unsigned long ulErrorFound = pdFALSE;
 		/* Delay until it is time to execute again. */
 		vTaskDelayUntil( &xLastExecutionTime, xDelayPeriod );
 
-		/* Check all the demo tasks (other than the flash tasks) to ensure
+        /* Check all the demo tasks (other than the flash tasks) to ensure
 		that they are all still running, and that none have detected an error. */
 		if( xAreIntQueueTasksStillRunning() != pdTRUE )
 		{

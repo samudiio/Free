@@ -28,11 +28,6 @@
 or 0 to run the more comprehensive test and demo application. */
 #define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY  BLINKY
 
-//#define TASK_MONITOR_STACK_SIZE            (2048/sizeof(portSTACK_TYPE))
-//#define TASK_MONITOR_STACK_PRIORITY        (tskIDLE_PRIORITY)
-//#define TASK_LED_STACK_SIZE                (1024/sizeof(portSTACK_TYPE))
-//#define TASK_LED_STACK_PRIORITY            (tskIDLE_PRIORITY)
-
 /*----------------------------------------------------------------------------
  *        Local prototypes
  *----------------------------------------------------------------------------*/
@@ -54,37 +49,6 @@ extern void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName
 #else
     extern void main_full( void );
 #endif /* #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 */
-
-
-///**
-// * \brief This task, when activated, send every ten seconds on debug UART
-// * the whole report of free heap and total tasks status
-// */
-//static void task_monitor(void *pvParameters)
-//{
-//	static portCHAR szList[256];
-//	UNUSED(pvParameters);
-//
-//	for (;;) {
-//		printf("--- Number of active tasks ## %u\n\r", (unsigned int)uxTaskGetNumberOfTasks());
-//		vTaskList((signed portCHAR *)szList);
-//		printf(szList);
-//		vTaskDelay(1000);
-//	}
-//}
-//
-///**
-// * \brief This task, when activated, make LED blink at a fixed rate
-// */
-//static void task_led(void *pvParameters)
-//{
-//    UNUSED(pvParameters);
-//    for (;;)
-//    {
-//        LED_Toggle(0);
-//        vTaskDelay(100);
-//    }
-//}
 
 
 /*~~~~~~  Global variables ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -117,6 +81,39 @@ static void prvSetupHardware( void )
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
+/**
+ *  \brief Application entry point.
+ *
+ *  \return Unused (ANSI-C compatibility).
+ */
+extern int main( void )
+{
+    /* Configure the hardware ready to run the demo. */
+    prvSetupHardware();
+
+    /*Free RTOS 8.2.1 Example*/
+
+    printf("Free RTOS 8.2.1 Example \n\r");
+
+    /* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
+    of this file. */
+    #if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
+    {
+        main_blinky();
+    }
+    #else
+    {
+        main_full();
+    }
+    #endif
+
+    return 0;
+}
+
+/*----------------------------------------------------------------------------
+ *        Standard FreeRTOS callback/hook functions
+ *----------------------------------------------------------------------------*/
+
 extern void vApplicationMallocFailedHook(void)
 {
     /* Called if a call to pvPortMalloc() fails because there is insufficient
@@ -150,7 +147,7 @@ extern void vApplicationIdleHook( void )
 }
 
 /**
- * \brief This function is called by FreeRTOS idle task
+ * \brief This function is called by FreeRTOS each tick
  */
 extern void vApplicationTickHook( void )
 {
@@ -192,57 +189,4 @@ extern void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName
     /* Force an assert. */
     configASSERT( ( volatile void * ) NULL );
 }
-
-
-/*********************************** Main Function ***********************************/
-/**
- *  \brief Application entry point.
- *
- *  \return Unused (ANSI-C compatibility).
- */
-extern int main( void )
-{
-    /* Configure the hardware ready to run the demo. */
-    prvSetupHardware();
-
-    /*Free RTOS 8.2.1 Example*/
-    
-    printf("Free RTOS 8.2.1 Example \n\r");
-
-    /* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
-    of this file. */
-    #if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
-    {
-        main_blinky();
-    }
-    #else
-    {
-        main_full();
-    }
-    #endif
-
-    return 0;
-
-
-/*Free RTOS Example*/
-
-//    /* Create task to monitor processor activity */
-//    if (xTaskCreate(task_monitor, "Task Monitor", TASK_MONITOR_STACK_SIZE, NULL, TASK_MONITOR_STACK_PRIORITY, NULL) != pdPASS)
-//    {
-//        printf("Failed to create Monitor task\r\n");
-//    }
-//
-//    /* Create task to make led blink */
-//    if (xTaskCreate(task_led, "Led 0", TASK_LED_STACK_SIZE, NULL, TASK_LED_STACK_PRIORITY, NULL) != pdPASS)
-//    {
-//        printf("Failed to create test led task\r\n");
-//    }
-//
-//    /* Start the scheduler. */
-//    vTaskStartScheduler();
-//
-//    /* Will only get here if there was insufficient memory to create the idle task. */
-//    return 0;
-}
-
 
