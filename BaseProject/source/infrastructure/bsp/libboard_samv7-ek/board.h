@@ -82,10 +82,35 @@
 
 #include "chip.h"
 
-#include "board_lowlevel.h"
-#include "board_memories.h"
-#include "led.h"
+#include "include/board_lowlevel.h"
+#include "include/board_memories.h"
+//#include "include/led.h"
+#include "include/gmii.h"
+//#include "include/gmacb_phy.h"
 #include "include/dbg_console.h"
+#include "include/bmp.h"
+#include "include/lcdd.h"
+#include "include/ili9488.h"
+#include "include/ili9488_reg.h"
+#include "include/ili9488_spi.h"
+#include "include/ili9488_ebi.h"
+#include "include/ili9488_dma.h"
+#include "include/ili9488_spi_dma.h"
+#include "include/ili9488_ebi_dma.h"
+#include "include/frame_buffer.h"
+#include "include/lcd_color.h"
+#include "include/lcd_draw.h"
+#include "include/lcd_font10x14.h"
+#include "include/lcd_font.h"
+#include "include/lcd_gimp_image.h"
+#include "include/rtc_calib.h"
+//#include "include/wm8904.h"
+//#include "include/cs2100.h"
+#include "include/s25fl1.h"
+//#include "include/omnivision.h"
+//#include "include/ovyuv.h"
+//#include "include/ov.h"
+//#include "include/iso7816_4.h"
    
 #if defined (  __GNUC__  )
 #include "include/syscalls.h"
@@ -264,8 +289,6 @@
 #define PIN_LED_0  {PIO_PA23, PIOA, ID_PIOA, PIO_OUTPUT_1, PIO_DEFAULT}
 /** LED #0 pin definition (YELLOW). */
 #define PIN_LED_1  {PIO_PC9, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
-
-
 
 /** List of all LEDs definitions. */
 #define PINS_LEDS  {PIN_LED_0, PIN_LED_1}
@@ -737,6 +760,5 @@
  * USB pins
  */
 #define PINS_VBUS_EN   {PIO_PC16, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
-extern void board_init(void);
 #endif /* #ifndef _BOARD_H_ */
 
