@@ -49,16 +49,16 @@
       </History>
       <PI.0>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <C>48</C>
-       <L>2256</L>
-       <P>..\source\infrastructure\os\FreeRtos_821\Source\tasks.c</P>
-       <VL>2236</VL>
-      </PI.0>
-      <PI.1>
-       <Bookmarks_num_>0</Bookmarks_num_>
        <L>334</L>
        <P>..\source\infrastructure\toolset\gcc\startup_sam.c</P>
        <VL>331</VL>
+      </PI.0>
+      <PI.1>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>50</C>
+       <L>3503</L>
+       <P>..\source\infrastructure\os\FreeRtos_821\Source\tasks.c</P>
+       <VL>3486</VL>
       </PI.1>
       <PI.10>
        <Bookmarks type="B">PNAAAAAA</Bookmarks>
@@ -132,10 +132,10 @@
       </PI.19>
       <PI.2>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <C>5</C>
-       <L>284</L>
+       <C>77</C>
+       <L>268</L>
        <P>..\source\appl\main_full.c</P>
-       <VL>279</VL>
+       <VL>264</VL>
       </PI.2>
       <PI.20>
        <Bookmarks_num_>0</Bookmarks_num_>
@@ -205,10 +205,10 @@
       </PI.29>
       <PI.3>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <C>13</C>
-       <L>105</L>
+       <C>49</C>
+       <L>90</L>
        <P>..\source\appl\main.c</P>
-       <VL>81</VL>
+       <VL>66</VL>
       </PI.3>
       <PI.30>
        <Bookmarks_num_>0</Bookmarks_num_>
@@ -847,10 +847,10 @@
      <Documents.0>
       <ActiveDocument>
        <Maximized>True</Maximized>
-       <RelativeFileName>..\source\infrastructure\os\FreeRtos_821\Source\tasks.c</RelativeFileName>
+       <RelativeFileName>..\source\appl\main_full.c</RelativeFileName>
       </ActiveDocument>
       <Editor.0>
-       <FileBarIndex>3</FileBarIndex>
+       <FileBarIndex>2</FileBarIndex>
        <RectPosBottom>562</RectPosBottom>
        <RectPosLeft>160</RectPosLeft>
        <RectPosRight>1516</RectPosRight>
@@ -858,7 +858,7 @@
        <RelativeFileName>..\source\appl\main.c</RelativeFileName>
       </Editor.0>
       <Editor.1>
-       <FileBarIndex>2</FileBarIndex>
+       <FileBarIndex>3</FileBarIndex>
        <RectPosBottom>619</RectPosBottom>
        <RectPosLeft>128</RectPosLeft>
        <RectPosRight>1093</RectPosRight>
@@ -866,7 +866,7 @@
        <RelativeFileName>..\source\appl\main_full.c</RelativeFileName>
       </Editor.1>
       <Editor.2>
-       <FileBarIndex>0</FileBarIndex>
+       <FileBarIndex>1</FileBarIndex>
        <RectPosBottom>683</RectPosBottom>
        <RectPosLeft>192</RectPosLeft>
        <RectPosRight>1157</RectPosRight>
@@ -874,7 +874,7 @@
        <RelativeFileName>..\source\infrastructure\os\FreeRtos_821\Source\tasks.c</RelativeFileName>
       </Editor.2>
       <Editor.3>
-       <FileBarIndex>1</FileBarIndex>
+       <FileBarIndex>0</FileBarIndex>
        <RectPosBottom>651</RectPosBottom>
        <RectPosLeft>160</RectPosLeft>
        <RectPosRight>1125</RectPosRight>
@@ -895,10 +895,10 @@
       </EditorHistoryFile.3>
      </Documents.0>
      <Progress>
-      <b>873</b>
-      <l>3266</l>
-      <r>3934</r>
-      <t>426</t>
+      <b>738</b>
+      <l>626</l>
+      <r>1294</r>
+      <t>291</t>
      </Progress>
      <Watches>
       <ActiveWatchPane>0</ActiveWatchPane>
@@ -1961,7 +1961,7 @@
        <Items.0>
         <__>
          <Name>Files</Name>
-         <Options>1</Options>
+         <Options>5</Options>
          <Items.0>
           <__>
            <Name>appl</Name>

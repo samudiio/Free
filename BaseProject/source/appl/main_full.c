@@ -238,9 +238,9 @@ void main_full( void )
     xTaskCreate( prvRegTestTaskEntry2, "Reg2", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
 
     /* Create task to make led blink */
-    if (xTaskCreate(task_led, "Led 1 tsk ", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL) != pdPASS)
+    if (xTaskCreate(task_led, "Led 1", TASK_LED_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL) != pdPASS)
     {
-        printf("Failed to create test led task\r\n");
+        printf("Failed to create led 1 task\r\n");
     }
 
     /* Create the task that performs the 'check' functionality,	as described at
@@ -274,13 +274,13 @@ static void task_led(void *pvParameters)
 {
     /* Just to stop compiler warnings. */
     ( void ) pvParameters;
+
+    ActiveTasks = (unsigned int)uxTaskGetNumberOfTasks();
     for (;;)
     {
         LED_Toggle(1);
-        ActiveTasks = (unsigned int)uxTaskGetNumberOfTasks();
-        vTaskDelay(500);
 
-        //printf("--- Number of active tasks ## %u\n\r", (unsigned int)uxTaskGetNumberOfTasks());
+        vTaskDelay(500);
     }
 }
 
