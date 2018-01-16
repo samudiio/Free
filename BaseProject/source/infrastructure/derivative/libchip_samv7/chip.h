@@ -75,6 +75,7 @@
 //#include "timetick.h"
 #include "mcan.h"
 #include "pmc.h"
+#include "spi.h"
 #include "tc.h"
 #include "usart.h"
 #include "uart.h"
