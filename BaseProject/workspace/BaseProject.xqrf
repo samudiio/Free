@@ -79,43 +79,43 @@
       <SubDir>0</SubDir>
      </IncludePath.1>
      <IncludePath.10>
-      <Path>$(IRFDIR)..\source\bsw\mcal\afec_dma</Path>
+      <Path>$(IRFDIR)..\source\bsw\commons</Path>
       <SubDir>0</SubDir>
      </IncludePath.10>
      <IncludePath.11>
-      <Path>$(IRFDIR)..\source\bsw\mcal\afec</Path>
+      <Path>$(IRFDIR)..\source\bsw\ecual</Path>
       <SubDir>0</SubDir>
      </IncludePath.11>
      <IncludePath.12>
-      <Path>$(IRFDIR)..\source\bsw\ecual</Path>
+      <Path>$(IRFDIR)..\source\bsw\ecual\led</Path>
       <SubDir>0</SubDir>
      </IncludePath.12>
      <IncludePath.13>
-      <Path>$(IRFDIR)..\source\bsw\commons</Path>
+      <Path>$(IRFDIR)..\source\bsw\ecual\lcd</Path>
       <SubDir>0</SubDir>
      </IncludePath.13>
      <IncludePath.14>
-      <Path>$(IRFDIR)..\source\bsw\mcal\Uart_Dma</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\afec_dma</Path>
       <SubDir>0</SubDir>
      </IncludePath.14>
      <IncludePath.15>
-      <Path>$(IRFDIR)..\source\bsw\mcal\spi</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\afec</Path>
       <SubDir>0</SubDir>
      </IncludePath.15>
      <IncludePath.16>
-      <Path>$(IRFDIR)..\source\bsw\mcal\tc</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\Uart_Dma</Path>
       <SubDir>0</SubDir>
      </IncludePath.16>
      <IncludePath.17>
-      <Path>$(IRFDIR)..\source\bsw\mcal\xdma</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\spi</Path>
       <SubDir>0</SubDir>
      </IncludePath.17>
      <IncludePath.18>
-      <Path>$(IRFDIR)..\source\bsw\services</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\tc</Path>
       <SubDir>0</SubDir>
      </IncludePath.18>
      <IncludePath.19>
-      <Path>$(IRFDIR)..\source\bsw\services\system\trng</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\xdma</Path>
       <SubDir>0</SubDir>
      </IncludePath.19>
      <IncludePath.2>
@@ -123,43 +123,43 @@
       <SubDir>0</SubDir>
      </IncludePath.2>
      <IncludePath.20>
-      <Path>$(IRFDIR)..\source\bsw\services\system\trace</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\wdt</Path>
       <SubDir>0</SubDir>
      </IncludePath.20>
      <IncludePath.21>
-      <Path>$(IRFDIR)..\source\bsw\mcal\wdt</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\egc_data</Path>
       <SubDir>0</SubDir>
      </IncludePath.21>
      <IncludePath.22>
-      <Path>$(IRFDIR)..\source\bsw\mcal\egc_data</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\fpu</Path>
       <SubDir>0</SubDir>
      </IncludePath.22>
      <IncludePath.23>
-      <Path>$(IRFDIR)..\source\bsw\mcal\fpu</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\pmc</Path>
       <SubDir>0</SubDir>
      </IncludePath.23>
      <IncludePath.24>
-      <Path>$(IRFDIR)..\source\bsw\mcal\pmc</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\usart</Path>
       <SubDir>0</SubDir>
      </IncludePath.24>
      <IncludePath.25>
-      <Path>$(IRFDIR)..\source\bsw\mcal\usart</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\uart</Path>
       <SubDir>0</SubDir>
      </IncludePath.25>
      <IncludePath.26>
-      <Path>$(IRFDIR)..\source\bsw\mcal\uart</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\supc</Path>
       <SubDir>0</SubDir>
      </IncludePath.26>
      <IncludePath.27>
-      <Path>$(IRFDIR)..\source\bsw\mcal\supc</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\pio</Path>
       <SubDir>0</SubDir>
      </IncludePath.27>
      <IncludePath.28>
-      <Path>$(IRFDIR)..\source\bsw\mcal\pio</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\mpu</Path>
       <SubDir>0</SubDir>
      </IncludePath.28>
      <IncludePath.29>
-      <Path>$(IRFDIR)..\source\bsw\mcal\mpu</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\mcan</Path>
       <SubDir>0</SubDir>
      </IncludePath.29>
      <IncludePath.3>
@@ -167,43 +167,43 @@
       <SubDir>0</SubDir>
      </IncludePath.3>
      <IncludePath.30>
-      <Path>$(IRFDIR)..\source\bsw\mcal\mcan</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\exceptions</Path>
       <SubDir>0</SubDir>
      </IncludePath.30>
      <IncludePath.31>
-      <Path>$(IRFDIR)..\source\bsw\mcal\exceptions</Path>
+      <Path>$(IRFDIR)..\source\bsw\services</Path>
       <SubDir>0</SubDir>
      </IncludePath.31>
      <IncludePath.32>
-      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\TransformFunctions\</Path>
+      <Path>$(IRFDIR)..\source\bsw\services\system\trng</Path>
       <SubDir>0</SubDir>
      </IncludePath.32>
      <IncludePath.33>
-      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\SupportFunctions\</Path>
+      <Path>$(IRFDIR)..\source\bsw\services\system\trace</Path>
       <SubDir>0</SubDir>
      </IncludePath.33>
      <IncludePath.34>
-      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\StatisticsFunctions\</Path>
+      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\TransformFunctions\</Path>
       <SubDir>0</SubDir>
      </IncludePath.34>
      <IncludePath.35>
-      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\MatrixFunctions\</Path>
+      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\SupportFunctions\</Path>
       <SubDir>0</SubDir>
      </IncludePath.35>
      <IncludePath.36>
-      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\FilteringFunctions\</Path>
+      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\StatisticsFunctions\</Path>
       <SubDir>0</SubDir>
      </IncludePath.36>
      <IncludePath.37>
-      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\FastMathFunctions\</Path>
+      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\MatrixFunctions\</Path>
       <SubDir>0</SubDir>
      </IncludePath.37>
      <IncludePath.38>
-      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\ControllerFunctions\</Path>
+      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\FilteringFunctions\</Path>
       <SubDir>0</SubDir>
      </IncludePath.38>
      <IncludePath.39>
-      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\ComplexMathFunctions\</Path>
+      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\FastMathFunctions\</Path>
       <SubDir>0</SubDir>
      </IncludePath.39>
      <IncludePath.4>
@@ -211,17 +211,25 @@
       <SubDir>0</SubDir>
      </IncludePath.4>
      <IncludePath.40>
-      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\CommonTables\</Path>
+      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\ControllerFunctions\</Path>
       <SubDir>0</SubDir>
      </IncludePath.40>
      <IncludePath.41>
-      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\BasicMathFunctions\</Path>
+      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\ComplexMathFunctions\</Path>
       <SubDir>0</SubDir>
      </IncludePath.41>
      <IncludePath.42>
-      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\</Path>
+      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\CommonTables\</Path>
       <SubDir>0</SubDir>
      </IncludePath.42>
+     <IncludePath.43>
+      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\BasicMathFunctions\</Path>
+      <SubDir>0</SubDir>
+     </IncludePath.43>
+     <IncludePath.44>
+      <Path>$(IRFDIR)..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\</Path>
+      <SubDir>0</SubDir>
+     </IncludePath.44>
      <IncludePath.5>
       <Path>$(IRFDIR)..\source\infrastructure\derivative\utils\</Path>
       <SubDir>0</SubDir>
@@ -451,12 +459,19 @@
       <LinkGroup.3>
        <LinkGroupName>ecual</LinkGroupName>
        <File.0>
-        <FileName>$(IRFDIR)..\source\bsw\ecual\led.c</FileName>
+        <FileName>$(IRFDIR)..\source\bsw\ecual\led\led.c</FileName>
         <FileOptios>
          <CompilerDefines>__SAMV71Q21__&#xA;BLINKY=0</CompilerDefines>
          <CompilerOptions>-x c  -mcpu=cortex-m7  -mthumb -mfloat-abi=softfp -mfpu=fpv5-sp-d16 $(DEFINES) $(INCLUDES)  -g3 -c -I $(IRFDIR) -o $(NOEXT).o $(EDNAME) -fno-builtin-fabs</CompilerOptions>
         </FileOptios>
        </File.0>
+       <File.1>
+        <FileName>$(IRFDIR)..\source\bsw\ecual\lcd\lcd.c</FileName>
+        <FileOptios>
+         <CompilerDefines>__SAMV71Q21__&#xA;BLINKY=0</CompilerDefines>
+         <CompilerOptions>-x c  -mcpu=cortex-m7  -mthumb -mfloat-abi=softfp -mfpu=fpv5-sp-d16 $(DEFINES) $(INCLUDES)  -g3 -c -I $(IRFDIR) -o $(NOEXT).o $(EDNAME) -fno-builtin-fabs</CompilerOptions>
+        </FileOptios>
+       </File.1>
       </LinkGroup.3>
       <LinkGroup.4>
        <LinkGroupName>appl</LinkGroupName>

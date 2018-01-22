@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#include "lcd.h"
+
 /* Scheduler include files. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -27,8 +29,6 @@
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
 #define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY  BLINKY
-
-#define SPI0_CS3  3
 
 /*----------------------------------------------------------------------------
  *        Local prototypes
@@ -55,18 +55,6 @@ extern void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName
 
 /*~~~~~~  Global variables ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/** Pins to configure for the application. */
-static const Pin SPI_pins[] = {
-    PIN_SPI_MISO,
-    PIN_SPI_MOSI,
-    PIN_SPI_SPCK,
-    PIN_SPI_NPCS3
-};
-
-/** SPI Clock setting (Hz) */
-static uint32_t spiClock = 500000;
-
-uint8_t pTxBuffer[] = "This is SPI LoopBack Test Buffer";
 
 /*----------------------------------------------------------------------------
  *        Local functions
@@ -77,8 +65,6 @@ uint8_t pTxBuffer[] = "This is SPI LoopBack Test Buffer";
  */
 static void prvSetupHardware( void )
 {
-    uint8_t i;
-
     /* Disable watchdog. */
     WDT_Disable( WDT );
 
@@ -86,34 +72,7 @@ static void prvSetupHardware( void )
     SCB_EnableICache();
 //  SCB_EnableDCache();
 
-
-    /* Configure SPI pins*/
-    PIO_Configure( SPI_pins, PIO_LISTSIZE(SPI_pins) );
-
-    SPI_Configure(SPI0, ID_SPI0, ( SPI_MR_MSTR | SPI_MR_MODFDIS | SPI_PCS( SPI0_CS3 )));
-
-    /*SPI_ConfigureNPCS( SPI0, SPI0_CS3,
-                       SPI_DLYBCT( 1000, BOARD_MCK ) |
-                       SPI_DLYBS(1000, BOARD_MCK) |
-                       SPI_SCBR( spiClock, BOARD_MCK) );*/
-
-    SPI_ConfigureNPCS(SPI0, SPI0_CS3,
-                          SPI_CSR_CPOL | SPI_CSR_BITS_8_BIT |
-                          SPI_DLYBCT(100, BOARD_MCK) |
-                          SPI_DLYBS(6, BOARD_MCK) |
-                          SPI_SCBR(20000000, BOARD_MCK));
-
-    SPI_Enable(SPI0);
-
-    for (i = 0; ;i++) {
-        SPI_Write(SPI0, SPI0_CS3 , (uint16_t)pTxBuffer[i]);
-        if (pTxBuffer[i] =='\0')
-            break;
-    }
-    if (SPI_IsFinished(SPI0)) {
-        SPI_Disable(SPI0);
-    }
-
+    LDC_Init();
 
     /*  Configures LEDs \#1 and \#2 (cleared by default). */
     LED_Configure( 0 );
@@ -148,13 +107,9 @@ extern int main( void )
     }
     #else
     {
-        //main_full();
+        main_full();
     }
     #endif
-
-    while (1) {
-
-    }
 
     return 0;
 }

@@ -67,13 +67,110 @@
  *        Headers
  *----------------------------------------------------------------------------*/
 
-#include "chip.h"
+//#include "chip.h"
 
+#include "board.h"
 #include <stdint.h>
+
+/*------------------------------------------------------------------------------
+ *         Defines
+ *----------------------------------------------------------------------------*/
+
+#define SPI0_CS3  3
+
+/*------------------------------------------------------------------------------
+ *         Types Definitions
+ *----------------------------------------------------------------------------*/
+
+
+/*------------------------------------------------------------------------------
+ *         Global Variables
+ *----------------------------------------------------------------------------*/
+
+/** Pins to configure for the application. */
+static const Pin SPI_PinsId[] = {
+    PIN_SPI_MISO,
+    PIN_SPI_MOSI,
+    PIN_SPI_SPCK,
+    PIN_SPI_NPCS3
+};
+
+/** SPI Clock setting (Hz) */
+static uint32_t spiClock = 3000000; //3Mhz in the example, firt test with whis freq
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
+
+/**
+ * \brief Initializes SPI0 peripheral.
+ *
+ * \param spi  Pointer to an SPI instance.
+ */
+extern void SPI_Init()
+{
+    /* Configure SPI pins*/
+    PIO_Configure( SPI_PinsId, PIO_LISTSIZE(SPI_PinsId) );
+
+    SPI_Configure(SPI0, ID_SPI0, ( SPI_MR_MSTR | SPI_MR_MODFDIS | SPI_PCS( SPI0_CS3 )));
+
+    SPI_ConfigureNPCS( SPI0, SPI0_CS3,
+                       SPI_CSR_BITS_8_BIT |
+                       SPI_DLYBCT( 1000, BOARD_MCK ) |
+                       SPI_DLYBS(1000, BOARD_MCK) |
+                       SPI_SCBR( spiClock, BOARD_MCK) );
+
+    /*SPI_ConfigureNPCS(SPI0, SPI0_CS3,
+                          SPI_CSR_CPOL | SPI_CSR_BITS_8_BIT |
+                          SPI_DLYBCT(100, BOARD_MCK) |
+                          SPI_DLYBS(6, BOARD_MCK) |
+                          SPI_SCBR(20000000, BOARD_MCK));
+*/
+
+    /* Enable SPI1 after configuration */
+    SPI_Enable(SPI0);
+}
+
+/*
+ * SPI Send and Receive
+ */
+extern uint8_t SPI_ReadWrite(uint8_t DataToWrite)
+{
+    uint32_t DataRead = 0;
+
+    SPI_Write(SPI0, SPI0_CS3 , (uint16_t)DataToWrite);  // Write data to SPI data register
+    DataRead = SPI_Read(SPI0);
+
+    return (uint8_t)DataRead;
+}
+
+/*
+ * CS line low
+ */
+extern void SPI_CSlow(void)
+{
+    /* CS# line low */
+    if ( SPI_PinsId[SPI0_CS3].type == PIO_OUTPUT_0 )
+    {
+        PIO_Clear( &SPI_PinsId[SPI0_CS3] );
+    } else {
+        PIO_Set( &SPI_PinsId[SPI0_CS3] );
+    }
+}
+
+/*
+ * CS line high
+ */
+extern void SPI_CShigh(void)
+{
+    /* CS# line high */
+    if ( SPI_PinsId[SPI0_CS3].type == PIO_OUTPUT_0 )
+    {
+        PIO_Set( &SPI_PinsId[SPI0_CS3] );
+    } else {
+        PIO_Clear( &SPI_PinsId[SPI0_CS3] );
+    }
+}
 
 /**
  * \brief Enables a SPI peripheral.

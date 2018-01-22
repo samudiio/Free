@@ -293,6 +293,9 @@
 /** List of all LEDs definitions. */
 #define PINS_LEDS  {PIN_LED_0, PIN_LED_1}
 
+/* PD pin definition */
+#define PIN_LCD_PD  {PIO_PA2, PIOA, ID_PIOA, PIO_OUTPUT_1, PIO_DEFAULT}
+
 /** 
  * Push button #0 definition. 
  * Attributes = pull-up + debounce + interrupt on rising edge.
