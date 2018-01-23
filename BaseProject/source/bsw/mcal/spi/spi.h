@@ -87,9 +87,6 @@
 extern void SPI_Init();
 extern uint8_t SPI_ReadWrite(uint8_t DataToWrite);
 
-extern void SPI_CSlow(void);
-extern void SPI_CShigh(void);
-
 extern void SPI_Enable( Spi* spi ) ;
 extern void SPI_Disable( Spi* spi ) ;
 

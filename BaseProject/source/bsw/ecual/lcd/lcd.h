@@ -11,9 +11,6 @@
 void LDC_Init(void);
 uint8_t LCD_SPIReadWrite(uint8_t DataToWrite);
 
-void LCD_CSlow(void);
-void LCD_CShigh(void);
-
 void LCD_PDlow(void);
 void LCD_PDhigh(void);
 

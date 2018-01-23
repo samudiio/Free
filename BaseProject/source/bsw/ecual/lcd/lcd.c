@@ -12,6 +12,7 @@
  *        Headers
  *----------------------------------------------------------------------------*/
 #include "board.h"
+#include "lcd.h"
 #include "spi.h"
 
 //#include "FT8xx.h"
@@ -37,6 +38,7 @@ uint8_t pTxBuffer[] = "This is SPI LoopBack Test Buffer";
 void LDC_Init(void)
 {
     uint8_t i;
+    uint32_t j;
 
     /* Configure PD pin*/
     PIO_Configure( LCD_PinsId, PIO_LISTSIZE(LCD_PinsId) );
@@ -53,6 +55,11 @@ void LDC_Init(void)
         SPI_Disable(SPI0);
     }
 
+
+    for(j=0; j<65000; j++)
+    {
+
+    }
 }
 
 // ################################# SPI #######################################
@@ -67,33 +74,11 @@ uint8_t LCD_SPIReadWrite(uint8_t DataToWrite)
 // ########################### GPIO CONTROL ####################################
 
 /*
- * CS line low
- */
-void LCD_CSlow(void)
-{
-    SPI_CSlow();
-}
-
-/*
- * CD line high
- */
-void LCD_CShigh(void)
-{
-    SPI_CShigh();
-}
-
-/*
  * PD line low
  */
 void LCD_PDlow(void)
 {
-    /* PD# line low */
-    if ( LCD_PinsId[LCD_PD].type == PIO_OUTPUT_0 )
-    {
-        PIO_Clear( &LCD_PinsId[LCD_PD] );
-    } else {
-        PIO_Set( &LCD_PinsId[LCD_PD] );
-    }
+    PIO_Clear( &LCD_PinsId[LCD_PD] );
 }
 
 /*
@@ -101,13 +86,7 @@ void LCD_PDlow(void)
  */
 void LCD_PDhigh(void)
 {
-    /* PD# line high */
-    if ( LCD_PinsId[LCD_PD].type == PIO_OUTPUT_0 )
-    {
-        PIO_Set( &LCD_PinsId[LCD_PD] );
-    } else {
-        PIO_Clear( &LCD_PinsId[LCD_PD] );
-    }
+    PIO_Set( &LCD_PinsId[LCD_PD] );
 }
 
 

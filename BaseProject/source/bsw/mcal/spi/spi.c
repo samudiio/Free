@@ -70,6 +70,7 @@
 //#include "chip.h"
 
 #include "board.h"
+#include "spi.h"
 #include <stdint.h>
 
 /*------------------------------------------------------------------------------
@@ -96,7 +97,7 @@ static const Pin SPI_PinsId[] = {
 };
 
 /** SPI Clock setting (Hz) */
-static uint32_t spiClock = 3000000; //3Mhz in the example, firt test with whis freq
+static uint32_t spiClock = 1000000;//3000000; //3Mhz in the example, firt test with whis freq
 
 /*----------------------------------------------------------------------------
  *        Exported functions
@@ -144,33 +145,6 @@ extern uint8_t SPI_ReadWrite(uint8_t DataToWrite)
     return (uint8_t)DataRead;
 }
 
-/*
- * CS line low
- */
-extern void SPI_CSlow(void)
-{
-    /* CS# line low */
-    if ( SPI_PinsId[SPI0_CS3].type == PIO_OUTPUT_0 )
-    {
-        PIO_Clear( &SPI_PinsId[SPI0_CS3] );
-    } else {
-        PIO_Set( &SPI_PinsId[SPI0_CS3] );
-    }
-}
-
-/*
- * CS line high
- */
-extern void SPI_CShigh(void)
-{
-    /* CS# line high */
-    if ( SPI_PinsId[SPI0_CS3].type == PIO_OUTPUT_0 )
-    {
-        PIO_Set( &SPI_PinsId[SPI0_CS3] );
-    } else {
-        PIO_Clear( &SPI_PinsId[SPI0_CS3] );
-    }
-}
 
 /**
  * \brief Enables a SPI peripheral.
