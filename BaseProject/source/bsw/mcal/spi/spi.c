@@ -97,7 +97,7 @@ static const Pin SPI_PinsId[] = {
 };
 
 /** SPI Clock setting (Hz) */
-static uint32_t spiClock = 1000000;//3000000; //3Mhz in the example, firt test with whis freq
+static uint32_t spiClock = 3000000; //3Mhz in the example, firt test with whis freq
 
 /*----------------------------------------------------------------------------
  *        Exported functions
@@ -116,7 +116,7 @@ extern void SPI_Init()
     SPI_Configure(SPI0, ID_SPI0, ( SPI_MR_MSTR | SPI_MR_MODFDIS | SPI_PCS( SPI0_CS3 )));
 
     SPI_ConfigureNPCS( SPI0, SPI0_CS3,
-                       SPI_CSR_BITS_8_BIT |
+                       SPI_CSR_CPOL | SPI_CSR_BITS_8_BIT |
                        SPI_DLYBCT( 1000, BOARD_MCK ) |
                        SPI_DLYBS(1000, BOARD_MCK) |
                        SPI_SCBR( spiClock, BOARD_MCK) );

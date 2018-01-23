@@ -51,7 +51,7 @@
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>334</L>
        <P>..\source\infrastructure\toolset\gcc\startup_sam.c</P>
-       <VL>321</VL>
+       <VL>318</VL>
       </PI.0>
       <PI.1>
        <Bookmarks_num_>0</Bookmarks_num_>
@@ -131,8 +131,7 @@
       </PI.19>
       <PI.2>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <C>57</C>
-       <L>328</L>
+       <L>326</L>
        <P>..\source\infrastructure\os\FreeRtos_821\Demo\Common\Minimal\flop.c</P>
        <VL>313</VL>
       </PI.2>
@@ -207,10 +206,10 @@
       </PI.29>
       <PI.3>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <C>29</C>
-       <L>117</L>
+       <C>34</C>
+       <L>243</L>
        <P>..\source\bsw\mcal\spi\spi.c</P>
-       <VL>125</VL>
+       <VL>241</VL>
       </PI.3>
       <PI.30>
        <Bookmarks_num_>0</Bookmarks_num_>
@@ -281,7 +280,7 @@
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>164</L>
        <P>..\source\bsw\mcal\exceptions\exceptions.c</P>
-       <VL>157</VL>
+       <VL>148</VL>
       </PI.4>
       <PI.40>
        <Bookmarks_num_>0</Bookmarks_num_>
@@ -351,15 +350,15 @@
       </PI.49>
       <PI.5>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <C>1</C>
-       <L>44</L>
+       <C>18</C>
+       <L>46</L>
        <P>..\source\bsw\ecual\lcd\lcd.c</P>
-       <VL>30</VL>
+       <VL>36</VL>
       </PI.5>
       <PI.6>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>11</C>
-       <L>81</L>
+       <L>79</L>
        <P>..\source\appl\main.c</P>
        <VL>68</VL>
       </PI.6>
@@ -857,7 +856,7 @@
        <RelativeFileName>..\source\infrastructure\os\FreeRtos_821\Demo\Common\Minimal\flop.c</RelativeFileName>
       </ActiveDocument>
       <Editor.0>
-       <FileBarIndex>2</FileBarIndex>
+       <FileBarIndex>1</FileBarIndex>
        <RectPosBottom>562</RectPosBottom>
        <RectPosLeft>160</RectPosLeft>
        <RectPosRight>1516</RectPosRight>
@@ -865,7 +864,7 @@
        <RelativeFileName>..\source\appl\main.c</RelativeFileName>
       </Editor.0>
       <Editor.1>
-       <FileBarIndex>4</FileBarIndex>
+       <FileBarIndex>3</FileBarIndex>
        <RectPosBottom>388</RectPosBottom>
        <RectPosLeft>0</RectPosLeft>
        <RectPosRight>783</RectPosRight>
@@ -889,7 +888,7 @@
        <RelativeFileName>..\source\bsw\mcal\spi\spi.c</RelativeFileName>
       </Editor.3>
       <Editor.4>
-       <FileBarIndex>1</FileBarIndex>
+       <FileBarIndex>2</FileBarIndex>
        <RectPosBottom>420</RectPosBottom>
        <RectPosLeft>32</RectPosLeft>
        <RectPosRight>815</RectPosRight>
@@ -897,7 +896,7 @@
        <RelativeFileName>..\source\infrastructure\os\FreeRtos_821\Demo\Common\Minimal\flop.c</RelativeFileName>
       </Editor.4>
       <Editor.5>
-       <FileBarIndex>3</FileBarIndex>
+       <FileBarIndex>4</FileBarIndex>
        <RectPosBottom>548</RectPosBottom>
        <RectPosLeft>160</RectPosLeft>
        <RectPosRight>943</RectPosRight>
@@ -926,10 +925,10 @@
       </EditorHistoryFile.3>
      </Documents.0>
      <Progress>
-      <b>738</b>
+      <b>743</b>
       <l>626</l>
       <r>1294</r>
-      <t>291</t>
+      <t>296</t>
      </Progress>
      <Watches>
       <ActiveWatchPane>0</ActiveWatchPane>
@@ -958,6 +957,18 @@
          <Scale>0</Scale>
         </ExpressionDisplay>
        </Watch.0>
+       <Watch.1>
+        <WatchName>dwNpcs</WatchName>
+        <ExpressionDisplay>
+         <Color>0</Color>
+         <ColorBack>8421376</ColorBack>
+         <ColorText>0</ColorText>
+         <Enabled>0</Enabled>
+         <Hi type="D">100.0000000000000000</Hi>
+         <Lo type="D">0.0000000000000000</Lo>
+         <Scale>0</Scale>
+        </ExpressionDisplay>
+       </Watch.1>
       </WatchPane.0>
       <WatchPane.2>
        <Watch.0>
@@ -1172,7 +1183,7 @@
        <TypeOfWnd>-1</TypeOfWnd>
        <DockRect.0>
         <AreHorz>1</AreHorz>
-        <Percent>1610</Percent>
+        <Percent>999</Percent>
         <strTypeOfWnd>Output</strTypeOfWnd>
         <Type>0</Type>
         <TypeOfWnd>0</TypeOfWnd>
@@ -1185,32 +1196,72 @@
        </DockRect.1>
        <DockRect.2>
         <AreHorz>1</AreHorz>
-        <Percent>785</Percent>
-        <strTypeOfWnd>Watch</strTypeOfWnd>
+        <Percent>633</Percent>
         <Type>0</Type>
-        <TypeOfWnd>2</TypeOfWnd>
-        <Data>
-         <Columns.0>
-          <Pos type="D">0.0000000000000000</Pos>
-          <Width>0</Width>
-         </Columns.0>
-         <Columns.1>
-          <Pos type="D">30.9309309309309310</Pos>
-          <Width>0</Width>
-         </Columns.1>
-         <Columns.2>
-          <Pos type="D">54.9549549549549570</Pos>
-          <Width>0</Width>
-         </Columns.2>
-         <Columns.3>
-          <Pos type="D">69.9699699699699660</Pos>
-          <Width>0</Width>
-         </Columns.3>
-         <Columns.4>
-          <Pos type="D">84.9849849849849900</Pos>
-          <Width>0</Width>
-         </Columns.4>
-        </Data>
+        <TypeOfWnd>-1</TypeOfWnd>
+        <DockRect.0>
+         <AreHorz>1</AreHorz>
+         <Percent>151</Percent>
+         <strTypeOfWnd>Watch</strTypeOfWnd>
+         <Type>0</Type>
+         <TypeOfWnd>2</TypeOfWnd>
+         <Data>
+          <Columns.0>
+           <Pos type="D">0.0000000000000000</Pos>
+           <Width>0</Width>
+          </Columns.0>
+          <Columns.1>
+           <Pos type="D">30.9309309309309310</Pos>
+           <Width>0</Width>
+          </Columns.1>
+          <Columns.2>
+           <Pos type="D">54.9549549549549570</Pos>
+           <Width>0</Width>
+          </Columns.2>
+          <Columns.3>
+           <Pos type="D">69.9699699699699660</Pos>
+           <Width>0</Width>
+          </Columns.3>
+          <Columns.4>
+           <Pos type="D">84.9849849849849900</Pos>
+           <Width>0</Width>
+          </Columns.4>
+         </Data>
+        </DockRect.0>
+        <DockRect.1>
+         <AreHorz>1</AreHorz>
+         <Percent>5</Percent>
+         <Type>6</Type>
+         <TypeOfWnd>-1</TypeOfWnd>
+        </DockRect.1>
+        <DockRect.2>
+         <AreHorz>1</AreHorz>
+         <Percent>213</Percent>
+         <strTypeOfWnd>SFR</strTypeOfWnd>
+         <Type>0</Type>
+         <TypeOfWnd>12</TypeOfWnd>
+         <Data>
+          <SFRPane>
+           <Tree>
+            <HeaderWidth.0>200</HeaderWidth.0>
+            <HeaderWidth.1>100</HeaderWidth.1>
+            <HeaderWidth.2>400</HeaderWidth.2>
+            <HeaderWidth.3>100</HeaderWidth.3>
+            <HeaderWidth.4>400</HeaderWidth.4>
+           </Tree>
+          </SFRPane>
+          <WndData>
+           <Custom>0</Custom>
+           <strCustom></strCustom>
+          </WndData>
+         </Data>
+        </DockRect.2>
+        <DockRect.3>
+         <AreHorz>1</AreHorz>
+         <Percent>0</Percent>
+         <Type>6</Type>
+         <TypeOfWnd>-1</TypeOfWnd>
+        </DockRect.3>
        </DockRect.2>
        <DockRect.3>
         <AreHorz>1</AreHorz>
@@ -1232,6 +1283,19 @@
       <Fetch>
        <Beep>True</Beep>
        <DisplayMessage>True</DisplayMessage>
+       <BP.0>
+        <__>
+         <ActionEnabled>False</ActionEnabled>
+         <ActionScript></ActionScript>
+         <ActionScriptParams></ActionScriptParams>
+         <ActionShow>False</ActionShow>
+         <Active>True</Active>
+         <Condition></Condition>
+         <Condition_Count>0</Condition_Count>
+         <ConditionEnabled>False</ConditionEnabled>
+         <Name>&quot;..\source\bsw\mcal\spi\spi.c&quot;::257</Name>
+        </__>
+       </BP.0>
       </Fetch>
      </Breakpoints>
      <CASETool>
@@ -1983,7 +2047,7 @@
       <SFR>
        <InitScript></InitScript>
        <GlobalState>
-        <Selected>TC0</Selected>
+        <Selected>NCPHA</Selected>
         <Items.0>
          <__>
           <Name>ATSAMV7xx21</Name>
@@ -1997,45 +2061,57 @@
           <Items.1>
            <__>
             <Name>System Control Space</Name>
-            <Options>5</Options>
-            <Items.0>
-             <__>
-              <Name>NVIC</Name>
-              <Options>4</Options>
-             </__>
-            </Items.0>
-            <Items.1>
-             <__>
-              <Name>System Control Block</Name>
-              <Options>0</Options>
-             </__>
-            </Items.1>
-            <Items.2>
-             <__>
-              <Name>SysTick</Name>
-              <Options>0</Options>
-             </__>
-            </Items.2>
-            <Items.3>
-             <__>
-              <Name>Memory Protection Unit</Name>
-              <Options>0</Options>
-             </__>
-            </Items.3>
-            <Items.4>
-             <__>
-              <Name>FPU Floating Point Unit</Name>
-              <Options>0</Options>
-             </__>
-            </Items.4>
-            <Items.5>
-             <__>
-              <Name>System Control and ID</Name>
-              <Options>0</Options>
-             </__>
-            </Items.5>
+            <Options>1</Options>
            </__>
           </Items.1>
+          <Items.2>
+           <__>
+            <Name>SPI0</Name>
+            <Options>65537</Options>
+            <Items.0>
+             <__>
+              <Name>SPI0_CSR[3]</Name>
+              <Options>65537</Options>
+              <Items.0>
+               <__>
+                <Name>CSNAAT</Name>
+                <Options>65540</Options>
+               </__>
+              </Items.0>
+              <Items.1>
+               <__>
+                <Name>CSAAT</Name>
+                <Options>65536</Options>
+               </__>
+              </Items.1>
+              <Items.2>
+               <__>
+                <Name>BITS</Name>
+                <Options>65536</Options>
+               </__>
+              </Items.2>
+              <Items.3>
+               <__>
+                <Name>SCBR</Name>
+                <Options>65536</Options>
+               </__>
+              </Items.3>
+              <Items.4>
+               <__>
+                <Name>DLYBS</Name>
+                <Options>65536</Options>
+               </__>
+              </Items.4>
+              <Items.5>
+               <__>
+                <Name>DLYBCT</Name>
+                <Options>65536</Options>
+               </__>
+              </Items.5>
+             </__>
+            </Items.0>
+           </__>
+          </Items.2>
          </__>
         </Items.0>
        </GlobalState>
