@@ -14,6 +14,7 @@
 #include "board.h"
 #include "lcd.h"
 #include "spi.h"
+//#include "timetick.h"
 
 //#include "FT8xx.h"
 
@@ -57,10 +58,6 @@ void LDC_Init(void)
             break;
     }
 
-    /*if (SPI_IsFinished(SPI0)) {
-        SPI_Disable(SPI0);
-    } */
-
     LCD_PDlow();
     LCD_CSlow();
     for(j=0; j<65000; j++)
@@ -69,6 +66,7 @@ void LDC_Init(void)
     }
     LCD_CShigh();
     LCD_PDhigh();
+
 }
 
 // ################################# SPI #######################################
