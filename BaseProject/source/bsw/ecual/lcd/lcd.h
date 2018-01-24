@@ -17,4 +17,7 @@ void LCD_CShigh(void);
 void LCD_PDlow(void);
 void LCD_PDhigh(void);
 
+void MCU_Delay_20ms(void);
+void MCU_Delay_500ms(void);
+
 #endif /* LCD_H_ */

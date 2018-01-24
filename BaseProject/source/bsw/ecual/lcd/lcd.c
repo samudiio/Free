@@ -14,7 +14,6 @@
 #include "board.h"
 #include "lcd.h"
 #include "spi.h"
-//#include "timetick.h"
 
 //#include "FT8xx.h"
 
@@ -42,7 +41,6 @@ uint8_t pTxBuffer[] = "T";//"This is SPI LoopBack Test Buffer";
 void LDC_Init(void)
 {
     uint8_t i;
-    uint32_t j;
 
     /* Configure /CD and /PD pins*/
     PIO_Configure( LCD_PinsId, PIO_LISTSIZE(LCD_PinsId) );
@@ -50,23 +48,21 @@ void LDC_Init(void)
     /* Initialize SPI peripheral */
     SPI_Init();
 
-   // SPI_Write(SPI0, SPI0_CS_3 , (uint16_t)pTxBuffer);
+        //SPI_Write(SPI0, SPI0_CS_3 , (uint16_t)pTxBuffer);
 
-    for (i = 0; ;i++) {
+   /* for (i = 0; ;i++) {
         SPI_Write(SPI0, SPI0_CS_3 , (uint16_t)pTxBuffer[i]);
         if (pTxBuffer[i] =='\0')
             break;
-    }
+    }*/
 
     LCD_PDlow();
     LCD_CSlow();
-    for(j=0; j<65000; j++)
-    {
-
-    }
+    MCU_Delay_500ms();
     LCD_CShigh();
     LCD_PDhigh();
 
+    LCD_SPIReadWrite(0xFA);
 }
 
 // ################################# SPI #######################################
@@ -110,4 +106,24 @@ void LCD_PDlow(void)
 void LCD_PDhigh(void)
 {
     PIO_Set( &LCD_PinsId[LCD_PD_PIN] );
+}
+
+void MCU_Delay_20ms(void)
+{
+    uint32_t dly;
+
+    for(dly=0; dly< 0x40006; dly++)
+    {
+
+    }
+}
+
+void MCU_Delay_500ms(void)
+{
+    uint32_t dly;
+
+    for(dly=0; dly< 0x62FFFF; dly++)
+    {
+
+    }
 }
