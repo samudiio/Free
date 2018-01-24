@@ -86,6 +86,7 @@
 
 extern void SPI_Init();
 extern uint8_t SPI_ReadWrite(uint8_t DataToWrite);
+extern void SPI_WriteProtection( Spi* spi, uint8_t enable );
 
 extern void SPI_Enable( Spi* spi ) ;
 extern void SPI_Disable( Spi* spi ) ;

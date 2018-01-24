@@ -78,6 +78,8 @@
  *----------------------------------------------------------------------------*/
 
 #define SPI0_CS3  3
+#define WPEN      1     //Write protection enable
+#define WPDIS     0
 
 /*------------------------------------------------------------------------------
  *         Types Definitions
@@ -115,12 +117,22 @@ extern void SPI_Init()
 
     SPI_Configure(SPI0, ID_SPI0, ( SPI_MR_MSTR | SPI_MR_MODFDIS | SPI_PCS( SPI0_CS3 )));
 
+    /*- Maybe unlook write protection register is needed */
+    SPI_WriteProtection(SPI0, WPDIS);
+
+    /*  Idle state for clock is a low level (SPI_CSR_CPOL)
+     *  Transmit occurs on transition from active to idle clock state (SPI_CSR_NCPHA)
+     *  8 bits for transfer (SPI_CSR_BITS_8_BIT)
+     */
     SPI_ConfigureNPCS( SPI0, SPI0_CS3,
-                       SPI_CSR_CPOL | SPI_CSR_BITS_8_BIT |
+                       SPI_CSR_CPOL | SPI_CSR_NCPHA | SPI_CSR_BITS_8_BIT |
                        SPI_DLYBCT( 1000, BOARD_MCK ) |
                        SPI_DLYBS(1000, BOARD_MCK) |
                        SPI_SCBR( spiClock, BOARD_MCK) );
 
+    SPI_WriteProtection(SPI0, WPEN);
+
+    /*LCD Atmel example*/
     /*SPI_ConfigureNPCS(SPI0, SPI0_CS3,
                           SPI_CSR_CPOL | SPI_CSR_BITS_8_BIT |
                           SPI_DLYBCT(100, BOARD_MCK) |
@@ -145,6 +157,24 @@ extern uint8_t SPI_ReadWrite(uint8_t DataToWrite)
     return (uint8_t)DataRead;
 }
 
+
+/**
+ * \brief Configures SPI write protection.
+ *
+ * \param spi  Pointer to an SPI instance.
+ * \param enable Enable or Disable WP
+ */
+extern void SPI_WriteProtection( Spi* spi, uint8_t enable )
+{
+    if(WPEN == enable)
+    {
+        spi->SPI_WPMR = SPI_WPMR_WPKEY(SPI_WPMR_WPKEY_PASSWD) | SPI_WPMR_WPEN;   //1: Enable write protection
+    }
+    else
+    {
+        spi->SPI_WPMR = SPI_WPMR_WPKEY(SPI_WPMR_WPKEY_PASSWD) | SPI_WPMR_WPDIS;   //0: Disable write protection
+    }
+}
 
 /**
  * \brief Enables a SPI peripheral.

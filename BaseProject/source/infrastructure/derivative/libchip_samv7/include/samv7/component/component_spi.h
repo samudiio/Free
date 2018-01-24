@@ -146,6 +146,7 @@ typedef struct {
 #define SPI_CSR_DLYBCT(value) ((SPI_CSR_DLYBCT_Msk & ((value) << SPI_CSR_DLYBCT_Pos)))
 /* -------- SPI_WPMR : (SPI Offset: 0xE4) Write Protection Mode Register -------- */
 #define SPI_WPMR_WPEN (0x1u << 0) /**< \brief (SPI_WPMR) Write Protection Enable */
+#define SPI_WPMR_WPDIS (0x0u << 0) /**< \brief (SPI_WPMR) Write Protection Disable */
 #define SPI_WPMR_WPKEY_Pos 8
 #define SPI_WPMR_WPKEY_Msk (0xffffffu << SPI_WPMR_WPKEY_Pos) /**< \brief (SPI_WPMR) Write Protection Key */
 #define SPI_WPMR_WPKEY(value) ((SPI_WPMR_WPKEY_Msk & ((value) << SPI_WPMR_WPKEY_Pos)))

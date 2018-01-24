@@ -43,7 +43,7 @@ void LDC_Init(void)
     uint8_t i;
     uint32_t j;
 
-    /* Configure CD and PD pins*/
+    /* Configure /CD and /PD pins*/
     PIO_Configure( LCD_PinsId, PIO_LISTSIZE(LCD_PinsId) );
 
     /* Initialize SPI peripheral */
