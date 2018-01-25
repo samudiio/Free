@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include "lcd.h"
+#include "lcd_app.h"
 
 /* Scheduler include files. */
 #include "FreeRTOS.h"
@@ -73,6 +73,8 @@ static void prvSetupHardware( void )
 //  SCB_EnableDCache();
 
     LDC_Init();
+    //APP_Init();
+    //APP_FlashingDot();
 
     /*  Configures LEDs \#1 and \#2 (cleared by default). */
     LED_Configure( 0 );

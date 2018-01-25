@@ -31,38 +31,27 @@
 
 static const Pin LCD_PinsId[] = { PIN_LCD_CS, PIN_LCD_PD };
 
-uint8_t pTxBuffer[] = "T";//"This is SPI LoopBack Test Buffer";
-//uint8_t pTxBuffer ='S';
-
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
 void LDC_Init(void)
 {
-    uint8_t i;
-
     /* Configure /CD and /PD pins*/
     PIO_Configure( LCD_PinsId, PIO_LISTSIZE(LCD_PinsId) );
 
     /* Initialize SPI peripheral */
     SPI_Init();
 
-        //SPI_Write(SPI0, SPI0_CS_3 , (uint16_t)pTxBuffer);
-
-   /* for (i = 0; ;i++) {
-        SPI_Write(SPI0, SPI0_CS_3 , (uint16_t)pTxBuffer[i]);
-        if (pTxBuffer[i] =='\0')
-            break;
-    }*/
-
+/*
     LCD_PDlow();
     LCD_CSlow();
     MCU_Delay_500ms();
     LCD_CShigh();
     LCD_PDhigh();
 
-    LCD_SPIReadWrite(0xFA);
+    LCD_SPIReadWrite(0x4C);
+*/
 }
 
 // ################################# SPI #######################################
@@ -72,7 +61,6 @@ uint8_t LCD_SPIReadWrite(uint8_t DataToWrite)
     return SPI_ReadWrite(DataToWrite);
 }
 
-//Wait(20);
 
 // ########################### GPIO CONTROL ####################################
 
