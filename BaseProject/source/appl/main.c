@@ -73,7 +73,7 @@ static void prvSetupHardware( void )
 //  SCB_EnableDCache();
 
     LDC_Init();
-    //APP_Init();
+    APP_Init();
     //APP_FlashingDot();
 
     /*  Configures LEDs \#1 and \#2 (cleared by default). */

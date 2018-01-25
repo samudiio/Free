@@ -9,9 +9,11 @@
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
+#include "chip.h"
+#include "eve.h"
+#include "lcd.h"
 #include "lcd_app.h"
 
-#define NO_COMPILAR 0
 
 /*----------------------------------------------------------------------------
  *        Global variables
@@ -31,7 +33,7 @@ uint8_t lcdPclk;              // Pixel Clock
 uint8_t lcdSwizzle;           // Define RGB output pins
 uint8_t lcdPclkpol;           // Define active edge of PCLK
 
-uint32_t ramDisplayList = RAM_DL;      // Set beginning of display list memory
+uint32_t ramDisplayList = 3145728UL;//RAM_DL;      // Set beginning of display list memory
 uint32_t color;                // Variable for changing colors
 
 uint16_t cmdOffset = 0x0000;        // Used to navigate command rung buffer
@@ -40,7 +42,7 @@ uint16_t point_size = 0x0100;       // Define a default dot size
 uint8_t FT81x_GPIO;           // Used for FT800 GPIO register
 
 
-
+#define NOCOMP 0
 
 /*----------------------------------------------------------------------------
  *        Exported functions
@@ -52,16 +54,14 @@ void APP_Init(void)
 {
     // ----------------------- Cycle PD pin to reset device --------------------
 
-  /*  LCD_PDlow();                                                                // PD low to reset device
+    LCD_PDlow();                                                                // PD low to reset device
 
     MCU_Delay_20ms();
 
     LCD_PDhigh();                                                               // PD high again
 
     MCU_Delay_20ms();
-*/
-}
-#if NO_COMPILAR
+
     // ---------------------- Delay to allow start-up --------------------
 
     EVE_CmdWrite(FT81x_ACTIVE, 0x00);                                           // Sends 00 00 00 to wake FT8xx
@@ -137,8 +137,9 @@ void APP_Init(void)
 
     EVE_MemWrite32(REG_DLSWAP, DLSWAP_FRAME);                                   // Swap display list to make the edited one active
 }
-#endif
 
+
+#if NOCOMP
 // ######################## DEMO - FLASHING DOT ##############################
 
 void APP_FlashingDot(void)
@@ -202,7 +203,6 @@ void APP_FlashingDot(void)
     }
 }
 
-
-
+#endif
 
 
