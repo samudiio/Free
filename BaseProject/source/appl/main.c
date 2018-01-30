@@ -74,7 +74,19 @@ static void prvSetupHardware( void )
 
     LDC_Init();
     APP_Init();
-    //APP_FlashingDot();
+    //APP_Calibrate();                                                          // NOTE:  Enable if using any touch demos
+
+        // Important Note: Enable only one demo below at a time.
+        // If running any of the following demos, un-comment the APP_Calibrate function above
+        //     * APP_SliderAndButton
+
+
+    //APP_FlashingDot();    //Creating a basic screen via co-pro
+    //APP_VertexTranslate();
+    //APP_Text();
+    APP_ConvertedBitmap();
+    //APP_DigitsFont();
+    //APP_SliderandButton();
 
     /*  Configures LEDs \#1 and \#2 (cleared by default). */
     LED_Configure( 0 );

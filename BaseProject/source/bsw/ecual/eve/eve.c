@@ -289,8 +289,8 @@ uint16_t EVE_WaitCmdFifoEmpty(void)
 
     do
     {
-        ReadPointer = EVE_MemRead32(REG_CMD_READ);                              // Read the graphics processor read pointer
-        WritePointer = EVE_MemRead32(REG_CMD_WRITE);                            // Read the graphics processor write pointer
+        ReadPointer = (uint16_t)EVE_MemRead32(REG_CMD_READ);                              // Read the graphics processor read pointer
+        WritePointer = (uint16_t)EVE_MemRead32(REG_CMD_WRITE);                            // Read the graphics processor write pointer
     }while (WritePointer != ReadPointer);                                       // Wait until the two registers match
 
     return WritePointer;                                                        // New starting point will be first location after the last command

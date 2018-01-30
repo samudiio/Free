@@ -9,11 +9,14 @@
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
-#include "chip.h"
+//#include "chip.h"
+#include "board.h"
 #include "eve.h"
 #include "lcd.h"
 #include "lcd_app.h"
-
+//#include "EVE_RGB565.h"
+#include "DIGITfont.h"
+#include "Bosch.h"
 
 /*----------------------------------------------------------------------------
  *        Global variables
@@ -35,11 +38,16 @@ uint8_t lcdPclkpol;           // Define active edge of PCLK
 
 uint32_t ramDisplayList = 3145728UL;//RAM_DL;      // Set beginning of display list memory
 uint32_t color;                // Variable for changing colors
+uint32_t TrackerVal = 0;// 32 bit
 
 uint16_t cmdOffset = 0x0000;        // Used to navigate command rung buffer
 uint16_t point_size = 0x0100;       // Define a default dot size
+uint16_t SlideVal = 0;
 
+uint8_t TagVal = 0;
 uint8_t FT81x_GPIO;           // Used for FT800 GPIO register
+
+
 
 
 #define NOCOMP 0
@@ -118,11 +126,11 @@ void APP_Init(void)
 
     // ---------------------- Touch and Audio settings -------------------------
 
-//    EVE_MemWrite16(REG_TOUCH_RZTHRESH, 1200);                                   // Eliminate any false touches
-//
-//    EVE_MemWrite8(REG_VOL_PB, ZERO);                                            // turn recorded audio volume down
-//    EVE_MemWrite8(REG_VOL_SOUND, ZERO);                                         // turn synthesizer volume down
-//    EVE_MemWrite16(REG_SOUND, 0x6000);                                          // set synthesizer to mute
+    EVE_MemWrite16(REG_TOUCH_RZTHRESH, 1200);                                   // Eliminate any false touches
+
+    EVE_MemWrite8(REG_VOL_PB, ZERO);                                            // turn recorded audio volume down
+    EVE_MemWrite8(REG_VOL_SOUND, ZERO);                                         // turn synthesizer volume down
+    EVE_MemWrite16(REG_SOUND, 0x6000);                                          // set synthesizer to mute
 
     // -------- Initial display list to begin with blank screen ----------------
 
@@ -139,7 +147,7 @@ void APP_Init(void)
 }
 
 
-#if NOCOMP
+
 // ######################## DEMO - FLASHING DOT ##############################
 
 void APP_FlashingDot(void)
@@ -203,6 +211,559 @@ void APP_FlashingDot(void)
     }
 }
 
-#endif
+
+// ######################## DEMO - VERTEX TRANSLATE ##########################
+
+void APP_VertexTranslate(void)
+  {
+
+    cmdOffset = EVE_WaitCmdFifoEmpty();                                         // Wait for command FIFO to be empty and record current position in FIFO
+
+    LCD_CSlow();                                                            // CS low begins SPI transaction
+    EVE_AddrForWr(RAM_CMD + cmdOffset);                                     // Send address to which first value will be written
+
+    EVE_Write32(CMD_DLSTART);                                               // Co-pro starts new DL at RAM_DL + 0
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);                             // Keep count of bytes sent so that write pointer can be updated at end
+                                                                            // Keeping CS low and FT8xx will auto increment address for 'burst write'
+
+    EVE_Write32(CLEAR_COLOR_RGB(0,0,0));                                    // Set the default clear color to black
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(CLEAR(1,1,1));                                              // Clear the screen Attributes color, stencil and tag buffers
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(BEGIN(FTPOINTS));                                           // Begin drawing points
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(POINT_SIZE(point_size));                                    // Select the size of the dot to draw
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
 
 
+    EVE_Write32 (COLOR_RGB(0xFF,0,0));                                      // Colour = Red
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(VERTEX2F(100*16,100*16));                                   // Draw a point at (100,100)
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+
+
+    EVE_Write32 (COLOR_RGB(0,0xFF,0));                                      // Colour = Green
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(VERTEX2F(200*16,100*16));                                   // Draw a point at (200,100)
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+
+
+    EVE_Write32 (COLOR_RGB(0,0,0xFF));                                      // Colour = Blue
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(VERTEX_TRANSLATE_X(150*16));                                // Add an offset of 150 to X direction of subsequent Vertex commands
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(VERTEX2F(200*16,100*16));                                   // Draw a point at ((200+150),100) == (350,100))
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+
+
+    EVE_Write32 (COLOR_RGB(0xFF,0,0xFF));                                   // Colour = Purple
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(VERTEX2F(200*16,200*16));                                   // Draw a point at ((200+250),200) == (350,200))
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+
+
+    EVE_Write32 (COLOR_RGB(0xFF,0xFF,0xFF));                                // Colour = White
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(VERTEX_TRANSLATE_X(0*16));                                  // Return offset to 0 for subsequent Vertex commands
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(VERTEX2F(300*16,200*16));                                   // Draw a point at (300,200)
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+
+
+    EVE_Write32(END());                                                     // End drawing of points
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(DISPLAY());                                                 // Instruct the graphics processor to show the list
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(CMD_SWAP);                                                  // Make this list active
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    LCD_CShigh();                                                           // Chip Select high concludes burst
+
+    EVE_MemWrite32(REG_CMD_WRITE, (cmdOffset));                             // Update the ring buffer pointer
+                                                                            // Co-processor will now execute all of the above commands and create a display list
+    cmdOffset = EVE_WaitCmdFifoEmpty();                                     // Await completion of processing and record starting address for next screen update
+
+    //APP_SnapShot2();
+
+    /*while(1)
+    {
+
+    }*/
+}
+
+
+// ############################ DEMO - Text ##################################
+
+void APP_Text(void)
+{
+    cmdOffset = EVE_WaitCmdFifoEmpty();                                         // Wait for command FIFO to be empty and record current position in FIFO
+
+    LCD_CSlow();                                                                // CS low begins SPI transaction
+    EVE_AddrForWr(RAM_CMD + cmdOffset);                                         // Send address to which first value will be written
+
+
+    EVE_Write32(CMD_DLSTART);                                                   // Co-pro starts new DL at RAM_DL + 0
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);                                 // Keep count of bytes sent so that write pointer can be updated at end
+                                                                                // Keeping CS low and FT8xx will auto increment address for 'burst write'
+
+    EVE_Write32(CLEAR_COLOR_RGB(0,0,0));                                        // Set the default clear color to black
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(CLEAR(1,1,1));                                                  // Clear the screen Attributes color, stencil and tag buffers
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32 (COLOR_RGB(255,255,255));                                       // Set colour to white
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32 (CMD_TEXT);                                                     // command text 0xFFFFFF0C
+    EVE_Write16 (100);                                                          // x
+    EVE_Write16 (100);                                                          // y
+    EVE_Write16 (25);                                                           // font
+    EVE_Write16 (0);                                                            // options
+
+    EVE_Write8 (0x48);                                                          // string H
+    EVE_Write8 (0x45);                                                          // string E
+    EVE_Write8 (0x4C);                                                          // string L
+    EVE_Write8 (0x4C);                                                          // string L
+
+    EVE_Write8 (0x4F);                                                          // string O
+    EVE_Write8 (0x20);                                                          // string space
+    EVE_Write8 (0x41);                                                          // A
+    EVE_Write8 (0x54);                                                          // T
+
+    EVE_Write8 (0x48);                                                          // H
+    EVE_Write8 (0x5A);                                                          // Z
+    EVE_Write8 (0x49);                                                          // I
+    EVE_Write8 (0x52);                                                          // R
+
+    EVE_Write8 (0x49);                                                          // I
+    EVE_Write8 (0);                                                             // null
+    EVE_Write8 (0);                                                             // padding
+    EVE_Write8 (0);                                                             // padding since overall command not multiple of 4
+
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 28);                                // Update the command pointer, must be multiple of 4
+
+    EVE_Write32(DISPLAY());                                                     // Instruct the graphics processor to show the list
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(CMD_SWAP);                                                      // Make this list active
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    LCD_CShigh();                                                               // Chip Select high concludes burst
+
+    EVE_MemWrite32(REG_CMD_WRITE, (cmdOffset));                                 // Update the ring buffer pointer
+                                                                                // Co-processor will now execute all of the above commands and create a display list
+
+    cmdOffset = EVE_WaitCmdFifoEmpty();                                         // Await completion of processing and record starting address for next screen update
+
+    //APP_SnapShot2();
+
+   /* while(1)
+    {
+
+    }*/
+}
+
+// ############################ DEMO - Bitmap ##################################
+
+/*('file properties: ', 'resolution ', 58, 'x', 75, 'format ', 'ARGB1555', 'stride ', 116, ' total size ', 8700)*/
+
+
+void APP_ConvertedBitmap(void)
+{
+
+    uint32_t DataPointer = 0;
+    //uint16_t DataSize = 8700;
+    uint32_t DataSize = 132860;
+    uint32_t BitmapDataSize = 0;
+
+    // ------------ Load image data -------------
+
+    cmdOffset = EVE_WaitCmdFifoEmpty();                                         // Wait for command FIFO to be empty
+
+    DataPointer = 0;
+
+    LCD_CSlow();                                                                // CS low begins SPI transaction
+    EVE_AddrForWr(RAM_G);                                                       // Send address to which first value will be written
+
+    while(DataPointer < DataSize)
+    {
+        EVE_Write8(rawData[DataPointer]);                                       // Send data byte-by-byte from array
+        DataPointer ++;
+    }
+
+    BitmapDataSize = DataSize - DataPointer;                                    // Add 3, 2 or 1 bytes padding to make it  a multiple of 4 bytes
+    BitmapDataSize = BitmapDataSize & 0x03;                                     // Mask off the bottom 2 bits
+
+    if (BitmapDataSize == 0x03)
+    {
+        EVE_Write8(0x00);
+    }
+    else if (BitmapDataSize == 0x02)
+    {
+        EVE_Write8(0x00);
+        EVE_Write8(0x00);
+    }
+    else if (BitmapDataSize == 0x01)
+    {
+        EVE_Write8(0x00);
+        EVE_Write8(0x00);
+        EVE_Write8(0x00);
+    }
+
+    LCD_CShigh();                                                               // CS high after burst write of image data
+
+        // ------------ Now create screen to display image -------------
+
+    MCU_Delay_20ms();
+
+
+    LCD_CSlow();                                                                // CS low begins SPI transaction
+    EVE_AddrForWr(RAM_CMD + cmdOffset);                                         // Send address to which first value will be written
+
+    EVE_Write32(CMD_DLSTART);                                                   // Co-pro starts new DL at RAM_DL + 0
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);                                 // Keep count of bytes sent so that write pointer can be updated at end
+                                                                                // Keeping CS low and FT8xx will auto increment address for 'burst write'
+
+    EVE_Write32(CLEAR_COLOR_RGB(0,0,0));                                        // Set the default clear color to black
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(CLEAR(1,1,1));                                                  // Clear the screen Attributes color, stencil and tag buffers
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(BITMAP_HANDLE(0));                                              // Set bitmap handle
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(BITMAP_SOURCE(0));                                              // Bitmap data starts at 0
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(BITMAP_LAYOUT(RGB565,910,146));                                  // Tell FT8xx about the properties of the image data
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(BITMAP_SIZE(NEAREST, BORDER, BORDER, 455,146));                   // Tell FT8xx about the on-screen properties of the image
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(BEGIN(BITMAPS));                                                // Begin drawing bitmaps
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(VERTEX2F(100,100));                                             // Draw at (100,100)
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(END());                                                         // End drawing images
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(DISPLAY());                                                     // Instruct the graphics processor to show the list
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(CMD_SWAP);                                                      // Make this list active
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    LCD_CShigh();                                                               // Chip Select high concludes burst
+
+    EVE_MemWrite32(REG_CMD_WRITE, (cmdOffset));                                 // Update the ring buffer pointer
+                                                                                // Co-processor will now execute all of the above commands and create a display list
+    cmdOffset = EVE_WaitCmdFifoEmpty();                                         // Await completion of processing and record starting address for next screen update
+
+    //APP_SnapShot2();
+
+    /*while(1)
+    {
+
+    }*/
+}
+
+
+void APP_DigitsFont(void)
+{
+    uint16_t DataOffset = 1000;
+    uint16_t DataPointer = 0;
+    uint16_t DataSize = 7273; //(148+7125))
+    uint16_t BitmapDataSize = 0;
+
+    // ------------------------- Load image data -------------------------------
+
+    // Load the image data from the MCU's Flash into the RAM_G of the FT81x
+    cmdOffset = EVE_WaitCmdFifoEmpty();                                         // Wait for command FIFO to be empty
+
+    LCD_CSlow();                                                                // CS low begins SPI transaction
+    EVE_AddrForWr(RAM_G+DataOffset);                                            // Send address to which first value will be written
+
+    while(DataPointer < DataSize)                                               // Stream data
+    {
+        EVE_Write8(MetricBlock[(DataPointer)]);
+        DataPointer ++;
+    }
+
+   // Add 3, 2 or 1 bytes padding to make it  a multiple of 4 bytes
+    BitmapDataSize = DataSize & 0x03;                                           // Mask off the bottom 2 bits
+
+    if (BitmapDataSize == 0x03)
+    {
+        EVE_Write8(0x00);
+    }
+    else if (BitmapDataSize == 0x02)
+    {
+        EVE_Write8(0x00);
+        EVE_Write8(0x00);
+    }
+    else if (BitmapDataSize == 0x01)
+    {
+        EVE_Write8(0x00);
+        EVE_Write8(0x00);
+        EVE_Write8(0x00);
+    }
+
+    LCD_CShigh();
+
+    MCU_Delay_20ms();
+
+    // ---------- Now create a screen with text written in this font -----------
+
+    LCD_CSlow();                                                                // Begin a new SPI burst by setting CS low and sending
+    EVE_AddrForWr(RAM_CMD + cmdOffset);                                         // first address to be written
+
+    EVE_Write32(CMD_DLSTART);                                                   // DL_Start command tells co-pro to begin new DL
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);                                 // Update the byte count
+
+    EVE_Write32(CLEAR_COLOR_RGB(0,0,0));                                        // Set the default clear color to black
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);                                 // Update the command pointer
+
+    EVE_Write32(CLEAR(1,1,1));                                                  // Clear the screen Attributes color, stencil and tag buffers
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);                                 // Update the command pointer
+
+    EVE_Write32(BITMAP_HANDLE(14));                                             // Set the bitmap properties for handle 14
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);                                 // Update the command pointer
+
+    EVE_Write32(BITMAP_SOURCE(-1252));                                          // This value can be found in font converter output data
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);                                 // Update the command pointer
+
+    EVE_Write32(BITMAP_LAYOUT(L1,3,25));                                        // Specify the format, linestride, height
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);                                 // Update the command pointer
+
+    EVE_Write32(BITMAP_SIZE(NEAREST, BORDER, BORDER, 18,25));                   // Specify bitmap parameters
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);                                 // Update the command pointer
+
+    EVE_Write32(CMD_SETFONT);                                                   // Set Font
+    EVE_Write32(14);                                                            // Font handle
+    EVE_Write32 (1000);                                                         // Address of data in RAM_G
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 12);                                // Update the command pointer
+
+    EVE_Write32 (COLOR_RGB(255,255,255));                                       // Specify colour of text
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);                                 // Update the command pointer, must be multiple of 4
+
+    EVE_Write32 (CMD_TEXT);                                                     // command text 0xFFFFFF0C
+    EVE_Write16 (100);                                                          // x
+    EVE_Write16 (200);                                                          // y
+    EVE_Write16 (14);                                                           // font
+    EVE_Write16 (0);                                                            // options
+    EVE_Write8 (0x30);                                                          // string H
+    EVE_Write8 (0x31);                                                          // string E
+    EVE_Write8 (0x32);                                                          // string L
+    EVE_Write8 (0x33);                                                          // string L
+    EVE_Write8 (0x34);                                                          // string O
+    EVE_Write8 (0);                                                             // null
+    EVE_Write8 (0);                                                             // padding
+    EVE_Write8 (0);                                                             // padding since overall command not multiple of 4
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 20);                                // Update the command pointer, must be multiple of 4
+
+    EVE_Write32(DISPLAY());                                                     // Instruct the graphics processor to show the list
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);                                 // Update the command pointer
+
+    EVE_Write32(CMD_SWAP);                                                      // Make this list active
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);                                 // Update the command pointer
+
+    LCD_CShigh();                                                               // Chip select high
+
+    EVE_MemWrite32(REG_CMD_WRITE, (cmdOffset));                                 // Update the CMD FIFO pointer
+
+    cmdOffset = EVE_WaitCmdFifoEmpty();
+
+    //APP_SnapShot2();
+
+   /* while(1)
+    {
+    }
+    */
+}
+
+// ############################ TOUCH CALIBRATION ##############################
+
+void APP_Calibrate(void)
+{
+    cmdOffset = EVE_WaitCmdFifoEmpty();                                         // Wait for command FIFO to be empty and record current position in FIFO
+
+    LCD_CSlow();                                                                // CS low begins SPI transaction
+    EVE_AddrForWr(RAM_CMD + cmdOffset);                                         // Send address to which first value will be written
+
+    EVE_Write32(CMD_DLSTART);                                                   // Co-pro starts new DL at RAM_DL + 0
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);                                 // Keep count of bytes sent so that write pointer can be updated at end
+                                                                                // Keeping CS low and FT8xx will auto increment address for 'burst write'
+    EVE_Write32(CLEAR_COLOR_RGB(0,0,0));                                        // Set the default clear color to black
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(CLEAR(1,1,1));                                                  // Clear the screen Attributes color, stencil and tag buffers
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(CMD_CALIBRATE);                                                 // Calibrate
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(DISPLAY());                                                     // Instruct the graphics processor to show the list
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(CMD_SWAP);                                                      // Make this list active
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    LCD_CShigh();                                                               // CS high finishes SPI burst write. Data now loaded into co-pro's FIFO but not yet executed
+
+    EVE_MemWrite32(REG_CMD_WRITE, (cmdOffset));                                 // Update circular buffer write pointer to tell FT8xx to execute commands...
+
+    cmdOffset = EVE_WaitCmdFifoEmpty();                                         // ... and wait until co-pro has completed executing them
+    // Code will only reach past above line once user has touched the 3 points on the calibration screen
+    // Code could store result of the calibration (i.e. read the six 32-bit values from registers REG_TOUCH_TRANSFORM_A to _F) in MCU EEPROM and re-load them on each power up
+}
+
+void APP_SliderandButton(void)
+{
+    uint16_t Button3D = 0;
+
+    cmdOffset = EVE_WaitCmdFifoEmpty();                                         // Wait for command FIFO to be empty and record current position in FIFO
+
+    while(1)
+    {
+        LCD_CSlow();                                                            // CS low begins SPI transaction
+        EVE_AddrForWr(RAM_CMD + cmdOffset);                                     // Send address to which first value will be written
+
+        EVE_Write32(CMD_DLSTART);                                               // Co-pro starts new DL at RAM_DL + 0
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);                             // Keep count of bytes sent so that write pointer can be updated at end
+                                                                                // Keeping CS low and FT8xx will auto increment address for 'burst write'
+
+        EVE_Write32(CLEAR_COLOR_RGB(0,0,0));                                    // Set the default clear color to black
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+        EVE_Write32(CLEAR(1,1,1));                                              // Clear the screen Attributes color, stencil and tag buffers
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+
+        EVE_Write32(TAG_MASK(1));                                               // Enable tagging
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+
+        EVE_Write32(TAG(2));                                                    // Tag following items with tag '2'
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+        EVE_Write32 (CMD_BUTTON);                                               // command button 0xFFFFFF0D
+        EVE_Write16 (400);                                                      // x
+        EVE_Write16 (200);                                                      // y
+        EVE_Write16 (80);                                                       // w
+        EVE_Write16 (30);                                                       // h
+        EVE_Write16 (26);                                                       // font
+        EVE_Write16 (Button3D);                                                 // options 0 = 3D effect or 256 = flat
+        EVE_Write8 (0x42);                                                      // string B
+        EVE_Write8 (0x75);                                                      // string u
+        EVE_Write8 (0x74);                                                      // string t
+        EVE_Write8 (0x74);                                                      // string t
+        EVE_Write8 (0x6F);                                                      // string o
+        EVE_Write8 (0x6E);                                                      // string n
+        EVE_Write8 (0);                                                         // null terminates string
+        EVE_Write8 (0);                                                         // pad with extra zero to make multiple of 4 in total
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 24);                            // Update the command pointer, must be multiple of 4
+
+
+        EVE_Write32(TAG(5));                                                    // Tag following items with tag '5'
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+        EVE_Write32 (CMD_SLIDER);                                               // command slider 0xFFFFFF10
+        EVE_Write16 (0x00F0);                                                   // x
+        EVE_Write16 (0x0028);                                                   // y
+        EVE_Write16 (0x000F);                                                   // width
+        EVE_Write16 (0x00B0);                                                   // height
+        EVE_Write16 (0x0000);                                                   // options
+        EVE_Write16 (SlideVal);                                                 // value (i.e. position of handle)
+        EVE_Write16 (0x00FF);                                                   // range of slider
+        EVE_Write16 (0x0000);                                                   // dummy
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 20);                            // Update the command pointer, must be multiple of 4
+
+        EVE_Write32 (CMD_TRACK);                                                // command track 0xFFFFFF2C
+        EVE_Write16 (0x00F0);                                                   // x
+        EVE_Write16 (0x0028);                                                   // y
+        EVE_Write16 (0x000F);                                                   // width
+        EVE_Write16 (0x00B0);                                                   // height
+        EVE_Write16 (0x0005);                                                   // tag the tracked area with 5
+        EVE_Write16 (0x0000);                                                   // dummy
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 16);                            // Update the command pointer, must be multiple of 4
+
+
+
+        EVE_Write32(TAG_MASK(0));                                               // Tag mask - disable tagging of any subsequent items
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+        EVE_Write32(BEGIN(FTPOINTS));                                           // Begin drawing points
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+        EVE_Write32(POINT_SIZE(point_size));                                    // Select the size of the dot to draw
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+        EVE_Write32 (COLOR_RGB(color,0,0));                                       // Colour = red or black (black == invisible since matches background colour)
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+        EVE_Write32(VERTEX2F(440*16,100*16));                                   // Set the point center location (400+ half width of button))
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+        EVE_Write32(END());                                                     // End the point
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+        EVE_Write32(DISPLAY());                                                 // Instruct the graphics processor to show the list
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+        EVE_Write32(CMD_SWAP);                                                  // Make this list active
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+        LCD_CShigh();                                                           // Chip Select high concludes burst
+
+        EVE_MemWrite32(REG_CMD_WRITE, (cmdOffset));                             // Update the ring buffer pointer
+                                                                                // Co-processor will now execute all of the above commands and create a display list
+        cmdOffset = EVE_WaitCmdFifoEmpty();                                     // Await completion of processing and record starting address for next screen update
+
+        // ------ read tag and tracker values --------
+        TagVal = EVE_MemRead8(REG_TOUCH_TAG);                                   // Get Tag value
+        TrackerVal = EVE_MemRead32(REG_TRACKER);                                // Read the value of the tag and track register
+
+        if(TagVal == 2)
+        {// If button pushed tag register will read 2
+            color = 0xFF;                                                       // change red amount to 255
+            Button3D = 256;
+        }
+        else
+        {// Otherwise...
+            color = 0x00;                                                       // change red amount to 0
+            Button3D = 0;
+        }
+
+        if(TagVal == 5)                                                         // if slider touched...
+        {
+            SlideVal = (TrackerVal >> 24);                                      // ... then get the tracker value.
+            // Note: Value of tracking is 16 bits but we only want upper 8 bits since the slider is set for 8 bit resolution
+        }
+
+        //APP_SnapShot2();
+
+        // Result of button press and slider value will be displayed next time round
+    }
+}
