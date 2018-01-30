@@ -388,26 +388,42 @@ void APP_Text(void)
 
 void APP_ConvertedBitmap(void)
 {
+    static uint8_t index = 0;
+    uint8_t i= 0;
 
     uint32_t DataPointer = 0;
     //uint16_t DataSize = 8700;
-    uint32_t DataSize = 132860;
+    uint32_t DataSize = 261120;
     uint32_t BitmapDataSize = 0;
+    uint8_t * const Pictures[5] =
+    {
+        (uint8_t*)trail,
+        (uint8_t*)utct
+    };
 
     // ------------ Load image data -------------
 
     cmdOffset = EVE_WaitCmdFifoEmpty();                                         // Wait for command FIFO to be empty
 
+while(1)
+{
     DataPointer = 0;
 
     LCD_CSlow();                                                                // CS low begins SPI transaction
     EVE_AddrForWr(RAM_G);                                                       // Send address to which first value will be written
 
+    if(index > 1)
+    {
+        index = 0;
+    }
+
+
     while(DataPointer < DataSize)
     {
-        EVE_Write8(rawData[DataPointer]);                                       // Send data byte-by-byte from array
+        EVE_Write8(*( ( (uint8_t*) Pictures[index] ) + DataPointer) );                                       // Send data byte-by-byte from array
         DataPointer ++;
     }
+    index++;
 
     BitmapDataSize = DataSize - DataPointer;                                    // Add 3, 2 or 1 bytes padding to make it  a multiple of 4 bytes
     BitmapDataSize = BitmapDataSize & 0x03;                                     // Mask off the bottom 2 bits
@@ -454,10 +470,10 @@ void APP_ConvertedBitmap(void)
     EVE_Write32(BITMAP_SOURCE(0));                                              // Bitmap data starts at 0
     cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
 
-    EVE_Write32(BITMAP_LAYOUT(RGB565,910,146));                                  // Tell FT8xx about the properties of the image data
+    EVE_Write32(BITMAP_LAYOUT(RGB565,960,272));                                  // Tell FT8xx about the properties of the image data
     cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
 
-    EVE_Write32(BITMAP_SIZE(NEAREST, BORDER, BORDER, 455,146));                   // Tell FT8xx about the on-screen properties of the image
+    EVE_Write32(BITMAP_SIZE(NEAREST, BORDER, BORDER, 480,272));                   // Tell FT8xx about the on-screen properties of the image
     cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
 
     EVE_Write32(BEGIN(BITMAPS));                                                // Begin drawing bitmaps
@@ -487,6 +503,13 @@ void APP_ConvertedBitmap(void)
     {
 
     }*/
+    for(i = 0; i<10; i++)
+    {
+        MCU_Delay_500ms();
+        MCU_Delay_500ms();
+    }
+
+}
 }
 
 

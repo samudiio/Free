@@ -84,7 +84,9 @@ static void prvSetupHardware( void )
     //APP_FlashingDot();    //Creating a basic screen via co-pro
     //APP_VertexTranslate();
     //APP_Text();
+
     APP_ConvertedBitmap();
+
     //APP_DigitsFont();
     //APP_SliderandButton();
 

@@ -136,6 +136,8 @@
 #include "IntSemTest.h"
 #include "TaskNotify.h"
 
+#include "lcd_app.h"
+
 /* Priorities for the demo application tasks. */
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1UL )
 #define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2UL )
@@ -279,6 +281,8 @@ static void task_led(void *pvParameters)
     for (;;)
     {
         LED_Toggle(1);
+
+        //APP_ConvertedBitmap();
 
         vTaskDelay(500);
     }
