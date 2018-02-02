@@ -198,7 +198,7 @@ static uint8_t _spid_configureLinkList(Spi *pSpiHw, void *pXdmad, SpidCmd *pComm
 		XDMAC_CC_DSYNC_MEM2PER |
 		XDMAC_CC_CSIZE_CHK_1 |
 		XDMAC_CC_DWIDTH_BYTE|
-		XDMAC_CC_SIF_AHB_IF0 |
+		XDMAC_CC_SIF_AHB_IF1 |
 		XDMAC_CC_DIF_AHB_IF1 |
 		XDMAC_CC_SAM_INCREMENTED_AM |
 		XDMAC_CC_DAM_FIXED_AM |
@@ -224,7 +224,7 @@ static uint8_t _spid_configureLinkList(Spi *pSpiHw, void *pXdmad, SpidCmd *pComm
 		XDMAC_CC_CSIZE_CHK_1 |
 		XDMAC_CC_DWIDTH_BYTE|
 		XDMAC_CC_SIF_AHB_IF1 |
-		XDMAC_CC_DIF_AHB_IF0 |
+		XDMAC_CC_DIF_AHB_IF1 |
 		XDMAC_CC_SAM_FIXED_AM |
 		XDMAC_CC_DAM_INCREMENTED_AM |
 		XDMAC_CC_PERID(XDMAIF_Get_ChannelNumber(  spiId, XDMAD_TRANSFER_RX ));

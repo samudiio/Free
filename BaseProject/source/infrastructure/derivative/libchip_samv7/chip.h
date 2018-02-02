@@ -84,7 +84,7 @@
 #include "xdma_hardware_interface.h"
 #include "xdmac.h"
 #include "xdmad.h"
-
+#include "spi_dma.h"
 
 #define ENABLE_PERIPHERAL(dwId)         PMC_EnablePeripheral( dwId )
 #define DISABLE_PERIPHERAL(dwId)        PMC_DisablePeripheral( dwId )

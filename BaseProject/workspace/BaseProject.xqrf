@@ -99,19 +99,19 @@
       <SubDir>0</SubDir>
      </IncludePath.14>
      <IncludePath.15>
-      <Path>$(IRFDIR)..\source\bsw\mcal\afec_dma</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\afec</Path>
       <SubDir>0</SubDir>
      </IncludePath.15>
      <IncludePath.16>
-      <Path>$(IRFDIR)..\source\bsw\mcal\afec</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\Uart_Dma</Path>
       <SubDir>0</SubDir>
      </IncludePath.16>
      <IncludePath.17>
-      <Path>$(IRFDIR)..\source\bsw\mcal\Uart_Dma</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\spi</Path>
       <SubDir>0</SubDir>
      </IncludePath.17>
      <IncludePath.18>
-      <Path>$(IRFDIR)..\source\bsw\mcal\spi</Path>
+      <Path>$(IRFDIR)..\source\bsw\mcal\spi_dma</Path>
       <SubDir>0</SubDir>
      </IncludePath.18>
      <IncludePath.19>
@@ -359,28 +359,28 @@
         </FileOptios>
        </File.13>
        <File.14>
-        <FileName>$(IRFDIR)..\source\bsw\mcal\afec_dma\afe_dma.c</FileName>
+        <FileName>$(IRFDIR)..\source\bsw\mcal\fpu\fpu.c</FileName>
         <FileOptios>
          <CompilerDefines>__SAMV71Q21__&#xA;BLINKY=0</CompilerDefines>
          <CompilerOptions>-x c  -mcpu=cortex-m7  -mthumb -mfloat-abi=softfp -mfpu=fpv5-sp-d16 $(DEFINES) $(INCLUDES)  -g3 -c -I $(IRFDIR) -o $(NOEXT).o $(EDNAME) -fno-builtin-fabs</CompilerOptions>
         </FileOptios>
        </File.14>
        <File.15>
-        <FileName>$(IRFDIR)..\source\bsw\mcal\fpu\fpu.c</FileName>
+        <FileName>$(IRFDIR)..\source\bsw\mcal\egc_data\ecg_data.c</FileName>
         <FileOptios>
          <CompilerDefines>__SAMV71Q21__&#xA;BLINKY=0</CompilerDefines>
          <CompilerOptions>-x c  -mcpu=cortex-m7  -mthumb -mfloat-abi=softfp -mfpu=fpv5-sp-d16 $(DEFINES) $(INCLUDES)  -g3 -c -I $(IRFDIR) -o $(NOEXT).o $(EDNAME) -fno-builtin-fabs</CompilerOptions>
         </FileOptios>
        </File.15>
        <File.16>
-        <FileName>$(IRFDIR)..\source\bsw\mcal\egc_data\ecg_data.c</FileName>
+        <FileName>$(IRFDIR)..\source\bsw\mcal\spi\spi.c</FileName>
         <FileOptios>
          <CompilerDefines>__SAMV71Q21__&#xA;BLINKY=0</CompilerDefines>
          <CompilerOptions>-x c  -mcpu=cortex-m7  -mthumb -mfloat-abi=softfp -mfpu=fpv5-sp-d16 $(DEFINES) $(INCLUDES)  -g3 -c -I $(IRFDIR) -o $(NOEXT).o $(EDNAME) -fno-builtin-fabs</CompilerOptions>
         </FileOptios>
        </File.16>
        <File.17>
-        <FileName>$(IRFDIR)..\source\bsw\mcal\spi\spi.c</FileName>
+        <FileName>$(IRFDIR)..\source\bsw\mcal\spi_dma\spi_dma.c</FileName>
         <FileOptios>
          <CompilerDefines>__SAMV71Q21__&#xA;BLINKY=0</CompilerDefines>
          <CompilerOptions>-x c  -mcpu=cortex-m7  -mthumb -mfloat-abi=softfp -mfpu=fpv5-sp-d16 $(DEFINES) $(INCLUDES)  -g3 -c -I $(IRFDIR) -o $(NOEXT).o $(EDNAME) -fno-builtin-fabs</CompilerOptions>

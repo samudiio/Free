@@ -130,6 +130,39 @@ extern void SPI_Init()
     SPI_Enable(SPI0);
 }
 
+
+//extern void SPIDma_Init()
+//{
+//    /* Configure SPI pins*/
+//    PIO_Configure( SPI_PinsId, PIO_LISTSIZE(SPI_PinsId) );
+//
+//Dma.pXdmacs = XDMAC;
+//
+//SpiCommand.TxSize = 30;
+//SpiCommand.pTxBuff = (uint8_t *)pTxBuffer;
+//SpiCommand.RxSize= 30;
+//SpiCommand.pRxBuff = (uint8_t *)pRxBuffer;
+//SpiCommand.spiCs = SPI0_CS3;
+//
+//
+//    SPID_Configure(&SpiDma, SPI0, ID_SPI0, (SPI_MR_MSTR | SPI_MR_MODFDIS | SPI_PCS( SPI0_CS3 )), &Dma);
+//
+/*
+//     *  Transmit occurs on transition from active to idle clock state (SPI_CSR_NCPHA)
+//     *  8 bits for transfer (SPI_CSR_BITS_8_BIT)
+//     */
+//    SPI_ConfigureNPCS( SPI0, SPI0_CS3,
+//                       SPI_CSR_NCPHA | SPI_CSR_BITS_8_BIT |
+//                       SPI_DLYBCT( 500, BOARD_MCK ) |   //Time between transfers
+//                       SPI_DLYBS(500, BOARD_MCK) |      //Delay Before SPCK
+//                       SPI_SCBR( spiClock, BOARD_MCK) );
+//
+//    /* Enable SPI1 after configuration */
+//    SPI_Enable(SPI0);
+//    SPID_SendCommand(&SpiDma, &SpiCommand); //SPI_Write
+//}
+
+
 /*
  * SPI Send and Receive
  */
