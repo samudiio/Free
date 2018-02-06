@@ -131,8 +131,8 @@
       </PI.19>
       <PI.2>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <C>34</C>
-       <L>113</L>
+       <C>35</C>
+       <L>104</L>
        <P>..\source\appl\main.c</P>
        <VL>86</VL>
       </PI.2>
@@ -858,7 +858,7 @@
        <RelativeFileName>..\source\appl\main.c</RelativeFileName>
       </ActiveDocument>
       <Editor.0>
-       <FileBarIndex>0</FileBarIndex>
+       <FileBarIndex>1</FileBarIndex>
        <RectPosBottom>562</RectPosBottom>
        <RectPosLeft>160</RectPosLeft>
        <RectPosRight>1516</RectPosRight>
@@ -874,7 +874,7 @@
        <RelativeFileName>..\source\bsw\ecual\lcd\lcd.c</RelativeFileName>
       </Editor.1>
       <Editor.2>
-       <FileBarIndex>1</FileBarIndex>
+       <FileBarIndex>0</FileBarIndex>
        <RectPosBottom>529</RectPosBottom>
        <RectPosLeft>75</RectPosLeft>
        <RectPosRight>817</RectPosRight>
@@ -895,10 +895,10 @@
       </EditorHistoryFile.3>
      </Documents.0>
      <Progress>
-      <b>743</b>
-      <l>626</l>
-      <r>1294</r>
-      <t>296</t>
+      <b>-31759</b>
+      <l>-32234</l>
+      <r>-31566</r>
+      <t>-32206</t>
      </Progress>
      <Watches>
       <ActiveWatchPane>0</ActiveWatchPane>
@@ -1996,7 +1996,7 @@
        </Items.0>
       </OSWindow>
       <ProjectWindow>
-       <Selected>spi_dma.h</Selected>
+       <Selected></Selected>
        <Items.0>
         <__>
          <Name>Files</Name>
@@ -2010,33 +2010,39 @@
          <Items.1>
           <__>
            <Name>ecual</Name>
-           <Options>1</Options>
+           <Options>5</Options>
+           <Items.0>
+            <__>
+             <Name>eve.c</Name>
+             <Options>4</Options>
+            </__>
+           </Items.0>
           </__>
          </Items.1>
          <Items.2>
           <__>
            <Name>mcal</Name>
            <Options>1</Options>
+           <Items.0>
+            <__>
+             <Name>afec.c</Name>
+             <Options>4</Options>
+            </__>
+           </Items.0>
           </__>
          </Items.2>
          <Items.3>
           <__>
            <Name>services</Name>
            <Options>1</Options>
-          </__>
-         </Items.3>
-         <Items.4>
-          <__>
-           <Name>Dependencies </Name>
-           <Options>1</Options>
            <Items.0>
             <__>
-             <Name>math.h</Name>
+             <Name>syscalls.c</Name>
              <Options>4</Options>
             </__>
            </Items.0>
           </__>
-         </Items.4>
+         </Items.3>
         </__>
        </Items.0>
       </ProjectWindow>
@@ -2096,22 +2102,16 @@
             </Items.4>
             <Items.5>
              <__>
-              <Name>SPI0_CSR[2]</Name>
-              <Options>0</Options>
+              <Name>SPI0_CSR[3]</Name>
+              <Options>65537</Options>
              </__>
             </Items.5>
             <Items.6>
              <__>
-              <Name>SPI0_CSR[3]</Name>
-              <Options>65537</Options>
-             </__>
-            </Items.6>
-            <Items.7>
-             <__>
               <Name>SPI0_WPSR</Name>
               <Options>1</Options>
              </__>
-            </Items.7>
+            </Items.6>
            </__>
           </Items.2>
          </__>

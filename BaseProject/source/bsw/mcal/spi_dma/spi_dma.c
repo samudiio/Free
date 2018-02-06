@@ -76,7 +76,6 @@
  *        Local Variables
  *----------------------------------------------------------------------------*/
 
-
 /*  DMA driver instance */
 static uint32_t spiDmaTxChannel;
 static uint32_t spiDmaRxChannel;

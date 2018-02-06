@@ -121,6 +121,7 @@ typedef struct _Spid
 	volatile int8_t semaphore ;
 } Spid ;
 
+
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
@@ -140,6 +141,8 @@ extern void SPID_Handler( Spid* pSpid ) ;
 extern void SPID_DmaHandler( Spid *pSpid );
 
 extern uint32_t SPID_IsBusy( const Spid* pSpid ) ;
+
+
 
 #ifdef __cplusplus
 }

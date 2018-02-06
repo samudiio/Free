@@ -83,7 +83,8 @@
 /*------------------------------------------------------------------------------
  *         Types Definitions
  *----------------------------------------------------------------------------*/
-
+#define SPI_DMA_ENABLE  0
+#define FT813_CMD_SOFTWARE_RESET                  0x01
 
 /*------------------------------------------------------------------------------
  *         Global Variables
@@ -100,6 +101,12 @@ static const Pin SPI_PinsId[] = {
 /** SPI Clock setting (Hz) */
 static uint32_t spiClock = 3000000; //3Mhz in the example, firt test with whis freq
 
+/** Global DMA driver for all transfer */
+static Spid SpiDma;
+static SpidCmd SpiCommand;
+static sXdmad Dma;
+
+uint8_t pTxBuffer[] = "This is SPI LoopBack Test Buffer";
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
@@ -114,7 +121,22 @@ extern void SPI_Init()
     /* Configure SPI pins*/
     PIO_Configure( SPI_PinsId, PIO_LISTSIZE(SPI_PinsId) );
 
-    SPI_Configure(SPI0, ID_SPI0, ( SPI_MR_MSTR | SPI_MR_MODFDIS | SPI_PCS( SPI0_CS3 )));
+    #if SPI_DMA_ENABLE
+
+        Dma.pXdmacs = XDMAC;
+
+        SpiCommand.TxSize = 30;
+        SpiCommand.pTxBuff = (uint8_t *)pTxBuffer;
+        SpiCommand.RxSize= 30;
+        SpiCommand.pRxBuff = (uint8_t *)pRxBuffer;
+        SpiCommand.spiCs = SPI0_CS3;
+
+
+        SPID_Configure(&SpiDma, SPI0, ID_SPI0, (SPI_MR_MSTR | SPI_MR_MODFDIS | SPI_PCS( SPI0_CS3 )), &Dma);
+
+    #else
+        SPI_Configure(SPI0, ID_SPI0, ( SPI_MR_MSTR | SPI_MR_MODFDIS | SPI_PCS( SPI0_CS3 )));
+    #endif
 
     /*
      *  Transmit occurs on transition from active to idle clock state (SPI_CSR_NCPHA)
@@ -128,40 +150,18 @@ extern void SPI_Init()
 
     /* Enable SPI1 after configuration */
     SPI_Enable(SPI0);
+
+#if SPI_DMA_ENABLE
+    SPID_SendCommand(&SpiDma, &SpiCommand); //SPI_Write
+#endif
 }
 
-
-//extern void SPIDma_Init()
+//uint32_t FT813_SpiInitialize(sXdmad *dmad)
 //{
-//    /* Configure SPI pins*/
-//    PIO_Configure( SPI_PinsId, PIO_LISTSIZE(SPI_PinsId) );
 //
-//Dma.pXdmacs = XDMAC;
-//
-//SpiCommand.TxSize = 30;
-//SpiCommand.pTxBuff = (uint8_t *)pTxBuffer;
-//SpiCommand.RxSize= 30;
-//SpiCommand.pRxBuff = (uint8_t *)pRxBuffer;
-//SpiCommand.spiCs = SPI0_CS3;
-//
-//
-//    SPID_Configure(&SpiDma, SPI0, ID_SPI0, (SPI_MR_MSTR | SPI_MR_MODFDIS | SPI_PCS( SPI0_CS3 )), &Dma);
-//
-/*
-//     *  Transmit occurs on transition from active to idle clock state (SPI_CSR_NCPHA)
-//     *  8 bits for transfer (SPI_CSR_BITS_8_BIT)
-//     */
-//    SPI_ConfigureNPCS( SPI0, SPI0_CS3,
-//                       SPI_CSR_NCPHA | SPI_CSR_BITS_8_BIT |
-//                       SPI_DLYBCT( 500, BOARD_MCK ) |   //Time between transfers
-//                       SPI_DLYBS(500, BOARD_MCK) |      //Delay Before SPCK
-//                       SPI_SCBR( spiClock, BOARD_MCK) );
-//
-//    /* Enable SPI1 after configuration */
-//    SPI_Enable(SPI0);
-//    SPID_SendCommand(&SpiDma, &SpiCommand); //SPI_Write
+//    FT813_SpiInitializeWithDma(dmad);
+//    FT813_SpiSendCommand(FT813_CMD_SOFTWARE_RESET, 0, 0, AccessInst, 0);
 //}
-
 
 /*
  * SPI Send and Receive
