@@ -54,6 +54,12 @@ void LDC_Init(void)
 */
 }
 
+/* Change clock frequency to 25mhz */
+void LDC_ChangeClock(void)
+{
+    SPI_ChangeClock();
+}
+
 // ################################# SPI #######################################
 
 uint8_t LCD_SPIReadWrite(uint8_t DataToWrite)

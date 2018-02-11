@@ -85,6 +85,7 @@ static void prvSetupHardware( void )
     //APP_VertexTranslate();
     //APP_Text();
 
+    APP_ConvertedBitmap_FirstTime();
     APP_ConvertedBitmap();
 
     //APP_DigitsFont();

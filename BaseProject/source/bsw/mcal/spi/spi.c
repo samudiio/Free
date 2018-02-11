@@ -84,7 +84,8 @@
  *         Types Definitions
  *----------------------------------------------------------------------------*/
 #define SPI_DMA_ENABLE  0
-#define FT813_CMD_SOFTWARE_RESET                  0x01
+#define FT813_CMD_SOFTWARE_RESET        0x01
+#define SPI_MAX_CLOCK_FREQ              30000000
 
 /*------------------------------------------------------------------------------
  *         Global Variables
@@ -162,6 +163,21 @@ extern void SPI_Init()
 //    FT813_SpiInitializeWithDma(dmad);
 //    FT813_SpiSendCommand(FT813_CMD_SOFTWARE_RESET, 0, 0, AccessInst, 0);
 //}
+
+/* Change clock frequency to 25mhz */
+extern void SPI_ChangeClock(void)
+{
+    SPI_Enable(SPI0);
+
+    SPI_ConfigureNPCS( SPI0, SPI0_CS3,
+                       SPI_CSR_NCPHA | SPI_CSR_BITS_8_BIT |
+                       SPI_DLYBCT( 500, BOARD_MCK ) |   //Time between transfers
+                       SPI_DLYBS(500, BOARD_MCK) |      //Delay Before SPCK
+                       SPI_SCBR( SPI_MAX_CLOCK_FREQ, BOARD_MCK) );
+
+    /* Enable SPI1 after configuration */
+    SPI_Enable(SPI0);
+}
 
 /*
  * SPI Send and Receive

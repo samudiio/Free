@@ -18,25 +18,36 @@
 #include "DIGITfont.h"
 #include "Bosch.h"
 
+/*------------------------------------------------------------------------------
+ *         Defines
+ *----------------------------------------------------------------------------*/
+
+#define NOCOMP      0
+
+/* LCD display parameters 480x272
+ * TFT Timing Characteristics
+ */
+#define LCD_HSIZE       480
+#define LCD_HCYCLE      548     // Total number of clocks per line
+#define LCD_HOFFSET     43      // Start of active line
+#define LCD_HSYNC0      0       // Start of horizontal sync pulse
+#define LCD_HSYNC1      41      // End of horizontal sync pulse
+#define LCD_VSIZE       272
+#define LCD_VCYCLE      292     // Total number of lines per screen
+#define LCD_VOFFSET     12      // Start of active screen
+#define LCD_VSYNC0      12      // Start of vertical sync pulse
+#define LCD_VSYNC1      0       // End of vertical sync pulse
+#define LCD_PCLK        5       // Pixel Clock
+#define LCD_SWIZZLE     0       // Define RGB output pins
+#define LCD_PCLKPOL     1       // Define active edge of PCLK
+#define LCD_CSPREAD     1
+#define LCD_DITHER      1
+
 /*----------------------------------------------------------------------------
  *        Global variables
  *----------------------------------------------------------------------------*/
-// LCD display parameters
-uint16_t lcdWidth;              // Active width of LCD display
-uint16_t lcdHeight;             // Active height of LCD display
-uint16_t lcdHcycle;             // Total number of clocks per line
-uint16_t lcdHoffset;            // Start of active line
-uint16_t lcdHsync0;             // Start of horizontal sync pulse
-uint16_t lcdHsync1;             // End of horizontal sync pulse
-uint16_t lcdVcycle;             // Total number of lines per screen
-uint16_t lcdVoffset;            // Start of active screen
-uint16_t lcdVsync0;             // Start of vertical sync pulse
-uint16_t lcdVsync1;             // End of vertical sync pulse
-uint8_t lcdPclk;              // Pixel Clock
-uint8_t lcdSwizzle;           // Define RGB output pins
-uint8_t lcdPclkpol;           // Define active edge of PCLK
 
-uint32_t ramDisplayList = 3145728UL;//RAM_DL;      // Set beginning of display list memory
+uint32_t ramDisplayList = RAM_DL;      // Set beginning of display list memory
 uint32_t color;                // Variable for changing colors
 uint32_t TrackerVal = 0;// 32 bit
 
@@ -47,10 +58,6 @@ uint16_t SlideVal = 0;
 uint8_t TagVal = 0;
 uint8_t FT81x_GPIO;           // Used for FT800 GPIO register
 
-
-
-
-#define NOCOMP 0
 
 /*----------------------------------------------------------------------------
  *        Exported functions
@@ -63,17 +70,13 @@ void APP_Init(void)
     // ----------------------- Cycle PD pin to reset device --------------------
 
     LCD_PDlow();                                                                // PD low to reset device
-
     MCU_Delay_20ms();
-
     LCD_PDhigh();                                                               // PD high again
-
     MCU_Delay_20ms();
 
     // ---------------------- Delay to allow start-up --------------------
 
     EVE_CmdWrite(FT81x_ACTIVE, 0x00);                                           // Sends 00 00 00 to wake FT8xx
-
     MCU_Delay_500ms();                                                          // 500ms delay (EVE requires at least 300ms here))
 
     // --------------- Check that FT8xx ready and SPI comms OK -----------------
@@ -89,61 +92,51 @@ void APP_Init(void)
     // ------------------------- Display settings ------------------------------
 
     // WQVGA display parameters
-    lcdWidth   = 480;                                                           // Active width of LCD display
-    lcdHeight  = 272;                                                           // Active height of LCD display
-    lcdHcycle  = 928;                                                           // Total number of clocks per line
-    lcdHoffset = 88;                                                            // Start of active line
-    lcdHsync0  = 0;                                                             // Start of horizontal sync pulse
-    lcdHsync1  = 48;                                                            // End of horizontal sync pulse
-    lcdVcycle  = 525;                                                           // Total number of lines per screen
-    lcdVoffset = 32;                                                            // Start of active screen
-    lcdVsync0  = 0;                                                             // Start of vertical sync pulse
-    lcdVsync1  = 3;                                                             // End of vertical sync pulse
-    lcdPclk    = 2;                                                             // Pixel Clock
-    lcdSwizzle = 0;                                                             // Define RGB output pins
-    lcdPclkpol = 1;                                                             // Define active edge of PCLK
+    EVE_MemWrite16(REG_HSIZE,   LCD_HSIZE);      // Active width of LCD display
+    EVE_MemWrite16(REG_HCYCLE,  LCD_HCYCLE);    // Total number of clocks per line
+    EVE_MemWrite16(REG_HOFFSET, LCD_HOFFSET);   // Start of active line
+    EVE_MemWrite16(REG_HSYNC0,  LCD_HSYNC0);    // Start of horizontal sync pulse
+    EVE_MemWrite16(REG_HSYNC1,  LCD_HSYNC1);    // End of horizontal sync pulse
+    EVE_MemWrite16(REG_VSIZE,   LCD_VSIZE);     // Active height of LCD display
+    EVE_MemWrite16(REG_VCYCLE,  LCD_VCYCLE);    // Total number of lines per screen
+    EVE_MemWrite16(REG_VOFFSET, LCD_VOFFSET);   // Start of active screen
+    EVE_MemWrite16(REG_VSYNC0,  LCD_VSYNC0);    // Start of vertical sync pulse
+    EVE_MemWrite16(REG_VSYNC1,  LCD_VSYNC1);    // End of vertical sync pulse
+    EVE_MemWrite8(REG_SWIZZLE,  LCD_SWIZZLE);   // Define RGB output pins
+    EVE_MemWrite8(REG_PCLK_POL, LCD_PCLKPOL);   // Define active edge of PCLK
+    EVE_MemWrite8(REG_CSPREAD,  LCD_CSPREAD);
+    EVE_MemWrite8(REG_DITHER,   LCD_DITHER);
 
-    EVE_MemWrite16(REG_HSIZE,   lcdWidth);
-    EVE_MemWrite16(REG_HCYCLE,  lcdHcycle);
-    EVE_MemWrite16(REG_HOFFSET, lcdHoffset);
-    EVE_MemWrite16(REG_HSYNC0,  lcdHsync0);
-    EVE_MemWrite16(REG_HSYNC1,  lcdHsync1);
-    EVE_MemWrite16(REG_VSIZE,   lcdHeight);
-    EVE_MemWrite16(REG_VCYCLE,  lcdVcycle);
-    EVE_MemWrite16(REG_VOFFSET, lcdVoffset);
-    EVE_MemWrite16(REG_VSYNC0,  lcdVsync0);
-    EVE_MemWrite16(REG_VSYNC1,  lcdVsync1);
-    EVE_MemWrite8(REG_SWIZZLE,  lcdSwizzle);
-    EVE_MemWrite8(REG_PCLK_POL, lcdPclkpol);
-
-    FT81x_GPIO = EVE_MemRead8(REG_GPIO);                                        // Read the FT800 GPIO register for a read/modify/write operation
-    FT81x_GPIO = FT81x_GPIO | 0x80;                                             // set bit 7 of FT800 GPIO register (DISP) - others are inputs
-    EVE_MemWrite8(REG_GPIO, FT81x_GPIO);                                        // Enable the DISP signal to the LCD panel
+    FT81x_GPIO = EVE_MemRead8(REG_GPIO);                                // Read the FT800 GPIO register for a read/modify/write operation
+    FT81x_GPIO = FT81x_GPIO | 0x80;                                     // set bit 7 of FT800 GPIO register (DISP) - others are inputs
+    EVE_MemWrite8(REG_GPIO, FT81x_GPIO);                                // Enable the DISP signal to the LCD panel
 
     // Can move these 2 lines to after the first display list to make the start-up appear cleaner to the user
-    EVE_MemWrite8(REG_PCLK, lcdPclk);                                           // Now start clocking data to the LCD panel
+    EVE_MemWrite8(REG_PCLK, LCD_PCLK);                                  // Now start clocking data to the LCD panel
     EVE_MemWrite8(REG_PWM_DUTY, 127);
 
     // ---------------------- Touch and Audio settings -------------------------
 
-    EVE_MemWrite16(REG_TOUCH_RZTHRESH, 1200);                                   // Eliminate any false touches
+    EVE_MemWrite16(REG_TOUCH_RZTHRESH, 1200);                           // Eliminate any false touches
 
-    EVE_MemWrite8(REG_VOL_PB, ZERO);                                            // turn recorded audio volume down
-    EVE_MemWrite8(REG_VOL_SOUND, ZERO);                                         // turn synthesizer volume down
-    EVE_MemWrite16(REG_SOUND, 0x6000);                                          // set synthesizer to mute
+    EVE_MemWrite8(REG_VOL_PB, ZERO);                                    // turn recorded audio volume down
+    EVE_MemWrite8(REG_VOL_SOUND, ZERO);                                 // turn synthesizer volume down
+    EVE_MemWrite16(REG_SOUND, 0x6000);                                  // set synthesizer to mute
 
-    // -------- Initial display list to begin with blank screen ----------------
+    // -------- Initial display list to begin with blank screen --------
 
-    ramDisplayList = RAM_DL;                                                    // start of Display List
-    EVE_MemWrite32(ramDisplayList, 0x02000000);                                 // Clear Color RGB sets the colour to clear screen to
+    ramDisplayList = RAM_DL;                                            // start of Display List
+    EVE_MemWrite32(ramDisplayList, CLEAR_COLOR_RGB(0,0,0));             // Clear Color RGB sets the colour to clear screen to black
 
-    ramDisplayList += 4;                                                        // point to next location
-    EVE_MemWrite32(ramDisplayList, (0x26000000 | 0x00000007));                  // Clear 00100110 -------- -------- -----CST  (C/S/T define which parameters to clear)
+    ramDisplayList += 4;                                                // point to next location
+    EVE_MemWrite32(ramDisplayList, CLEAR(1,1,1));                       // Clear 00100110 -------- -------- -----CST  (C/S/T define which parameters to clear)
 
-    ramDisplayList += 4;                                                        // point to next location
-    EVE_MemWrite32(ramDisplayList, 0x00000000);                                 // DISPLAY command 00000000 00000000 00000000 00000000 (end of display list)
+    ramDisplayList += 4;                                                // point to next location
+    EVE_MemWrite32(ramDisplayList, DISPLAY());                          // DISPLAY command 00000000 00000000 00000000 00000000 (end of display list)
 
-    EVE_MemWrite32(REG_DLSWAP, DLSWAP_FRAME);                                   // Swap display list to make the edited one active
+    EVE_MemWrite32(REG_DLSWAP, DLSWAP_FRAME);                           // Swap display list to make the edited one active
+
+    LDC_ChangeClock();
 }
 
 
@@ -383,12 +376,107 @@ void APP_Text(void)
 
 // ############################ DEMO - Bitmap ##################################
 
-/*('file properties: ', 'resolution ', 58, 'x', 75, 'format ', 'ARGB1555', 'stride ', 116, ' total size ', 8700)*/
+void APP_ConvertedBitmap_FirstTime(void)
+{
+    uint32_t DataPointer = 0;
+    uint32_t DataSize = 261120;
+    uint32_t BitmapDataSize = 0;
+    uint8_t * const Pictures[5] =
+    {
+        (uint8_t*)trail,
+        (uint8_t*)utct
+    };
+
+    // ------------ Load image data -------------
+
+    cmdOffset = EVE_WaitCmdFifoEmpty();                                         // Wait for command FIFO to be empty
+
+    DataPointer = 0;
+
+    LCD_CSlow();                                                                // CS low begins SPI transaction
+    EVE_AddrForWr(RAM_G);                                                       // Send address to which first value will be written
+
+    while(DataPointer < DataSize)
+    {
+        EVE_Write8(*( ( (uint8_t*) Pictures[0] ) + DataPointer) );                                       // Send data byte-by-byte from array
+        DataPointer ++;
+    }
+
+    BitmapDataSize = DataSize - DataPointer;                                    // Add 3, 2 or 1 bytes padding to make it  a multiple of 4 bytes
+    BitmapDataSize = BitmapDataSize & 0x03;                                     // Mask off the bottom 2 bits
+
+    if (BitmapDataSize == 0x03)
+    {
+        EVE_Write8(0x00);
+    }
+    else if (BitmapDataSize == 0x02)
+    {
+        EVE_Write8(0x00);
+        EVE_Write8(0x00);
+    }
+    else if (BitmapDataSize == 0x01)
+    {
+        EVE_Write8(0x00);
+        EVE_Write8(0x00);
+        EVE_Write8(0x00);
+    }
+
+    LCD_CShigh();                                                               // CS high after burst write of image data
+
+        // ------------ Now create screen to display image -------------
+
+    MCU_Delay_20ms();
+
+    LCD_CSlow();                                                                // CS low begins SPI transaction
+    EVE_AddrForWr(RAM_CMD + cmdOffset);                                         // Send address to which first value will be written
+
+    EVE_Write32(CMD_DLSTART);                                                   // Co-pro starts new DL at RAM_DL + 0
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);                                 // Keep count of bytes sent so that write pointer can be updated at end
+                                                                                // Keeping CS low and FT8xx will auto increment address for 'burst write'
+
+    /*probar con 5*/
+    EVE_Write32(BITMAP_HANDLE(0));                                              // Set bitmap handle
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(BITMAP_SOURCE(0));                                              // Bitmap data starts at 0
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(BITMAP_LAYOUT(RGB565,960, LCD_VSIZE));                                  // Tell FT8xx about the properties of the image data
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(BITMAP_SIZE(NEAREST, BORDER, BORDER, LCD_HSIZE, LCD_VSIZE));                   // Tell FT8xx about the on-screen properties of the image
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    /*intentar quitando esto*/
+    EVE_Write32(BEGIN(BITMAPS));                                                // Begin drawing bitmaps
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(VERTEX2F(0,0));                                             // Draw at (100,100)
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(END());                                                         // End drawing images
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(DISPLAY());                                                     // Instruct the graphics processor to show the list
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    EVE_Write32(CMD_SWAP);                                                      // Make this list active
+    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+    LCD_CShigh();                                                               // Chip Select high concludes burst
+
+    EVE_MemWrite32(REG_CMD_WRITE, (cmdOffset));                                 // Update the ring buffer pointer
+                                                                                // Co-processor will now execute all of the above commands and create a display list
+    cmdOffset = EVE_WaitCmdFifoEmpty();                                         // Await completion of processing and record starting address for next screen update
+
+    MCU_Delay_500ms();
+    MCU_Delay_500ms();
+}
 
 
 void APP_ConvertedBitmap(void)
 {
-    static uint8_t index = 0;
+    static uint8_t index = 1;
     uint8_t i= 0;
 
     uint32_t DataPointer = 0;
@@ -425,25 +513,6 @@ while(1)
     }
     index++;
 
-    BitmapDataSize = DataSize - DataPointer;                                    // Add 3, 2 or 1 bytes padding to make it  a multiple of 4 bytes
-    BitmapDataSize = BitmapDataSize & 0x03;                                     // Mask off the bottom 2 bits
-
-    if (BitmapDataSize == 0x03)
-    {
-        EVE_Write8(0x00);
-    }
-    else if (BitmapDataSize == 0x02)
-    {
-        EVE_Write8(0x00);
-        EVE_Write8(0x00);
-    }
-    else if (BitmapDataSize == 0x01)
-    {
-        EVE_Write8(0x00);
-        EVE_Write8(0x00);
-        EVE_Write8(0x00);
-    }
-
     LCD_CShigh();                                                               // CS high after burst write of image data
 
         // ------------ Now create screen to display image -------------
@@ -458,28 +527,10 @@ while(1)
     cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);                                 // Keep count of bytes sent so that write pointer can be updated at end
                                                                                 // Keeping CS low and FT8xx will auto increment address for 'burst write'
 
-    EVE_Write32(CLEAR_COLOR_RGB(0,0,0));                                        // Set the default clear color to black
-    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
-
-    EVE_Write32(CLEAR(1,1,1));                                                  // Clear the screen Attributes color, stencil and tag buffers
-    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
-
-    EVE_Write32(BITMAP_HANDLE(0));                                              // Set bitmap handle
-    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
-
-    EVE_Write32(BITMAP_SOURCE(0));                                              // Bitmap data starts at 0
-    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
-
-    EVE_Write32(BITMAP_LAYOUT(RGB565,960,272));                                  // Tell FT8xx about the properties of the image data
-    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
-
-    EVE_Write32(BITMAP_SIZE(NEAREST, BORDER, BORDER, 480,272));                   // Tell FT8xx about the on-screen properties of the image
-    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
-
     EVE_Write32(BEGIN(BITMAPS));                                                // Begin drawing bitmaps
     cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
 
-    EVE_Write32(VERTEX2F(100,100));                                             // Draw at (100,100)
+    EVE_Write32(VERTEX2F(0,0));                                                 // Draw at (0,0)
     cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
 
     EVE_Write32(END());                                                         // End drawing images
@@ -503,12 +554,11 @@ while(1)
     {
 
     }*/
-    for(i = 0; i<10; i++)
+    for(i = 0; i<4; i++)
     {
         MCU_Delay_500ms();
         MCU_Delay_500ms();
     }
-
 }
 }
 

@@ -32,6 +32,7 @@ void APP_FlashingDot(void);
 void APP_VertexTranslate(void);
 void APP_Text(void);
 void APP_ConvertedBitmap(void);
+void APP_ConvertedBitmap_FirstTime(void);
 void APP_Calibrate(void);
 void APP_SliderandButton(void);
 

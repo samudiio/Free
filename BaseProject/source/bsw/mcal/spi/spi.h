@@ -85,6 +85,7 @@
  *----------------------------------------------------------------------------*/
 
 extern void SPI_Init();
+extern void SPI_ChangeClock(void);
 extern uint8_t SPI_ReadWrite(uint8_t DataToWrite);
 
 extern void SPI_Enable( Spi* spi ) ;
