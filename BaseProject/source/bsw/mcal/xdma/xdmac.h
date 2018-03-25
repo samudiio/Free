@@ -73,6 +73,7 @@
 
 #include "chip.h"
 
+#include <assert.h>
 #include <utility.h>
 #include <stdint.h>
 
@@ -90,6 +91,51 @@
 /** Max DMA single transfer size */
 #define XDMAC_MAX_BT_SIZE               0xFFFF
 /**     @}*/
+
+/** DMA channel hardware interface number */
+#define XDAMC_CHANNEL_HWID_HSMCI       0
+#define XDAMC_CHANNEL_HWID_SPI0_TX     1
+#define XDAMC_CHANNEL_HWID_SPI0_RX     2
+#define XDAMC_CHANNEL_HWID_SPI1_TX     3
+#define XDAMC_CHANNEL_HWID_SPI1_RX     4
+#define XDAMC_CHANNEL_HWID_QSPI_TX     5
+#define XDAMC_CHANNEL_HWID_QSPI_RX     6
+#define XDAMC_CHANNEL_HWID_USART0_TX   7
+#define XDAMC_CHANNEL_HWID_USART0_RX   8
+#define XDAMC_CHANNEL_HWID_USART1_TX   9
+#define XDAMC_CHANNEL_HWID_USART1_RX   10
+#define XDAMC_CHANNEL_HWID_USART2_TX   11
+#define XDAMC_CHANNEL_HWID_USART2_RX   12
+#define XDAMC_CHANNEL_HWID_PWM0        13
+#define XDAMC_CHANNEL_HWID_TWIHS0_TX   14
+#define XDAMC_CHANNEL_HWID_TWIHS0_RX   15
+#define XDAMC_CHANNEL_HWID_TWIHS1_TX   16
+#define XDAMC_CHANNEL_HWID_TWIHS1_RX   17
+#define XDAMC_CHANNEL_HWID_TWIHS2_TX   18
+#define XDAMC_CHANNEL_HWID_TWIHS2_RX   19
+#define XDAMC_CHANNEL_HWID_UART0_TX    20
+#define XDAMC_CHANNEL_HWID_UART0_RX    21
+#define XDAMC_CHANNEL_HWID_UART1_TX    22
+#define XDAMC_CHANNEL_HWID_UART1_RX    23
+#define XDAMC_CHANNEL_HWID_UART2_TX    24
+#define XDAMC_CHANNEL_HWID_UART2_RX    25
+#define XDAMC_CHANNEL_HWID_UART3_TX    26
+#define XDAMC_CHANNEL_HWID_UART3_RX    27
+#define XDAMC_CHANNEL_HWID_UART4_TX    28
+#define XDAMC_CHANNEL_HWID_UART4_RX    29
+#define XDAMC_CHANNEL_HWID_DAC         30
+#define XDAMC_CHANNEL_HWID_SSC_TX      32
+#define XDAMC_CHANNEL_HWID_SSC_RX      33
+#define XDAMC_CHANNEL_HWID_PIOA        34
+#define XDAMC_CHANNEL_HWID_AFEC0       35
+#define XDAMC_CHANNEL_HWID_AFEC1       36
+#define XDAMC_CHANNEL_HWID_AES_TX      37
+#define XDAMC_CHANNEL_HWID_AES_RX      38
+#define XDAMC_CHANNEL_HWID_PWM1        39
+#define XDAMC_CHANNEL_HWID_TC0         40
+#define XDAMC_CHANNEL_HWID_TC1         41
+#define XDAMC_CHANNEL_HWID_TC2         42
+#define XDAMC_CHANNEL_HWID_TC3         43
 
 /*----------------------------------------------------------------------------
  *         Macro

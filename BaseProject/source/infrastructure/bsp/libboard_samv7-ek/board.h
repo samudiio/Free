@@ -639,7 +639,7 @@
 #define BOARD_LCD_HEIGHT            480
 
 
-/*----------------------------------------------------------------------------*/
+/*----------------------------------------------------- Memories --------------------------------------------------------------*/
 /**
  * \page samv7_Xplained_ultra_mem "SAM V71 Xplained Ultra - Memories"
  * This page lists definitions related to internal & external on-board memories.
@@ -721,7 +721,31 @@
 #define PINS_QSPI_IO3   {PIO_PD31A_QIO3, PIOD, ID_PIOD, PIO_PERIPH_A, PIO_DEFAULT}
 #define PINS_QSPI      {PINS_QSPI_IO, PINS_QSPI_IO3}
 
-/*----------------------------------------------------------------------------*/
+/**** Added From Atmel Sw Framework ****/
+/** SD/MMC card detect pin definition. */
+#define PIN_HSMCI_CD                    {PIO_PD18, PIOD, ID_PIOD, PIO_INPUT, PIO_PULLUP}
+#define SD_MMC_0_CD_GPIO                (PIO_PD18_IDX)
+#define SD_MMC_0_CD_PIO_ID              ID_PIOD
+#define SD_MMC_0_CD_FLAGS               (IOPORT_MODE_PULLUP)
+#define SD_MMC_0_CD_DETECT_VALUE        0
+
+/*******  SD only ******/
+
+#ifndef SD_MMC_SPI_MEM_CNT
+#  define SD_MMC_SPI_MEM_CNT        0
+#endif
+#ifndef SD_MMC_MCI_MEM_CNT
+#  define SD_MMC_MCI_MEM_CNT        0
+#endif
+#ifndef SD_MMC_HSMCI_MEM_CNT
+#  define SD_MMC_HSMCI_MEM_CNT      1
+#endif
+
+#ifndef SD_MMC_HSMCI_SLOT_0_SIZE
+#  define SD_MMC_HSMCI_SLOT_0_SIZE  1
+#endif
+
+/*-------------------------------------------------------------------------------------------------------------*/
 /**
  * \page samv7_Xplained_ultra_chipdef "SAM V71 Xplained Ultra - Individual chip definition"
  * This page lists the definitions related to different chip's definition

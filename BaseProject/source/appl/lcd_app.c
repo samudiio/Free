@@ -480,7 +480,6 @@ void APP_ConvertedBitmap(void)
     uint8_t i= 0;
 
     uint32_t DataPointer = 0;
-    //uint16_t DataSize = 8700;
     uint32_t DataSize = 261120;
     uint32_t BitmapDataSize = 0;
     uint8_t * const Pictures[5] =

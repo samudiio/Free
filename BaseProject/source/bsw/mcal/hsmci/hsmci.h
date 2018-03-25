@@ -1,154 +1,219 @@
-/* ----------------------------------------------------------------------------
- *         SAM Software Package License 
- * ----------------------------------------------------------------------------
- * Copyright (c) 2013, Atmel Corporation
+/**
+ * \file
  *
- * All rights reserved.
+ * \brief SAM HSMCI driver
+ *
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
- * - Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the disclaimer below.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- * Atmel's name may not be used to endorse or promote products derived from
- * this software without specific prior written permission.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
- * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
- * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * ----------------------------------------------------------------------------
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-/** \file */
+#ifndef HSMCI_H_INCLUDED
+#define HSMCI_H_INCLUDED
 
-/** \addtogroup hsmci_module Working with HSMCI
- *  \ingroup mcid_module
- *
- * \section Purpose
- *
- * The HSMCI driver provides the interface to configure and use the HSMCI
- * peripheral.
- *
- * \section Usage
- *
- * -# HSMCI_Enable(), MCI_Disable(): Enable/Disable HSMCI interface.
- * -# HSMCI_Reset(): Reset HSMCI interface.
- * -# HSMCI_Select(): HSMCI slot and buswidth selection
- *                    (\ref Hsmci::HSMCI_SDCR).
- * -# HSMCI_ConfigureMode(): Configure the  MCI CLKDIV in the _MR register
- *                           (\ref Hsmci::HSMCI_MR).
- * -# HSMCI_EnableIt(), HSMCI_DisableIt(), HSMCI_GetItMask(), HSMCI_GetStatus()
- *      HSMCI Interrupt control (\ref Hsmci::HSMCI_IER, \ref Hsmci::HSMCI_IDR,
- *      \ref Hsmci::HSMCI_IMR, \ref Hsmci::HSMCI_SR).
- * -# HSMCI_ConfigureTransfer(): Setup block length and count for MCI transfer
- *                               (\ref Hsmci::HSMCI_BLKR).
- * -# HSMCI_SendCmd(): Send SD/MMC command with argument
- *                     (\ref Hsmci::HSMCI_ARGR, \ref Hsmci::HSMCI_CMDR).
- * -# HSMCI_GetResponse(): Get SD/MMC response after command finished
- *                         (\ref Hsmci::HSMCI_RSPR).
- * -# HSMCI_ConfigureDma(): Configure MCI DMA transfer
- *                          (\ref Hsmci::HSMCI_DMA).
- * -# HSMCI_Configure(): Configure the HSMCI interface (\ref Hsmci::HSMCI_CFG).
- * -# HSMCI_HsEnable(), HSMCI_IsHsEnabled(): High Speed control.
- *
- * For more accurate information, please look at the HSMCI section of the
- * Datasheet.
- *
- * \sa \ref mcid_module
- *
- * Related files :\n
- * \ref hsmci.h\n
- * \ref hsmci.c.\n
- */
-
-#ifndef HSMCID_H
-#define HSMCID_H
-/** \addtogroup hsmci_module
- *@{
- */
-
-/*----------------------------------------------------------------------------
- *         Headers
- *----------------------------------------------------------------------------*/
-
-#include "chip.h"
-
-#include <stdint.h>
+#include "compiler.h"
+#include "sd_mmc_protocol.h"
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
-/*----------------------------------------------------------------------------
- *         Exported functions
- *----------------------------------------------------------------------------*/
-/** \addtogroup hsmci_functions HSMCI Functions
- *      @{
+
+
+/** Enable SD MMC interface pins through HSMCI */
+#define CONF_BOARD_SD_MMC_HSMCI
+
+#define CONF_HSMCI_XDMAC_CHANNEL  XDAMC_CHANNEL_HWID_HSMCI
+
+typedef sXdmadCfg xdmac_channel_config_t;
+
+/**
+ * \defgroup sam_drivers_hsmci High Speed MultiMedia Card Interface (HSMCI)
+ *
+ * This driver interfaces the HSMCI module.
+ * It will add functions for SD/MMC card reading, writing and management.
+ *
+ * @{
  */
 
-extern void HSMCI_Enable(Hsmci* pRMci);
-extern void HSMCI_Disable(Hsmci* pRMci);
-extern void HSMCI_Reset(Hsmci* pRMci, uint8_t bBackup);
+/** \brief Initializes the low level driver
+ *
+ * This enable the clock required and the hardware interface.
+ */
+void hsmci_init(void);
 
-extern void HSMCI_Select(Hsmci * pRMci,uint8_t bSlot,uint8_t bBusWidth);
-extern void HSMCI_SetSlot(Hsmci * pRMci,uint8_t bSlot);
-extern void HSMCI_SetBusWidth(Hsmci * pRMci,uint8_t bBusWidth);
-extern uint8_t HSMCI_GetBusWidth(Hsmci * pRMci);
+/** \brief Return the maximum bus width of a slot
+ *
+ * \param slot     Selected slot
+ *
+ * \return 1, 4 or 8 lines.
+ */
+uint8_t hsmci_get_bus_width(uint8_t slot);
 
-extern void HSMCI_ConfigureMode(Hsmci *pRMci, uint32_t dwMode);
-extern uint32_t HSMCI_GetMode(Hsmci *pRMci);
-extern void HSMCI_ProofEnable(Hsmci *pRMci, uint8_t bRdProof, uint8_t bWrProof);
-extern void HSMCI_PadvCtl(Hsmci *pRMci, uint8_t bPadv);
-extern void HSMCI_FByteEnable(Hsmci *pRMci, uint8_t bFByteEn);
-extern uint8_t HSMCI_IsFByteEnabled(Hsmci * pRMci);
-extern void HSMCI_DivCtrl(Hsmci *pRMci, uint32_t bClkDiv, uint8_t bPwsDiv);
+/** \brief Return the high speed capability of the driver
+ *
+ * \return true, if the high speed is supported
+ */
+bool hsmci_is_high_speed_capable(void);
 
-extern void HSMCI_EnableIt(Hsmci *pRMci, uint32_t dwSources);
-extern void HSMCI_DisableIt(Hsmci *pRMci, uint32_t dwSources);
-extern uint32_t HSMCI_GetItMask(Hsmci *pRMci);
+/**
+ * \brief Select a slot and initialize it
+ *
+ * \param slot       Selected slot
+ * \param clock      Maximum clock to use (Hz)
+ * \param bus_width  Bus width to use (1, 4 or 8)
+ * \param high_speed true, to enable high speed mode
+ */
+void hsmci_select_device(uint8_t slot, uint32_t clock, uint8_t bus_width,
+		bool high_speed);
 
-extern void HSMCI_ConfigureTransfer(Hsmci * pRMci,uint16_t wBlkLen,uint16_t wCnt);
-extern void HSMCI_SetBlockLen(Hsmci * pRMci,uint16_t wBlkSize);
-extern void HSMCI_SetBlockCount(Hsmci * pRMci,uint16_t wBlkCnt);
+/**
+ * \brief Deselect a slot
+ *
+ * \param slot       Selected slot
+ */
+void hsmci_deselect_device(uint8_t slot);
 
-extern void HSMCI_ConfigureCompletionTO(Hsmci *pRMci, uint32_t dwConfigure);
-extern void HSMCI_ConfigureDataTO(Hsmci *pRMci, uint32_t dwConfigure);
+/** \brief Send 74 clock cycles on the line of selected slot
+ * Note: It is required after card plug and before card install.
+ */
+void hsmci_send_clock(void);
 
-extern void HSMCI_SendCmd(Hsmci * pRMci,uint32_t dwCmd,uint32_t dwArg);
-extern uint32_t HSMCI_GetResponse(Hsmci *pRMci);
-extern uint32_t HSMCI_Read(Hsmci *pRMci);
-extern void HSMCI_ReadFifo(Hsmci *pRMci, uint8_t *pdwData, uint32_t dwSize);
-extern void HSMCI_Write(Hsmci *pRMci, uint32_t dwData);
-extern void HSMCI_WriteFifo(Hsmci *pRMci, uint8_t *pdwData, uint32_t dwSize);
+/** \brief Send a command on the selected slot
+ *
+ * \param cmd        Command definition
+ * \param arg        Argument of the command
+ *
+ * \return true if success, otherwise false
+ */
+bool hsmci_send_cmd(sdmmc_cmd_def_t cmd, uint32_t arg);
 
-extern uint32_t HSMCI_GetStatus(Hsmci *pRMci);
+/** \brief Return the 32 bits response of the last command
+ *
+ * \return 32 bits response
+ */
+uint32_t hsmci_get_response(void);
 
-extern void HSMCI_ConfigureDma(Hsmci *pRMci, uint32_t dwConfigure);
-extern void HSMCI_EnableDma(Hsmci * pRMci,uint8_t bEnable);
+/** \brief Return the 128 bits response of the last command
+ *
+ * \param response   Pointer on the array to fill with the 128 bits response
+ */
+void hsmci_get_response_128(uint8_t* response);
 
-extern void HSMCI_Configure(Hsmci *pRMci, uint32_t dwConfigure);
-extern void HSMCI_HsEnable(Hsmci *pRMci, uint8_t bHsEnable);
-extern uint8_t HSMCI_IsHsEnabled(Hsmci *pRMci);
+/** \brief Send an ADTC command on the selected slot
+ * An ADTC (Addressed Data Transfer Commands) command is used
+ * for read/write access.
+ *
+ * \param cmd          Command definition
+ * \param arg          Argument of the command
+ * \param block_size   Block size used for the transfer
+ * \param nb_block     Total number of block for this transfer
+ * \param access_block if true, the x_read_blocks() and x_write_blocks()
+ * functions must be used after this function.
+ * If false, the mci_read_word() and mci_write_word()
+ * functions must be used after this function.
+ *
+ * \return true if success, otherwise false
+ */
+bool hsmci_adtc_start(sdmmc_cmd_def_t cmd, uint32_t arg, uint16_t block_size,
+		uint16_t nb_block, bool access_block);
 
-extern void HSMCI_BusWidthCtl(Hsmci *pRMci, uint8_t bBusWidth);
-extern void HSMCI_SlotCtl(Hsmci *pRMci, uint8_t bSlot);
-extern uint8_t HSMCI_GetSlot(Hsmci *pRMci);
+/** \brief Send a command to stop an ADTC command on the selected slot
+ *
+ * \param cmd        Command definition
+ * \param arg        Argument of the command
+ *
+ * \return true if success, otherwise false
+ */
+bool hsmci_adtc_stop(sdmmc_cmd_def_t cmd, uint32_t arg);
 
-extern void HSMCI_ConfigureWP(Hsmci *pRMci, uint32_t dwConfigure);
-extern uint32_t HSMCI_GetWPStatus(Hsmci *pRMci);
+/** \brief Read a word on the line
+ *
+ * \param value  Pointer on a word to fill
+ *
+ * \return true if success, otherwise false
+ */
+bool hsmci_read_word(uint32_t* value);
+
+/** \brief Write a word on the line
+ *
+ * \param value  Word to send
+ *
+ * \return true if success, otherwise false
+ */
+bool hsmci_write_word(uint32_t value);
+
+/** \brief Start a read blocks transfer on the line
+ * Note: The driver will use the DMA available to speed up the transfer.
+ *
+ * \param dest       Pointer on the buffer to fill
+ * \param nb_block   Number of block to transfer
+ *
+ * \return true if started, otherwise false
+ */
+bool hsmci_start_read_blocks(void *dest, uint16_t nb_block);
+
+/** \brief Wait the end of transfer initiated by mci_start_read_blocks()
+ *
+ * \return true if success, otherwise false
+ */
+bool hsmci_wait_end_of_read_blocks(void);
+
+/** \brief Start a write blocks transfer on the line
+ * Note: The driver will use the DMA available to speed up the transfer.
+ *
+ * \param src        Pointer on the buffer to send
+ * \param nb_block   Number of block to transfer
+ *
+ * \return true if started, otherwise false
+ */
+bool hsmci_start_write_blocks(const void *src, uint16_t nb_block);
+
+/** \brief Wait the end of transfer initiated by mci_start_write_blocks()
+ *
+ * \return true if success, otherwise false
+ */
+bool hsmci_wait_end_of_write_blocks(void);
+
+//! @}
 
 #ifdef __cplusplus
 }
 #endif
 
-/**     @}*/
-/**@}*/
-#endif //#ifndef HSMCID_H
-
+#endif /* HSMCI_H_INCLUDED */

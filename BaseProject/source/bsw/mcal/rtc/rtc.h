@@ -1,102 +1,166 @@
-/* ----------------------------------------------------------------------------
- *         SAM Software Package License
- * ----------------------------------------------------------------------------
- * Copyright (c) 2011, Atmel Corporation
+/**
+ * \file
  *
- * All rights reserved.
+ * \brief Real-Time Clock (RTC) driver for SAM.
+ *
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
- * - Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the disclaimer below.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- * Atmel's name may not be used to endorse or promote products derived from
- * this software without specific prior written permission.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
- * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
- * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * ----------------------------------------------------------------------------
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+
+#ifndef RTC_H_INCLUDED
+#define RTC_H_INCLUDED
+
+#include  "compiler.h"
+
+/// @cond 0
+/**INDENT-OFF**/
+#ifdef __cplusplus
+extern "C" {
+#endif
+/**INDENT-ON**/
+/// @endcond
+
+void rtc_set_hour_mode(Rtc *p_rtc, uint32_t ul_mode);
+uint32_t rtc_get_hour_mode(Rtc *p_rtc);
+void rtc_enable_interrupt(Rtc *p_rtc, uint32_t ul_sources);
+void rtc_disable_interrupt(Rtc *p_rtc, uint32_t ul_sources);
+uint32_t rtc_get_interrupt_mask(Rtc *p_rtc);
+void rtc_get_time(Rtc *p_rtc, uint32_t *pul_hour, uint32_t *pul_minute,
+		uint32_t *pul_second);
+uint32_t rtc_set_time(Rtc *p_rtc, uint32_t ul_hour, uint32_t ul_minute,
+		uint32_t ul_second);
+uint32_t rtc_set_time_alarm(Rtc *p_rtc,
+		uint32_t ul_hour_flag, uint32_t ul_hour,
+		uint32_t ul_minute_flag, uint32_t ul_minute,
+		uint32_t ul_second_flag, uint32_t ul_second);
+void rtc_get_date(Rtc *p_rtc, uint32_t *pul_year, uint32_t *pul_month,
+		uint32_t *pul_day, uint32_t *pul_week);
+uint32_t rtc_set_date(Rtc *p_rtc, uint32_t ul_year, uint32_t ul_month,
+		uint32_t ul_day, uint32_t ul_week);
+uint32_t rtc_set_date_alarm(Rtc *p_rtc,
+		uint32_t ul_month_flag, uint32_t ul_month,
+		uint32_t ul_day_flag, uint32_t ul_day);
+void rtc_clear_time_alarm(Rtc *p_rtc);
+void rtc_clear_date_alarm(Rtc *p_rtc);
+uint32_t rtc_get_status(Rtc *p_rtc);
+void rtc_clear_status(Rtc *p_rtc, uint32_t ul_clear);
+uint32_t rtc_get_valid_entry(Rtc *p_rtc);
+void rtc_set_time_event(Rtc *p_rtc, uint32_t ul_selection);
+void rtc_set_calendar_event(Rtc *p_rtc, uint32_t ul_selection);
+
+
+void rtc_set_waveform(Rtc *p_rtc, uint32_t ul_channel, uint32_t ul_value);
+
+void rtc_set_pulse_parameter(Rtc *p_rtc, uint32_t ul_time_high,
+		uint32_t ul_period);
+
 
 /**
- * \file
+ * \page sam_rtc_quickstart Quickstart guide for SAM RTC driver
  *
- * Interface for Real Time Clock (RTC) controller.
+ * This is the quickstart guide for the \ref rtc_group "SAM RTC driver",
+ * with step-by-step instructions on how to configure and use the driver in a
+ * selection of use cases.
+ *
+ * The use cases contain several code fragments. The code fragments in the
+ * steps for setup can be copied into a custom initialization function, while
+ * the steps for usage can be copied into, e.g., the main application function.
+ *
+ * \section rtc_basic_use_case Basic use case
+ * In this basic use case, the RTC module is using 32kHz external crystal and
+ * configured for 24-hour mode. It will read the current date and time.
+ *
+ * \subsection sam_rtc_quickstart_prereq Prerequisites
+ * -# \ref sysclk_group "System Clock Management (Sysclock)"
+ *
+ * \section rtc_basic_use_case_setup Setup steps
+ * \subsection rtc_basic_use_case_setup_code Example code
+ * Add to application C-file:
+ * \code
+	   void rtc_setup(void)
+	   {
+	       pmc_switch_sclk_to_32kxtal(PMC_OSC_XTAL);
+
+	       while (!pmc_osc_is_ready_32kxtal());
+
+	       rtc_set_hour_mode(RTC, 0);
+	   }
+\endcode
+ *
+ * \subsection rtc_basic_use_case_setup_flow Workflow
+ *   - \note Please make sure the external 32kHz crystal is available.
+ * -# Enable the External 32K crystal :
+ *   - \code pmc_switch_sclk_to_32kxtal(PMC_OSC_XTAL); \endcode
+ * -# Wait for 32K crystal ready:
+ *   - \code while (!pmc_osc_is_ready_32kxtal()); \endcode
+ * -# Set default RTC configuration, 24-hour mode .
+ *   - \code rtc_set_hour_mode(RTC, 0); \endcode
+ *
+ * \section rtc_basic_use_case_usage Usage steps
+ * \subsection rtc_basic_use_case_usage_code Example code
+ * Add to, e.g., main loop in application C-file:
+ * \code
+	    uint32_t hour, minute, second;
+	    uint32_t year, month, day, week;
+
+	    rtc_get_time(RTC, &hour, &minute, &second);
+	    rtc_get_date(RTC, &year, &month, &day, &week);
+\endcode
+ *
+ * \subsection rtc_basic_use_case_usage_flow Workflow
+ * -# Start Define the variables for the date and time:
+ *   - \code uint32_t hour, minute, second; \endcode
+ *   - \code uint32_t year, month, day, week; \endcode
+ * -# Read current time:
+ *   - \code rtc_get_time(RTC, &hour, &minute, &second); \endcode
+ * -# Read current date:
+ *   - \code rtc_get_date(RTC, &year, &month, &day, &week); \endcode
  *
  */
 
-#ifndef _RTC_
-#define _RTC_
-
-/*----------------------------------------------------------------------------
- *        Headers
- *----------------------------------------------------------------------------*/
-#include "chip.h"
-
-#include <stdint.h>
-
-/*----------------------------------------------------------------------------
- *        Definitions
- *----------------------------------------------------------------------------*/
-
-#define RTC_HOUR_BIT_LEN_MASK   0x3F
-#define RTC_MIN_BIT_LEN_MASK    0x7F
-#define RTC_SEC_BIT_LEN_MASK    0x7F
-#define RTC_CENT_BIT_LEN_MASK   0x7F
-#define RTC_YEAR_BIT_LEN_MASK   0xFF
-#define RTC_MONTH_BIT_LEN_MASK  0x1F
-#define RTC_DATE_BIT_LEN_MASK   0x3F
-#define RTC_WEEK_BIT_LEN_MASK   0x07
-
-/*----------------------------------------------------------------------------
- *        Exported functions
- *----------------------------------------------------------------------------*/
-
-#ifdef __cplusplus
- extern "C" {
-#endif
-
-extern void RTC_SetHourMode( Rtc* pRtc, uint32_t dwMode ) ;
-
-extern uint32_t RTC_GetHourMode( Rtc* pRtc ) ;
-
-extern void RTC_EnableIt( Rtc* pRtc, uint32_t dwSources ) ;
-
-extern void RTC_DisableIt( Rtc* pRtc, uint32_t dwSources ) ;
-
-extern int RTC_SetTime( Rtc* pRtc, uint8_t ucHour, uint8_t ucMinute, 
-		uint8_t ucSecond ) ;
-
-extern void RTC_GetTime( Rtc* pRtc, uint8_t *pucHour, uint8_t *pucMinute, 
-		uint8_t *pucSecond ) ;
-
-extern int RTC_SetTimeAlarm( Rtc* pRtc, uint8_t *pucHour, uint8_t *pucMinute, 
-		uint8_t *pucSecond ) ;
-
-extern void RTC_GetDate( Rtc* pRtc, uint16_t *pwYear, uint8_t *pucMonth, 
-		uint8_t *pucDay, uint8_t *pucWeek ) ;
-
-extern int RTC_SetDate( Rtc* pRtc, uint16_t wYear, uint8_t ucMonth, 
-		uint8_t ucDay, uint8_t ucWeek ) ;
-
-extern int RTC_SetDateAlarm( Rtc* pRtc, uint8_t *pucMonth, uint8_t *pucDay ) ;
-
-extern void RTC_ClearSCCR( Rtc* pRtc, uint32_t dwMask ) ;
-
-extern uint32_t RTC_GetSR( Rtc* pRtc, uint32_t dwMask ) ;
-
+/// @cond 0
+/**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
+/**INDENT-ON**/
+/// @endcond
 
-#endif /* #ifndef _RTC_ */
-
+#endif /* RTC_H_INCLUDED */

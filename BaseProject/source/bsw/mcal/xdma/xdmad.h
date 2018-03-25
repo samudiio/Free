@@ -134,6 +134,7 @@ typedef struct _Xdmad {
 	uint8_t  xdmaMutex;
 } sXdmad;
 
+/** XDMA config register for channel */
 typedef struct _XdmadCfg {
 	/** Microblock Control Member. */
 	uint32_t mbr_ubc;
@@ -152,6 +153,7 @@ typedef struct _XdmadCfg {
 	/** Destination Microblock Stride Member. */
 	uint32_t mbr_dus;
 } sXdmadCfg;
+
 
 /** \brief Structure for storing parameters for DMA view0 that can be
  * performed by the DMA Master transfer.*/
@@ -226,6 +228,9 @@ typedef struct _LinkedListDescriporView3
  *----------------------------------------------------------------------------*/
 /** \addtogroup dmad_functions DMA Driver Functions
 		@{*/
+
+extern void xdmac_configure_transfer(Xdmac *xdmac, uint32_t channel_num, sXdmadCfg *cfg);
+
 extern void XDMAD_Initialize( sXdmad *pXdmad,
 							 uint8_t bPollingMode );
 

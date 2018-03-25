@@ -97,8 +97,7 @@ uint32_t SystemCoreClock = CHIP_FREQ_MAINCK_RC_4MHZ;
 	{
 	}
 	
-	PMC->PMC_MCKR = (PMC->PMC_MCKR & ~(uint32_t)PMC_MCKR_CSS_Msk)
-					| PMC_MCKR_CSS_MAIN_CLK;
+	PMC->PMC_MCKR = (PMC->PMC_MCKR & ~(uint32_t)PMC_MCKR_CSS_Msk)| PMC_MCKR_CSS_MAIN_CLK;
 
 	while ( !(PMC->PMC_SR & PMC_SR_MCKRDY) )
 	{

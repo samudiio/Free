@@ -51,6 +51,23 @@
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
+void xdmac_configure_transfer(Xdmac *xdmac, uint32_t channel_num, sXdmadCfg *cfg)
+{
+    assert(xdmac);
+    assert(channel_num < XDMACCHID_NUMBER);
+    assert(cfg);
+
+    XDMAC_GetChannelIsr( xdmac, channel_num);
+    XDMAC_SetSourceAddr(xdmac, channel_num, cfg->mbr_sa);
+    XDMAC_SetDestinationAddr(xdmac, channel_num, cfg->mbr_da);
+    XDMAC_SetMicroblockControl(xdmac, channel_num, cfg->mbr_ubc);
+    XDMAC_SetBlockControl(xdmac, channel_num, cfg->mbr_bc);
+    XDMAC_SetDataStride_MemPattern(xdmac, channel_num, cfg->mbr_ds);
+    XDMAC_SetSourceMicroBlockStride(xdmac, channel_num, cfg->mbr_sus);
+    XDMAC_SetDestinationMicroBlockStride(xdmac, channel_num, cfg->mbr_dus);
+    XDMAC_SetChannelConfig(xdmac, channel_num, cfg->mbr_cfg );
+}
+
 /**
  * \brief Get XDMAC global type.
  *
@@ -154,6 +171,10 @@ void XDMAC_EnableChannel( Xdmac *pXdmac, uint8_t channel )
 {
 	assert(pXdmac);
 	assert(channel < XDMAC_CHANNEL_NUM);
+
+    /* Update DCache before DMA transmit */
+    SCB_CleanInvalidateDCache();  /*******test if can be removed********/
+
 	pXdmac->XDMAC_GE = (XDMAC_GE_EN0 << channel);
 }
 

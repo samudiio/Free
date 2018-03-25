@@ -1,455 +1,651 @@
-/* ----------------------------------------------------------------------------
- *         SAM Software Package License
- * ----------------------------------------------------------------------------
- * Copyright (c) 2011, Atmel Corporation
+/**
+ * \file
  *
- * All rights reserved.
+ * \brief Real-Time Clock (RTC) driver for SAM.
+ *
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
- * - Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the disclaimer below.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- * Atmel's name may not be used to endorse or promote products derived from
- * this software without specific prior written permission.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
- * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
- * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * ----------------------------------------------------------------------------
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-/** \addtogroup rtc_module Working with RTC
- *  \ingroup peripherals_module
- * The RTC driver provides the interface to configure and use the RTC
- * peripheral.
- *
- * It manages date, time, and alarms.\n
- * This timer is clocked by the 32kHz system clock, and is not impacted by
- * power management settings (PMC). To be accurate, it is better to use an
- * external 32kHz crystal instead of the internal 32kHz RC.\n
- *
- * It uses BCD format, and time can be set in AM/PM or 24h mode through a
- * configuration bit in the mode register.\n
- *
- * To update date or time, the user has to follow these few steps :
- * <ul>
- * <li>Set UPDTIM and/or UPDCAL bit(s) in RTC_CR,</li>
- * <li>Polling or IRQ on the ACKUPD bit of RTC_CR,</li>
- * <li>Clear ACKUPD bit in RTC_SCCR,</li>
- * <li>Update Time and/or Calendar values in RTC_TIMR/RTC_CALR (BCD format),</li>
- * <li>Clear UPDTIM and/or UPDCAL bit in RTC_CR.</li>
- * </ul>
- * An alarm can be set to happen on month, date, hours, minutes or seconds,
- * by setting the proper "Enable" bit of each of these fields in the Time and
- * Calendar registers.
- * This allows a large number of configurations to be available for the user.
- * Alarm occurrence can be detected even by polling or interrupt.
- *
- * A check of the validity of the date and time format and values written by 
- * the user is automatically done.
- * Errors are reported through the Valid Entry Register.
- *
- * For more accurate information, please look at the RTC section of the
- * Datasheet.
- *
- * Related files :\n
- * \ref rtc.c\n
- * \ref rtc.h.\n
- */
-/*@{*/
-/*@}*/
+#include "rtc.h"
 
+/// @cond 0
+/**INDENT-OFF**/
+#ifdef __cplusplus
+extern "C" {
+#endif
+/**INDENT-ON**/
+/// @endcond
 
 /**
- * \file
+ * \defgroup sam_drivers_rtc_group Real-Time Clock (RTC)
  *
- * Implementation of Real Time Clock (RTC) controller.
+ * See \ref sam_rtc_quickstart.
  *
+ * The RTC provides a full binary-coded decimal (BCD) clock that includes
+ * century (19/20), year (with leap years), month, date, day, hour, minute
+ * and second.
+ *
+ * @{
  */
 
-/*----------------------------------------------------------------------------
- *        Headers
- *----------------------------------------------------------------------------*/
+/* RTC Write Protect Key "RTC" in ASCII */
+#define RTC_WP_KEY     (0x525443)
 
-#include "chip.h"
+/* The BCD code shift value */
+#define BCD_SHIFT      4
 
-#include <stdint.h>
-#include <assert.h>
+/* The BCD code mask value */
+#define BCD_MASK       0xfu
 
-/*----------------------------------------------------------------------------
- *        Exported functions
- *----------------------------------------------------------------------------*/
+/* The BCD mul/div factor value */
+#define BCD_FACTOR     10
 
 /**
- * \brief Sets the RTC in either 12 or 24 hour mode.
+ * \brief Set the RTC hour mode.
  *
- * \param mode  Hour mode.
+ * \param p_rtc Pointer to an RTC instance.
+ * \param ul_mode 1 for 12-hour mode, 0 for 24-hour mode.
  */
-extern void RTC_SetHourMode( Rtc* pRtc, uint32_t dwMode )
+void rtc_set_hour_mode(Rtc *p_rtc, uint32_t ul_mode)
 {
-	assert((dwMode & 0xFFFFFFFE) == 0);
-
-	pRtc->RTC_MR = dwMode ;
-}
-
-/**
- * \brief Gets the RTC mode.
- *
- * \return Hour mode.
- */
-extern uint32_t RTC_GetHourMode( Rtc* pRtc )
-{
-	uint32_t dwMode ;
-
-	TRACE_DEBUG( "RTC_SetHourMode()\n\r" ) ;
-
-	dwMode = pRtc->RTC_MR;
-	dwMode &= 0xFFFFFFFE;
-
-	return dwMode ;
-}
-
-/**
- * \brief Enables the selected interrupt sources of the RTC.
- *
- * \param sources  Interrupt sources to enable.
- */
-extern void RTC_EnableIt( Rtc* pRtc, uint32_t dwSources )
-{
-	assert((dwSources & (uint32_t)(~0x1F)) == 0);
-
-	TRACE_DEBUG( "RTC_EnableIt()\n\r" ) ;
-
-	pRtc->RTC_IER = dwSources ;
-}
-
-/**
- * \brief Disables the selected interrupt sources of the RTC.
- *
- * \param sources  Interrupt sources to disable.
- */
-extern void RTC_DisableIt( Rtc* pRtc, uint32_t dwSources )
-{
-	assert((dwSources & (uint32_t)(~0x1F)) == 0);
-
-	TRACE_DEBUG( "RTC_DisableIt()\n\r" ) ;
-
-	pRtc->RTC_IDR = dwSources ;
-}
-
-/**
- * \brief Sets the current time in the RTC.
- *
- * \note In successive update operations, the user must wait at least one second
- * after resetting the UPDTIM/UPDCAL bit in the RTC_CR before setting these
- * bits again. Please look at the RTC section of the datasheet for detail.
- *
- * \param ucHour    Current hour in 12 or 24 hour mode.
- * \param ucMinute  Current minute.
- * \param ucSecond  Current second.
- *
- * \return 0 success, 1 fail to set
- */
-extern int RTC_SetTime( Rtc* pRtc, uint8_t ucHour, uint8_t ucMinute, uint8_t ucSecond )
-{
-	uint32_t dwTime=0 ;
-	uint8_t ucHour_bcd ;
-	uint8_t ucMin_bcd ;
-	uint8_t ucSec_bcd ;
-
-	TRACE_DEBUG( "RTC_SetTime(%02d:%02d:%02d)\n\r", ucHour, ucMinute, ucSecond ) ;
-
-	/* if 12-hour mode, set AMPM bit */
-	if ( (pRtc->RTC_MR & RTC_MR_HRMOD) == RTC_MR_HRMOD ) {
-		if ( ucHour > 12 ) {
-			ucHour -= 12 ;
-			dwTime |= RTC_TIMR_AMPM ;
-		}
+	if (ul_mode) {
+		p_rtc->RTC_MR |= RTC_MR_HRMOD;
+	} else {
+		p_rtc->RTC_MR &= (~RTC_MR_HRMOD);
 	}
-	ucHour_bcd = (ucHour%10)   | ((ucHour/10)<<4) ;
-	ucMin_bcd  = (ucMinute%10) | ((ucMinute/10)<<4) ;
-	ucSec_bcd  = (ucSecond%10) | ((ucSecond/10)<<4) ;
-
-	/* value overflow */
-	if ( (ucHour_bcd & (uint8_t)(~RTC_HOUR_BIT_LEN_MASK)) |
-			(ucMin_bcd & (uint8_t)(~RTC_MIN_BIT_LEN_MASK)) |
-			(ucSec_bcd & (uint8_t)(~RTC_SEC_BIT_LEN_MASK))) {
-		return 1 ;
-	}
-
-	dwTime = ucSec_bcd | (ucMin_bcd << 8) | (ucHour_bcd<<16) ;
-
-	pRtc->RTC_CR |= RTC_CR_UPDTIM ;
-	while ((pRtc->RTC_SR & RTC_SR_ACKUPD) != RTC_SR_ACKUPD) ;
-	pRtc->RTC_SCCR = RTC_SCCR_ACKCLR ;
-	pRtc->RTC_TIMR = dwTime ;
-	pRtc->RTC_CR &= (uint32_t)(~RTC_CR_UPDTIM) ;
-	pRtc->RTC_SCCR |= RTC_SCCR_SECCLR ;
-
-	return (int)(pRtc->RTC_VER & RTC_VER_NVTIM) ;
 }
 
 /**
- * \brief Retrieves the current time as stored in the RTC in several variables.
+ * \brief Get the RTC hour mode.
  *
- * \param pucHour    If not null, current hour is stored in this variable.
- * \param pucMinute  If not null, current minute is stored in this variable.
- * \param pucSecond  If not null, current second is stored in this variable.
+ * \param p_rtc Pointer to an RTC instance.
+ *
+ * \return 1 for 12-hour mode, 0 for 24-hour mode.
  */
-extern void RTC_GetTime( Rtc* pRtc, uint8_t *pucHour, 
-				uint8_t *pucMinute, uint8_t *pucSecond )
+uint32_t rtc_get_hour_mode(Rtc *p_rtc)
 {
-	uint32_t dwTime ;
+	uint32_t ul_temp = p_rtc->RTC_MR;
 
-	TRACE_DEBUG( "RTC_GetTime()\n\r" ) ;
+	if (ul_temp & RTC_MR_HRMOD) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
 
-	/* Get current RTC time */
-	dwTime = pRtc->RTC_TIMR ;
-	while ( dwTime != pRtc->RTC_TIMR ) {
-		dwTime = pRtc->RTC_TIMR ;
+/**
+ * \brief Enable RTC interrupts.
+ *
+ * \param p_rtc Pointer to an RTC instance.
+ * \param ul_sources Interrupts to be enabled.
+ */
+void rtc_enable_interrupt(Rtc *p_rtc, uint32_t ul_sources)
+{
+	p_rtc->RTC_IER = ul_sources;
+}
+
+/**
+ * \brief Disable RTC interrupts.
+ *
+ * \param p_rtc Pointer to an RTC instance.
+ * \param ul_sources Interrupts to be disabled.
+ */
+void rtc_disable_interrupt(Rtc *p_rtc, uint32_t ul_sources)
+{
+	p_rtc->RTC_IDR = ul_sources;
+}
+
+/**
+ * \brief Read RTC interrupt mask.
+ *
+ * \param p_rtc Pointer to an RTC instance.
+ *
+ * \return The interrupt mask value.
+ */
+uint32_t rtc_get_interrupt_mask(Rtc *p_rtc)
+{
+	return p_rtc->RTC_IMR;
+}
+
+/**
+ * \brief Get the RTC time value.
+ *
+ * \param p_rtc Pointer to an RTC instance.
+ * \param pul_hour Current hour, 24-hour mode.
+ * \param pul_minute Current minute.
+ * \param pul_second Current second.
+ */
+void rtc_get_time(Rtc *p_rtc, uint32_t *pul_hour, uint32_t *pul_minute,
+		uint32_t *pul_second)
+{
+	uint32_t ul_time;
+	uint32_t ul_temp;
+
+	/* Get the current RTC time (multiple reads are necessary to insure a stable value). */
+	ul_time = p_rtc->RTC_TIMR;
+	while (ul_time != p_rtc->RTC_TIMR) {
+		ul_time = p_rtc->RTC_TIMR;
 	}
 
 	/* Hour */
-	if ( pucHour ) {
-		*pucHour = ((dwTime & 0x00300000) >> 20) * 10
-			+ ((dwTime & 0x000F0000) >> 16);
+	if (pul_hour) {
+		ul_temp = (ul_time & RTC_TIMR_HOUR_Msk) >> RTC_TIMR_HOUR_Pos;
+		*pul_hour = (ul_temp >> BCD_SHIFT) * BCD_FACTOR + (ul_temp & BCD_MASK);
 
-		if ( (dwTime & RTC_TIMR_AMPM) == RTC_TIMR_AMPM ) {
-			*pucHour += 12 ;
+		if ((ul_time & RTC_TIMR_AMPM) == RTC_TIMR_AMPM) {
+			*pul_hour += 12;
 		}
 	}
 
 	/* Minute */
-	if ( pucMinute ) {
-		*pucMinute = ((dwTime & 0x00007000) >> 12) * 10
-			+ ((dwTime & 0x00000F00) >> 8);
+	if (pul_minute) {
+		ul_temp = (ul_time & RTC_TIMR_MIN_Msk) >> RTC_TIMR_MIN_Pos;
+		*pul_minute = (ul_temp >> BCD_SHIFT) * BCD_FACTOR +  (ul_temp & BCD_MASK);
 	}
 
 	/* Second */
-	if ( pucSecond ) {
-		*pucSecond = ((dwTime & 0x00000070) >> 4) * 10
-			+ (dwTime & 0x0000000F);
+	if (pul_second) {
+		ul_temp = (ul_time & RTC_TIMR_SEC_Msk) >> RTC_TIMR_SEC_Pos;
+		*pul_second = (ul_temp >> BCD_SHIFT) * BCD_FACTOR + (ul_temp & BCD_MASK);
 	}
 }
 
 /**
- * \brief Sets a time alarm on the RTC.
- * The match is performed only on the provided variables;
- * Setting all pointers to 0 disables the time alarm.
+ * \brief Set the RTC time value.
  *
- * \note In AM/PM mode, the hour value must have bit #7 set for PM, cleared for
- * AM (as expected in the time registers).
+ * \param p_rtc Pointer to an RTC instance.
+ * \param ul_hour Current hour, 24-hour mode.
+ * \param ul_minute Current minute.
+ * \param ul_second Current second.
  *
- * \param pucHour    If not null, the time alarm will hour-match this value.
- * \param pucMinute  If not null, the time alarm will minute-match this value.
- * \param pucSecond  If not null, the time alarm will second-match this value.
- *
- * \return 0 success, 1 fail to set
+ * \return 0 for OK, else invalid setting.
  */
-extern int RTC_SetTimeAlarm( Rtc* pRtc, uint8_t *pucHour, 
-				uint8_t *pucMinute, uint8_t *pucSecond )
+uint32_t rtc_set_time(Rtc *p_rtc, uint32_t ul_hour, uint32_t ul_minute,
+		uint32_t ul_second)
 {
-	uint32_t dwAlarm=0 ;
+	uint32_t ul_time = 0;
 
-	TRACE_DEBUG( "RTC_SetTimeAlarm()\n\r" ) ;
+	/* If 12-hour mode, set AMPM bit */
+	if ((p_rtc->RTC_MR & RTC_MR_HRMOD) == RTC_MR_HRMOD) {
+		if (ul_hour > 12) {
+			ul_hour -= 12;
+			ul_time |= RTC_TIMR_AMPM;
+		}
+	}
 
 	/* Hour */
-	if ( pucHour ) {
-		dwAlarm |= RTC_TIMALR_HOUREN | ((*pucHour / 10) << 20) | ((*pucHour % 10) << 16);
-	}
+	ul_time |= ((ul_hour / BCD_FACTOR) << (RTC_TIMR_HOUR_Pos + BCD_SHIFT)) |
+			((ul_hour % BCD_FACTOR) << RTC_TIMR_HOUR_Pos);
 
 	/* Minute */
-	if ( pucMinute ) {
-		dwAlarm |= RTC_TIMALR_MINEN | ((*pucMinute / 10) << 12) 
-				| ((*pucMinute % 10) << 8);
-	}
+	ul_time |= ((ul_minute / BCD_FACTOR) << (RTC_TIMR_MIN_Pos + BCD_SHIFT)) |
+			((ul_minute % BCD_FACTOR) << RTC_TIMR_MIN_Pos);
 
 	/* Second */
-	if ( pucSecond ) {
-		dwAlarm |= RTC_TIMALR_SECEN | ((*pucSecond / 10) << 4) | (*pucSecond % 10);
-	}
+	ul_time |= ((ul_second / BCD_FACTOR) << (RTC_TIMR_SEC_Pos + BCD_SHIFT)) |
+			((ul_second % BCD_FACTOR) << RTC_TIMR_SEC_Pos);
 
-	pRtc->RTC_TIMALR = dwAlarm ;
+	/* Update time register. Check the spec for the flow. */
+	while ((p_rtc->RTC_SR & RTC_SR_SEC) != RTC_SR_SEC);
+	p_rtc->RTC_CR |= RTC_CR_UPDTIM;
+	while ((p_rtc->RTC_SR & RTC_SR_ACKUPD) != RTC_SR_ACKUPD);
+	p_rtc->RTC_SCCR = RTC_SCCR_ACKCLR;
+	p_rtc->RTC_TIMR = ul_time;
+	p_rtc->RTC_CR &= (~RTC_CR_UPDTIM);
 
-	return (int)(pRtc->RTC_VER & RTC_VER_NVTIMALR) ;
+	return (p_rtc->RTC_VER & RTC_VER_NVTIM);
 }
 
 /**
- * \brief Retrieves the current year, month and day from the RTC.
- * Month, day and week values are numbered starting at 1.
+ * \brief Set the RTC alarm time value.
  *
- * \param pYwear  Current year (optional).
- * \param pucMonth  Current month (optional).
- * \param pucDay  Current day (optional).
- * \param pucWeek  Current day in current week (optional).
+ * \param p_rtc Pointer to an RTC instance.
+ * \param ul_hour_flag 1 for setting, 0 for not setting.
+ * \param ul_hour Alarm hour value, 24-hour mode.
+ * \param ul_minute_flag 1 for setting, 0 for not setting.
+ * \param ul_minute Alarm minute value.
+ * \param ul_second_flag 1 for setting, 0 for not setting.
+ * \param ul_second Alarm second value.
+ *
+ * \return 0 for OK, else invalid setting.
  */
-extern void RTC_GetDate( Rtc* pRtc, uint16_t *pwYear, uint8_t *pucMonth,
-				uint8_t *pucDay, uint8_t *pucWeek )
+uint32_t rtc_set_time_alarm(Rtc *p_rtc,
+		uint32_t ul_hour_flag, uint32_t ul_hour,
+		uint32_t ul_minute_flag, uint32_t ul_minute,
+		uint32_t ul_second_flag, uint32_t ul_second)
 {
-	uint32_t dwDate ;
+	uint32_t ul_alarm = 0;
 
-	/* Get current date (multiple reads are necessary to insure a stable value) */
-	do {
-		dwDate = pRtc->RTC_CALR ;
+	/* Hour alarm setting */
+	if (ul_hour_flag) {
+		/* If 12-hour mode, set AMPM bit */
+		if ((p_rtc->RTC_MR & RTC_MR_HRMOD) == RTC_MR_HRMOD) {
+			if (ul_hour > 12) {
+				ul_hour -= 12;
+				ul_alarm |= RTC_TIMR_AMPM;
+			}
+		}
+
+		ul_alarm |= ((ul_hour / BCD_FACTOR) << (RTC_TIMR_HOUR_Pos + BCD_SHIFT)) |
+				((ul_hour % BCD_FACTOR) << RTC_TIMR_HOUR_Pos);
 	}
-	while ( dwDate != pRtc->RTC_CALR ) ;
+
+	/* Minute alarm setting */
+	if (ul_minute_flag) {
+		ul_alarm |= ((ul_minute / BCD_FACTOR) << (RTC_TIMR_MIN_Pos + BCD_SHIFT)) |
+				((ul_minute % BCD_FACTOR) << RTC_TIMR_MIN_Pos);
+	}
+
+	/* Second alarm setting */
+	if (ul_second_flag) {
+		ul_alarm |= ((ul_second / BCD_FACTOR) << (RTC_TIMR_SEC_Pos + BCD_SHIFT)) |
+				((ul_second % BCD_FACTOR) << RTC_TIMR_SEC_Pos);
+	}
+
+	p_rtc->RTC_TIMALR &= ~(RTC_TIMALR_SECEN | RTC_TIMALR_MINEN | RTC_TIMALR_HOUREN);
+	p_rtc->RTC_TIMALR = ul_alarm;
+	p_rtc->RTC_TIMALR |= (RTC_TIMALR_SECEN | RTC_TIMALR_MINEN | RTC_TIMALR_HOUREN);
+
+	return (p_rtc->RTC_VER & RTC_VER_NVTIMALR);
+}
+
+/**
+ * \brief Get the RTC date value.
+ *
+ * \param p_rtc Pointer to an RTC instance.
+ * \param pul_year Current year.
+ * \param pul_month Current month.
+ * \param pul_day Current day.
+ * \param pul_week Current day in current week.
+ */
+void rtc_get_date(Rtc *p_rtc, uint32_t *pul_year, uint32_t *pul_month,
+		uint32_t *pul_day, uint32_t *pul_week)
+{
+	uint32_t ul_date;
+	uint32_t ul_cent;
+	uint32_t ul_temp;
+
+	/* Get the current date (multiple reads are necessary to insure a stable value). */
+	ul_date = p_rtc->RTC_CALR;
+	while (ul_date != p_rtc->RTC_CALR) {
+		ul_date = p_rtc->RTC_CALR;
+	}
 
 	/* Retrieve year */
-	if ( pwYear ) {
-		*pwYear = (((dwDate  >> 4) & 0x7) * 1000)
-			+ ((dwDate & 0xF) * 100)
-			+ (((dwDate >> 12) & 0xF) * 10)
-			+ ((dwDate >> 8) & 0xF);
+	if (pul_year) {
+		ul_temp = (ul_date & RTC_CALR_CENT_Msk) >> RTC_CALR_CENT_Pos;
+		ul_cent = (ul_temp >> BCD_SHIFT) * BCD_FACTOR + (ul_temp & BCD_MASK);
+		ul_temp = (ul_date & RTC_CALR_YEAR_Msk) >> RTC_CALR_YEAR_Pos;
+		*pul_year = (ul_cent * BCD_FACTOR * BCD_FACTOR) +
+				(ul_temp >> BCD_SHIFT) * BCD_FACTOR + (ul_temp & BCD_MASK);
 	}
 
 	/* Retrieve month */
-	if ( pucMonth ) {
-		*pucMonth = (((dwDate >> 20) & 1) * 10) + ((dwDate >> 16) & 0xF);
+	if (pul_month) {
+		ul_temp = (ul_date & RTC_CALR_MONTH_Msk) >> RTC_CALR_MONTH_Pos;
+		*pul_month = (ul_temp >> BCD_SHIFT) * BCD_FACTOR + (ul_temp & BCD_MASK);
 	}
 
 	/* Retrieve day */
-	if ( pucDay ) {
-		*pucDay = (((dwDate >> 28) & 0x3) * 10) + ((dwDate >> 24) & 0xF);
+	if (pul_day) {
+		ul_temp = (ul_date & RTC_CALR_DATE_Msk) >> RTC_CALR_DATE_Pos;
+		*pul_day = (ul_temp >> BCD_SHIFT) * BCD_FACTOR + (ul_temp & BCD_MASK);
 	}
 
 	/* Retrieve week */
-	if ( pucWeek ) {
-		*pucWeek = ((dwDate >> 21) & 0x7);
+	if (pul_week) {
+		*pul_week = ((ul_date & RTC_CALR_DAY_Msk) >> RTC_CALR_DAY_Pos);
 	}
 }
 
 /**
- * \brief Sets the current year, month and day in the RTC.
- * Month, day and week values must be numbered starting from 1.
+ * \brief Set the RTC date.
  *
- * \note In successive update operations, the user must wait at least one second
- * after resetting the UPDTIM/UPDCAL bit in the RTC_CR before setting these
- * bits again. Please look at the RTC section of the datasheet for detail.
+ * \param p_rtc Pointer to an RTC instance.
+ * \param ul_year Current year.
+ * \param ul_month Current month.
+ * \param ul_day Current day.
+ * \param ul_week Current day in current week.
  *
- * \param wYear  Current year.
- * \param ucMonth Current month.
- * \param ucDay   Current day.
- * \param ucWeek  Day number in current week.
- *
- * \return 0 success, 1 fail to set
+ * \return 0 for OK, else invalid setting.
  */
-extern int RTC_SetDate( Rtc* pRtc, uint16_t wYear, uint8_t ucMonth, 
-						uint8_t ucDay, uint8_t ucWeek )
+uint32_t rtc_set_date(Rtc *p_rtc, uint32_t ul_year, uint32_t ul_month,
+		uint32_t ul_day, uint32_t ul_week)
 {
-	uint32_t wDate ;
-	uint8_t ucCent_bcd ;
-	uint8_t ucYear_bcd ;
-	uint8_t ucMonth_bcd ;
-	uint8_t ucDay_bcd ;
-	uint8_t ucWeek_bcd ;
+	uint32_t ul_date = 0;
 
-	ucCent_bcd  = ((wYear/100)%10) | ((wYear/1000)<<4);
-	ucYear_bcd  = (wYear%10) | (((wYear/10)%10)<<4);
-	ucMonth_bcd = ((ucMonth%10) | (ucMonth/10)<<4);
-	ucDay_bcd   = ((ucDay%10) | (ucDay/10)<<4);
-	ucWeek_bcd  = ((ucWeek%10) | (ucWeek/10)<<4);
+	/* Cent */
+	ul_date |= ((ul_year / BCD_FACTOR / BCD_FACTOR / BCD_FACTOR) <<
+			(RTC_CALR_CENT_Pos + BCD_SHIFT) |
+			((ul_year / BCD_FACTOR / BCD_FACTOR) % BCD_FACTOR) <<  RTC_CALR_CENT_Pos);
 
-	/* value over flow */
-	if ( (ucCent_bcd & (uint8_t)(~RTC_CENT_BIT_LEN_MASK)) |
-			(ucYear_bcd & (uint8_t)(~RTC_YEAR_BIT_LEN_MASK)) |
-			(ucMonth_bcd & (uint8_t)(~RTC_MONTH_BIT_LEN_MASK)) |
-			(ucWeek_bcd & (uint8_t)(~RTC_WEEK_BIT_LEN_MASK)) |
-			(ucDay_bcd & (uint8_t)(~RTC_DATE_BIT_LEN_MASK))
-	   ) {
-		return 1 ;
-	}
+	/* Year */
+	ul_date |= (((ul_year / BCD_FACTOR) % BCD_FACTOR) <<
+			(RTC_CALR_YEAR_Pos + BCD_SHIFT)) |
+			((ul_year % BCD_FACTOR) << RTC_CALR_YEAR_Pos);
 
+	/* Month */
+	ul_date |= ((ul_month / BCD_FACTOR) << (RTC_CALR_MONTH_Pos + BCD_SHIFT)) |
+			((ul_month % BCD_FACTOR) << RTC_CALR_MONTH_Pos);
 
-	/* Convert values to date register value */
-	wDate = ucCent_bcd |
-		(ucYear_bcd << 8) |
-		(ucMonth_bcd << 16) |
-		(ucWeek_bcd << 21) |
-		(ucDay_bcd << 24);
+	/* Week */
+	ul_date |= (ul_week << RTC_CALR_DAY_Pos);
 
-	/* Update calendar register  */
-	pRtc->RTC_CR |= RTC_CR_UPDCAL ;
-	while ((pRtc->RTC_SR & RTC_SR_ACKUPD) != RTC_SR_ACKUPD) ;
+	/* Day */
+	ul_date |= ((ul_day / BCD_FACTOR) << (RTC_CALR_DATE_Pos + BCD_SHIFT)) |
+			((ul_day % BCD_FACTOR) << RTC_CALR_DATE_Pos);
 
-	pRtc->RTC_SCCR = RTC_SCCR_ACKCLR;
-	pRtc->RTC_CALR = wDate ;
-	pRtc->RTC_CR &= (uint32_t)(~RTC_CR_UPDCAL) ;
-	pRtc->RTC_SCCR |= RTC_SCCR_SECCLR; /* clear SECENV in SCCR */
+	/* Update calendar register. Check the spec for the flow. */
+	while ((p_rtc->RTC_SR & RTC_SR_SEC) != RTC_SR_SEC);
+	p_rtc->RTC_CR |= RTC_CR_UPDCAL;
+	while ((p_rtc->RTC_SR & RTC_SR_ACKUPD) != RTC_SR_ACKUPD);
+	p_rtc->RTC_SCCR = RTC_SCCR_ACKCLR;
+	p_rtc->RTC_CALR = ul_date;
+	p_rtc->RTC_CR &= (~RTC_CR_UPDCAL);
 
-	return (int)(pRtc->RTC_VER & RTC_VER_NVCAL) ;
+	return (p_rtc->RTC_VER & RTC_VER_NVCAL);
 }
 
 /**
- * \brief Sets a date alarm in the RTC.
- * The alarm will match only the provided values;
- * Passing a null-pointer disables the corresponding field match.
+ * \brief Set the RTC alarm date value.
  *
- * \param pucMonth If not null, the RTC alarm will month-match this value.
- * \param pucDay   If not null, the RTC alarm will day-match this value.
+ * \param p_rtc Pointer to an RTC instance.
+ * \param ul_month_flag 1 for setting, 0 for not setting.
+ * \param ul_month Alarm month value.
+ * \param ul_day_flag 1 for setting, 0 for not setting.
+ * \param ul_day Alarm day value.
  *
- * \return 0 success, 1 fail to set
+ * \return 0 for OK, else invalid setting.
  */
-extern int RTC_SetDateAlarm( Rtc* pRtc, uint8_t *pucMonth, uint8_t *pucDay )
+uint32_t rtc_set_date_alarm(Rtc *p_rtc,
+		uint32_t ul_month_flag, uint32_t ul_month,
+		uint32_t ul_day_flag, uint32_t ul_day)
 {
-	uint32_t dwAlarm ;
+	uint32_t ul_alarm = 0;
 
-	dwAlarm = ((pucMonth) || (pucDay)) ? (0) : (0x01010000);
-
-	TRACE_DEBUG( "RTC_SetDateAlarm()\n\r" ) ;
-
-	/* Compute alarm field value */
-	if ( pucMonth ) {
-		dwAlarm |= RTC_CALALR_MTHEN | ((*pucMonth / 10) << 20) 
-					| ((*pucMonth % 10) << 16);
+	/* Month alarm setting */
+	if (ul_month_flag) {
+		ul_alarm |= ((ul_month / BCD_FACTOR) << (RTC_CALR_MONTH_Pos + BCD_SHIFT)) |
+				((ul_month % BCD_FACTOR) << RTC_CALR_MONTH_Pos);
 	}
 
-	if ( pucDay ) {
-		dwAlarm |= RTC_CALALR_DATEEN | ((*pucDay / 10) << 28) 
-					| ((*pucDay % 10) << 24);
+	/* Day alarm setting */
+	if (ul_day_flag) {
+		ul_alarm |= ((ul_day / BCD_FACTOR) << (RTC_CALR_DATE_Pos + BCD_SHIFT)) |
+				((ul_day % BCD_FACTOR) << RTC_CALR_DATE_Pos);
 	}
 
 	/* Set alarm */
-	pRtc->RTC_CALALR = dwAlarm ;
+	p_rtc->RTC_CALALR &= ~(RTC_CALALR_MTHEN | RTC_CALALR_DATEEN);
+	p_rtc->RTC_CALALR = ul_alarm;
+	p_rtc->RTC_CALALR |= (RTC_CALALR_MTHEN | RTC_CALALR_DATEEN);
 
-	return (int)(pRtc->RTC_VER & RTC_VER_NVCALALR) ;
+	return (p_rtc->RTC_VER & RTC_VER_NVCALALR);
 }
 
 /**
- * \brief Clear flag bits of status clear command register in the RTC.
+ * \brief Clear the RTC time alarm setting.
  *
- * \param mask Bits mask of cleared events
+ * \param p_rtc Pointer to an RTC instance.
  */
-extern void RTC_ClearSCCR( Rtc* pRtc, uint32_t dwMask )
+void rtc_clear_time_alarm(Rtc *p_rtc)
 {
-	/* Clear all flag bits in status clear command register */
-	dwMask &= RTC_SCCR_ACKCLR | RTC_SCCR_ALRCLR | RTC_SCCR_SECCLR 
-				| RTC_SCCR_TIMCLR | RTC_SCCR_CALCLR ;
-
-	pRtc->RTC_SCCR = dwMask ;
+	p_rtc->RTC_TIMALR = 0;
 }
 
 /**
- * \brief Get flag bits of status register in the RTC.
+ * \brief Clear the RTC date alarm setting.
  *
- * \param mask Bits mask of Status Register
- *
- * \return Status register & mask
+ * \param p_rtc Pointer to an RTC instance.
  */
-extern uint32_t RTC_GetSR( Rtc* pRtc, uint32_t dwMask )
+void rtc_clear_date_alarm(Rtc *p_rtc)
 {
-	uint32_t dwEvent ;
-
-	dwEvent = pRtc->RTC_SR ;
-
-	return (dwEvent & dwMask) ;
+	/* Need a valid value without enabling */
+	p_rtc->RTC_CALALR = RTC_CALALR_MONTH(0x01) | RTC_CALALR_DATE(0x01);
 }
 
+/**
+ * \brief Get the RTC status.
+ *
+ * \param p_rtc Pointer to an RTC instance.
+ *
+ * \return Status of the RTC.
+ */
+uint32_t rtc_get_status(Rtc *p_rtc)
+{
+	return (p_rtc->RTC_SR);
+}
+
+/**
+ * \brief Set the RTC SCCR to clear status bits.
+ *
+ * \param p_rtc Pointer to an RTC instance.
+ * \param ul_clear Some flag bits which will be cleared.
+ */
+void rtc_clear_status(Rtc *p_rtc, uint32_t ul_clear)
+{
+	p_rtc->RTC_SCCR = ul_clear;
+}
+
+/**
+ * \brief Get the RTC valid entry.
+ *
+ * \param p_rtc Pointer to an RTC instance.
+ *
+ * \return 0 for no invalid data, else has contained invalid data.
+ */
+uint32_t rtc_get_valid_entry(Rtc *p_rtc)
+{
+	return (p_rtc->RTC_VER);
+}
+
+/**
+ * \brief Set the RTC time event selection.
+ *
+ * \param p_rtc Pointer to an RTC instance.
+ * \param ul_selection Time event selection to be enabled.
+ */
+void rtc_set_time_event(Rtc *p_rtc, uint32_t ul_selection)
+{
+	p_rtc->RTC_CR &= ~RTC_CR_TIMEVSEL_Msk;
+	p_rtc->RTC_CR |= (ul_selection << RTC_CR_TIMEVSEL_Pos) & RTC_CR_TIMEVSEL_Msk;
+}
+
+/**
+ * \brief Set the RTC calendar event selection.
+ *
+ * \param p_rtc Pointer to an RTC instance.
+ * \param ul_selection Calendar event selection to be enabled..
+ */
+void rtc_set_calendar_event(Rtc *p_rtc, uint32_t ul_selection)
+{
+	p_rtc->RTC_CR &= ~RTC_CR_CALEVSEL_Msk;
+	p_rtc->RTC_CR |= (ul_selection << RTC_CR_CALEVSEL_Pos) & RTC_CR_CALEVSEL_Msk;
+}
+
+
+/**
+ * \brief Set the RTC output waveform.
+ *
+ * \note This function is only available on SAM3S8/3SD8/4S/4C/G/V/S/E devices.
+ *
+ * \param p_rtc Pointer to an RTC instance.
+ * \param ul_channel Output channel selection.
+ * \param ul_value Output source selection value.
+ */
+void rtc_set_waveform(Rtc *p_rtc, uint32_t ul_channel, uint32_t ul_value)
+{
+	if (ul_channel == 0) {
+		switch (ul_value) {
+		case 0:
+			p_rtc->RTC_MR &= ~RTC_MR_OUT0_Msk;
+			p_rtc->RTC_MR |= RTC_MR_OUT0_NO_WAVE;
+			break;
+
+		case 1:
+			p_rtc->RTC_MR &= ~RTC_MR_OUT0_Msk;
+			p_rtc->RTC_MR |= RTC_MR_OUT0_FREQ1HZ;
+			break;
+
+		case 2:
+			p_rtc->RTC_MR &= ~RTC_MR_OUT0_Msk;
+			p_rtc->RTC_MR |= RTC_MR_OUT0_FREQ32HZ;
+			break;
+
+		case 3:
+			p_rtc->RTC_MR &= ~RTC_MR_OUT0_Msk;
+			p_rtc->RTC_MR |= RTC_MR_OUT0_FREQ64HZ;
+			break;
+
+		case 4:
+			p_rtc->RTC_MR &= ~RTC_MR_OUT0_Msk;
+			p_rtc->RTC_MR |= RTC_MR_OUT0_FREQ512HZ;
+			break;
+
+#if (!SAMG)
+		case 5:
+			p_rtc->RTC_MR &= ~RTC_MR_OUT0_Msk;
+			p_rtc->RTC_MR |= RTC_MR_OUT0_ALARM_TOGGLE;
+			break;
+#endif
+
+		case 6:
+			p_rtc->RTC_MR &= ~RTC_MR_OUT0_Msk;
+			p_rtc->RTC_MR |= RTC_MR_OUT0_ALARM_FLAG;
+			break;
+
+#if (!SAMG)
+		case 7:
+			p_rtc->RTC_MR &= ~RTC_MR_OUT0_Msk;
+			p_rtc->RTC_MR |= RTC_MR_OUT0_PROG_PULSE;
+			break;
+#endif
+
+		default:
+			break;
+		}
+	} else {
+	#if (!SAM4C && !SAM4CP && !SAM4CM)
+		switch (ul_value) {
+		case 0:
+			p_rtc->RTC_MR &= ~RTC_MR_OUT1_Msk;
+			p_rtc->RTC_MR |= RTC_MR_OUT1_NO_WAVE;
+			break;
+
+		case 1:
+			p_rtc->RTC_MR &= ~RTC_MR_OUT1_Msk;
+			p_rtc->RTC_MR |= RTC_MR_OUT1_FREQ1HZ;
+			break;
+
+		case 2:
+			p_rtc->RTC_MR &= ~RTC_MR_OUT1_Msk;
+			p_rtc->RTC_MR |= RTC_MR_OUT1_FREQ32HZ;
+			break;
+
+		case 3:
+			p_rtc->RTC_MR &= ~RTC_MR_OUT1_Msk;
+			p_rtc->RTC_MR |= RTC_MR_OUT1_FREQ64HZ;
+			break;
+
+		case 4:
+			p_rtc->RTC_MR &= ~RTC_MR_OUT1_Msk;
+			p_rtc->RTC_MR |= RTC_MR_OUT1_FREQ512HZ;
+			break;
+
+#if (!SAMG)
+		case 5:
+			p_rtc->RTC_MR &= ~RTC_MR_OUT1_Msk;
+			p_rtc->RTC_MR |= RTC_MR_OUT1_ALARM_TOGGLE;
+			break;
+#endif
+
+		case 6:
+			p_rtc->RTC_MR &= ~RTC_MR_OUT1_Msk;
+			p_rtc->RTC_MR |= RTC_MR_OUT1_ALARM_FLAG;
+			break;
+
+#if (!SAMG)
+		case 7:
+			p_rtc->RTC_MR &= ~RTC_MR_OUT1_Msk;
+			p_rtc->RTC_MR |= RTC_MR_OUT1_PROG_PULSE;
+			break;
+#endif
+
+		default:
+			break;
+		}
+	#endif
+	}
+}
+
+
+/**
+ * \brief Set the pulse output waveform parameters.
+ *
+ * \note This function is only available on SAM3S8/3SD8/4S/4C/V/S/E devices.
+ *
+ * \param p_rtc Pointer to an RTC instance.
+ * \param ul_time_high High duration of the output pulse.
+ * \param ul_period Period of the output pulse.
+ */
+void rtc_set_pulse_parameter(Rtc *p_rtc, uint32_t ul_time_high,
+		uint32_t ul_period)
+{
+	uint32_t ul_temp;
+
+	ul_temp = p_rtc->RTC_MR;
+
+	ul_temp |= (RTC_MR_THIGH_Msk & ((ul_time_high) << RTC_MR_THIGH_Pos));
+	ul_temp |= (RTC_MR_TPERIOD_Msk & ((ul_period) << RTC_MR_TPERIOD_Pos));
+
+	p_rtc->RTC_MR = ul_temp;
+}
+
+
+//@}
+
+/// @cond 0
+/**INDENT-OFF**/
+#ifdef __cplusplus
+}
+#endif
+/**INDENT-ON**/
+/// @endcond

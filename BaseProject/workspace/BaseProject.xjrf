@@ -16,28 +16,28 @@
        <Combo>
         <ID.0>
          <Data.0>
-          <__>afeDmaRxChannel</__>
+          <__>sd_mmc_mci_card_init</__>
          </Data.0>
          <Data.1>
-          <__>dwXdmaIntEn</__>
+          <__>afeDmaRxChannel</__>
          </Data.1>
          <Data.2>
-          <__>dwXdmaDescAddr</__>
+          <__>dwXdmaIntEn</__>
          </Data.2>
          <Data.3>
-          <__>dwXdmaDescCfg</__>
+          <__>dwXdmaDescAddr</__>
          </Data.3>
          <Data.4>
-          <__>AFEC_GetConvertedData</__>
+          <__>dwXdmaDescCfg</__>
          </Data.4>
          <Data.5>
-          <__>PIO_PD30X1_AFE0_AD0</__>
+          <__>AFEC_GetConvertedData</__>
          </Data.5>
          <Data.6>
-          <__>PIO_PA9A_URXD0</__>
+          <__>PIO_PD30X1_AFE0_AD0</__>
          </Data.6>
          <Data.7>
-          <__>mode</__>
+          <__>PIO_PA9A_URXD0</__>
          </Data.7>
         </ID.0>
         <ID.1>
@@ -49,341 +49,344 @@
       </History>
       <PI.0>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <L>393</L>
-       <P>..\source\infrastructure\os\FreeRtos_821\Source\portable\GCC\ARM_CM7\r0p1\port.c</P>
-       <VL>393</VL>
+       <C>52</C>
+       <L>107</L>
+       <P>..\source\bsw\services\ioport\ioport.h</P>
+       <VL>91</VL>
       </PI.0>
       <PI.1>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <L>164</L>
-       <P>..\source\bsw\mcal\exceptions\exceptions.c</P>
-       <VL>148</VL>
+       <L>334</L>
+       <P>..\source\infrastructure\toolset\gcc\startup_sam.c</P>
+       <VL>334</VL>
       </PI.1>
       <PI.10>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <C>21</C>
-       <L>49</L>
-       <P>..\source\bsw\mcal\afec_dma\afe_dma.c</P>
-       <VL>36</VL>
+       <C>37</C>
+       <L>164</L>
+       <P>..\source\appl\main.c</P>
+       <VL>143</VL>
       </PI.10>
       <PI.11>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <C>6</C>
-       <L>124</L>
-       <P>..\source\bsw\mcal\afec\afec.c</P>
-       <VL>111</VL>
+       <C>22</C>
+       <L>483</L>
+       <P>..\source\appl\lcd_app.c</P>
+       <VL>474</VL>
       </PI.11>
       <PI.12>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <C>34</C>
-       <L>80</L>
-       <P>..\source\infrastructure\derivative\libchip_samv7\chip.h</P>
-       <VL>64</VL>
+       <P>..\source\bsw\mcal\rtc\rtc.c</P>
+       <VL>488</VL>
       </PI.12>
       <PI.13>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <P>..\source\bsw\mcal\Uart_Dma\uart_dma.c</P>
-       <VL>261</VL>
+       <C>55</C>
+       <L>511</L>
+       <P>..\source\bsw\mcal\xdma\xdmac.h</P>
+       <VL>492</VL>
       </PI.13>
       <PI.14>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <L>217</L>
-       <P>..\source\infrastructure\os\FreeRtos_821\Source\list.c</P>
-       <VL>199</VL>
+       <C>7</C>
+       <L>400</L>
+       <P>..\source\infrastructure\os\FreeRtos_821\Source\portable\GCC\ARM_CM7\r0p1\port.c</P>
+       <VL>393</VL>
       </PI.14>
       <PI.15>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <C>10</C>
-       <L>339</L>
-       <P>..\source\infrastructure\os\FreeRtos_821\Demo\Common\Minimal\IntQueue.c</P>
-       <VL>322</VL>
+       <C>12</C>
+       <L>138</L>
+       <P>..\source\bsw\ecual\sd_mmc\sd_mmc_mem.h</P>
+       <VL>118</VL>
       </PI.15>
       <PI.16>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <C>37</C>
-       <L>123</L>
-       <P>..\source\bsw\mcal\spi\spi.c</P>
-       <VL>116</VL>
+       <C>41</C>
+       <L>211</L>
+       <P>..\source\bsw\services\storage\ctrl_access\ctrl_access.h</P>
+       <VL>189</VL>
       </PI.16>
       <PI.17>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <C>63</C>
-       <L>627</L>
-       <P>..\source\infrastructure\os\FreeRtos_821\Source\queue.c</P>
-       <VL>659</VL>
+       <C>36</C>
+       <L>52</L>
+       <P>..\source\infrastructure\derivative\libchip_samv7\include\fatfs\fatfs-port-r0.09\sam\fattime_rtc.c</P>
+       <VL>31</VL>
       </PI.17>
       <PI.18>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <C>336</C>
-       <L>72</L>
-       <P>..\source\appl\RegTest.c</P>
-       <VL>57</VL>
-       <VP>2403</VP>
-      </PI.18>
-      <PI.19>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <C>23</C>
-       <L>436</L>
-       <P>..\source\infrastructure\os\FreeRtos_821\Demo\Common\Minimal\dynamic.c</P>
-       <VL>430</VL>
-      </PI.19>
-      <PI.2>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>128</C>
        <L>662</L>
        <P>..\source\bsw\ecual\eve\FT8xx.h</P>
        <VL>647</VL>
        <VP>420</VP>
+      </PI.18>
+      <PI.19>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>45</C>
+       <L>56</L>
+       <P>..\source\bsw\services\clock\sysclk.h</P>
+       <VL>34</VL>
+      </PI.19>
+      <PI.2>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>7</C>
+       <L>130</L>
+       <P>..\source\bsw\services\ioport\ioport_pio.h</P>
+       <VL>109</VL>
       </PI.2>
       <PI.20>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>17</C>
+       <L>2252</L>
+       <P>..\source\infrastructure\os\FreeRtos_821\Source\tasks.c</P>
+       <VL>2227</VL>
+      </PI.20>
+      <PI.21>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>53</C>
+       <L>134</L>
+       <P>..\source\bsw\services\clock\osc.h</P>
+       <VL>110</VL>
+      </PI.21>
+      <PI.22>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>53</C>
+       <L>241</L>
+       <P>..\source\bsw\mcal\spi_dma\spi_dma.c</P>
+       <VL>230</VL>
+      </PI.22>
+      <PI.23>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>1</C>
+       <L>116</L>
+       <P>..\source\bsw\mcal\spi_dma\spi_dma.h</P>
+       <VL>98</VL>
+      </PI.23>
+      <PI.24>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>21</C>
+       <L>49</L>
+       <P>..\source\bsw\mcal\afec_dma\afe_dma.c</P>
+       <VL>36</VL>
+      </PI.24>
+      <PI.25>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>6</C>
+       <L>124</L>
+       <P>..\source\bsw\mcal\afec\afec.c</P>
+       <VL>111</VL>
+      </PI.25>
+      <PI.26>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>34</C>
+       <L>80</L>
+       <P>..\source\infrastructure\derivative\libchip_samv7\chip.h</P>
+       <VL>64</VL>
+      </PI.26>
+      <PI.27>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <P>..\source\bsw\mcal\Uart_Dma\uart_dma.c</P>
+       <VL>261</VL>
+      </PI.27>
+      <PI.28>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <L>217</L>
+       <P>..\source\infrastructure\os\FreeRtos_821\Source\list.c</P>
+       <VL>199</VL>
+      </PI.28>
+      <PI.29>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>10</C>
+       <L>339</L>
+       <P>..\source\infrastructure\os\FreeRtos_821\Demo\Common\Minimal\IntQueue.c</P>
+       <VL>322</VL>
+      </PI.29>
+      <PI.3>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>51</C>
+       <L>21</L>
+       <P>..\source\bsw\mcal\xdma\xdmac.c</P>
+      </PI.3>
+      <PI.30>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>37</C>
+       <L>123</L>
+       <P>..\source\bsw\mcal\spi\spi.c</P>
+       <VL>116</VL>
+      </PI.30>
+      <PI.31>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>63</C>
+       <L>627</L>
+       <P>..\source\infrastructure\os\FreeRtos_821\Source\queue.c</P>
+       <VL>659</VL>
+      </PI.31>
+      <PI.32>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>336</C>
+       <L>72</L>
+       <P>..\source\appl\RegTest.c</P>
+       <VL>57</VL>
+       <VP>2403</VP>
+      </PI.32>
+      <PI.33>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>23</C>
+       <L>436</L>
+       <P>..\source\infrastructure\os\FreeRtos_821\Demo\Common\Minimal\dynamic.c</P>
+       <VL>430</VL>
+      </PI.33>
+      <PI.34>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>64</C>
        <L>22</L>
        <P>..\source\bsw\ecual\eve\eve.h</P>
        <VL>11</VL>
-      </PI.20>
-      <PI.21>
+      </PI.34>
+      <PI.35>
        <Bookmarks_num_>0</Bookmarks_num_>
        <L>326</L>
        <P>..\source\infrastructure\os\FreeRtos_821\Demo\Common\Minimal\flop.c</P>
        <VL>308</VL>
-      </PI.21>
-      <PI.22>
+      </PI.35>
+      <PI.36>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>41</C>
        <L>444</L>
        <P>..\source\appl\main_full.c</P>
        <VL>435</VL>
-      </PI.22>
-      <PI.23>
+      </PI.36>
+      <PI.37>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>20</C>
        <L>42</L>
        <P>..\source\bsw\ecual\Led\led.c</P>
        <VL>33</VL>
-      </PI.23>
-      <PI.24>
+      </PI.37>
+      <PI.38>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>46</C>
        <L>517</L>
        <P>..\source\infrastructure\os\FreeRtos_821\Source\include\task.h</P>
        <VL>493</VL>
-      </PI.24>
-      <PI.25>
+      </PI.38>
+      <PI.39>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>61</C>
        <L>6</L>
        <P>..\source\bsw\mcal\uart\uart.c</P>
-      </PI.25>
-      <PI.26>
+      </PI.39>
+      <PI.4>
+       <Bookmarks_num_>0</Bookmarks_num_>
+       <C>40</C>
+       <L>69</L>
+       <P>..\source\bsw\mcal\hsmci\hsmci.h</P>
+       <VL>50</VL>
+      </PI.4>
+      <PI.40>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>37</C>
        <L>217</L>
        <P>..\source\infrastructure\os\FreeRtos_821\Demo\Common\Minimal\QueueOverwrite.c</P>
        <VL>208</VL>
-      </PI.26>
-      <PI.27>
+      </PI.40>
+      <PI.41>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>8</C>
        <L>3</L>
        <P>..\source\bsw\ecual\Afec_Ctrl.h</P>
-      </PI.27>
-      <PI.28>
+      </PI.41>
+      <PI.42>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>4</C>
        <L>32</L>
        <P>..\source\bsw\ecual\Afec_Ctrl.c</P>
        <VL>15</VL>
-      </PI.28>
-      <PI.29>
+      </PI.42>
+      <PI.43>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>29</C>
        <L>160</L>
        <P>..\source\bsw\mcal\afec\afec.h</P>
        <VL>143</VL>
-      </PI.29>
-      <PI.3>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <C>62</C>
-       <L>524</L>
-       <P>..\source\appl\lcd_app.c</P>
-       <VL>501</VL>
-      </PI.3>
-      <PI.30>
+      </PI.43>
+      <PI.44>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>18</C>
        <L>90</L>
        <P>..\source\bsw\ecual\led.c</P>
        <VL>84</VL>
-      </PI.30>
-      <PI.31>
+      </PI.44>
+      <PI.45>
        <Bookmarks type="B">PNAAAAAA</Bookmarks>
        <Bookmarks_num_>1</Bookmarks_num_>
        <C>2</C>
        <L>86</L>
        <P>..\source\infrastructure\bsp\libboard_samv7-ek\board.h</P>
        <VL>80</VL>
-      </PI.31>
-      <PI.32>
+      </PI.45>
+      <PI.46>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>4</C>
        <L>78</L>
        <P>..\source\infrastructure\bsp\libboard_samv7-ek\include\gmacb_phy.h</P>
        <VL>61</VL>
-      </PI.32>
-      <PI.33>
+      </PI.46>
+      <PI.47>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>26</C>
        <L>48</L>
        <P>..\source\bsw\ecual\led.h</P>
        <VL>39</VL>
-      </PI.33>
-      <PI.34>
+      </PI.47>
+      <PI.48>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>40</C>
        <L>181</L>
        <P>..\source\appl\IntQueueTimer.c</P>
        <VL>154</VL>
-      </PI.34>
-      <PI.35>
+      </PI.48>
+      <PI.49>
        <Bookmarks_num_>0</Bookmarks_num_>
        <C>15</C>
        <L>23</L>
        <P>..\source\bsw\services\system\timer0\timer0.h</P>
        <VL>3</VL>
-      </PI.35>
-      <PI.36>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <C>1</C>
-       <L>49</L>
-       <P>..\source\bsw\services\system\timer0\timer0.c</P>
-       <VL>27</VL>
-      </PI.36>
-      <PI.37>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <C>37</C>
-       <L>48</L>
-       <P>..\source\infrastructure\bsp\libboard_samv7-ek\source\board_memories.c</P>
-       <VL>30</VL>
-      </PI.37>
-      <PI.38>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <L>2073</L>
-       <P>..\source\infrastructure\derivative\freertos\freertos-8.2.3\Source\tasks.c</P>
-       <VL>2081</VL>
-      </PI.38>
-      <PI.39>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <C>57</C>
-       <L>695</L>
-       <P>..\source\infrastructure\derivative\freertos\freertos-8.2.3\Source\portable\GCC\ARM_CM7\r0p1\port.c</P>
-       <VL>636</VL>
-      </PI.39>
-      <PI.4>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <L>334</L>
-       <P>..\source\infrastructure\toolset\gcc\startup_sam.c</P>
-       <VL>328</VL>
-      </PI.4>
-      <PI.40>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <C>2</C>
-       <L>121</L>
-       <P>..\source\appl\asf.h</P>
-       <VL>100</VL>
-      </PI.40>
-      <PI.41>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <C>38</C>
-       <L>925</L>
-       <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\FilteringFunctions\arm_fir_f32.c</P>
-       <VL>908</VL>
-      </PI.41>
-      <PI.42>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <P>..\source\infrastructure\derivative\libchip_samv7\compiler.h</P>
-      </PI.42>
-      <PI.43>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <C>19</C>
-       <L>39</L>
-       <P>..\source\bsw\mcal\fpu\fpu.h</P>
-       <VL>3</VL>
-      </PI.43>
-      <PI.44>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <C>10</C>
-       <L>72</L>
-       <P>..\source\bsw\mcal\fpu\fpu.c</P>
-       <VL>60</VL>
-      </PI.44>
-      <PI.45>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <C>15</C>
-       <L>5747</L>
-       <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\Include\arm_math.h</P>
-       <VL>5751</VL>
-      </PI.45>
-      <PI.46>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <C>44</C>
-       <L>69</L>
-       <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\CommonTables\arm_const_structs.c</P>
-       <VL>45</VL>
-      </PI.46>
-      <PI.47>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <C>2</C>
-       <L>123</L>
-       <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\ComplexMathFunctions\arm_cmplx_mag_f32.c</P>
-       <VL>105</VL>
-      </PI.47>
-      <PI.48>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <L>225</L>
-       <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\TransformFunctions\arm_cfft_radix8_f32.c</P>
-       <VL>225</VL>
-      </PI.48>
-      <PI.49>
-       <Bookmarks_num_>0</Bookmarks_num_>
-       <C>9</C>
-       <L>69</L>
-       <P>..\source\infrastructure\derivative\libchip_samv7\include\cmsis\CMSIS\DSP_Lib\Source\StatisticsFunctions\arm_max_f32.c</P>
-       <VL>67</VL>
       </PI.49>
       <PI.5>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <C>37</C>
-       <L>1695</L>
-       <P>..\source\infrastructure\os\FreeRtos_821\Source\tasks.c</P>
-       <VL>1685</VL>
+       <L>679</L>
+       <P>..\source\bsw\mcal\hsmci\hsmci.c</P>
+       <VL>667</VL>
       </PI.5>
       <PI.6>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <L>118</L>
-       <P>..\source\bsw\ecual\lcd\lcd.c</P>
-       <VL>103</VL>
+       <L>164</L>
+       <P>..\source\bsw\mcal\exceptions\exceptions.c</P>
+       <VL>164</VL>
       </PI.6>
       <PI.7>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <C>42</C>
-       <L>107</L>
-       <P>..\source\appl\main.c</P>
-       <VL>86</VL>
+       <C>39</C>
+       <L>76</L>
+       <P>..\source\bsw\ecual\sd_mmc\sd_mmc_mem.c</P>
+       <VL>57</VL>
       </PI.7>
       <PI.8>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <C>53</C>
-       <L>241</L>
-       <P>..\source\bsw\mcal\spi_dma\spi_dma.c</P>
-       <VL>230</VL>
+       <C>52</C>
+       <L>1744</L>
+       <P>..\source\bsw\ecual\sd_mmc\sd_mmc.c</P>
+       <VL>1737</VL>
       </PI.8>
       <PI.9>
        <Bookmarks_num_>0</Bookmarks_num_>
-       <C>1</C>
-       <L>116</L>
-       <P>..\source\bsw\mcal\spi_dma\spi_dma.h</P>
-       <VL>98</VL>
+       <C>23</C>
+       <L>117</L>
+       <P>..\source\bsw\ecual\lcd\lcd.c</P>
+       <VL>25</VL>
       </PI.9>
      </REG_ROOT>
     </EditorOptions>
@@ -855,83 +858,115 @@
      <Documents.0>
       <ActiveDocument>
        <Maximized>True</Maximized>
-       <RelativeFileName>..\source\bsw\ecual\lcd\lcd.c</RelativeFileName>
+       <RelativeFileName>..\source\infrastructure\toolset\gcc\startup_sam.c</RelativeFileName>
       </ActiveDocument>
       <Editor.0>
-       <FileBarIndex>3</FileBarIndex>
-       <RectPosBottom>569</RectPosBottom>
-       <RectPosLeft>128</RectPosLeft>
-       <RectPosRight>878</RectPosRight>
-       <RectPosTop>128</RectPosTop>
+       <FileBarIndex>2</FileBarIndex>
+       <RectPosBottom>463</RectPosBottom>
+       <RectPosLeft>96</RectPosLeft>
+       <RectPosRight>1045</RectPosRight>
+       <RectPosTop>96</RectPosTop>
        <RelativeFileName>..\source\appl\lcd_app.c</RelativeFileName>
       </Editor.0>
       <Editor.1>
-       <FileBarIndex>6</FileBarIndex>
-       <RectPosBottom>562</RectPosBottom>
-       <RectPosLeft>160</RectPosLeft>
-       <RectPosRight>1516</RectPosRight>
-       <RectPosTop>160</RectPosTop>
+       <FileBarIndex>3</FileBarIndex>
+       <RectPosBottom>537</RectPosBottom>
+       <RectPosLeft>96</RectPosLeft>
+       <RectPosRight>792</RectPosRight>
+       <RectPosTop>96</RectPosTop>
        <RelativeFileName>..\source\appl\main.c</RelativeFileName>
       </Editor.1>
-      <Editor.2>
-       <FileBarIndex>2</FileBarIndex>
-       <RectPosBottom>601</RectPosBottom>
+      <Editor.10>
+       <FileBarIndex>4</FileBarIndex>
+       <RectPosBottom>399</RectPosBottom>
+       <RectPosLeft>32</RectPosLeft>
+       <RectPosRight>981</RectPosRight>
+       <RectPosTop>32</RectPosTop>
+       <RelativeFileName>..\source\bsw\services\ioport\ioport_pio.h</RelativeFileName>
+      </Editor.10>
+      <Editor.11>
+       <FileBarIndex>6</FileBarIndex>
+       <RectPosBottom>527</RectPosBottom>
        <RectPosLeft>160</RectPosLeft>
-       <RectPosRight>910</RectPosRight>
+       <RectPosRight>1109</RectPosRight>
        <RectPosTop>160</RectPosTop>
-       <RelativeFileName>..\source\bsw\ecual\eve\FT8xx.h</RelativeFileName>
+       <RelativeFileName>..\source\infrastructure\toolset\gcc\startup_sam.c</RelativeFileName>
+      </Editor.11>
+      <Editor.2>
+       <FileBarIndex>5</FileBarIndex>
+       <RectPosBottom>431</RectPosBottom>
+       <RectPosLeft>64</RectPosLeft>
+       <RectPosRight>1013</RectPosRight>
+       <RectPosTop>64</RectPosTop>
+       <RelativeFileName>..\source\bsw\ecual\lcd\lcd.c</RelativeFileName>
       </Editor.2>
       <Editor.3>
        <FileBarIndex>7</FileBarIndex>
-       <RectPosBottom>388</RectPosBottom>
-       <RectPosLeft>0</RectPosLeft>
-       <RectPosRight>783</RectPosRight>
-       <RectPosTop>0</RectPosTop>
-       <RelativeFileName>..\source\bsw\ecual\lcd\lcd.c</RelativeFileName>
+       <RectPosBottom>431</RectPosBottom>
+       <RectPosLeft>64</RectPosLeft>
+       <RectPosRight>1013</RectPosRight>
+       <RectPosTop>64</RectPosTop>
+       <RelativeFileName>..\source\bsw\ecual\sd_mmc\sd_mmc.c</RelativeFileName>
       </Editor.3>
       <Editor.4>
-       <FileBarIndex>1</FileBarIndex>
-       <RectPosBottom>633</RectPosBottom>
-       <RectPosLeft>192</RectPosLeft>
-       <RectPosRight>942</RectPosRight>
-       <RectPosTop>192</RectPosTop>
-       <RelativeFileName>..\source\bsw\mcal\exceptions\exceptions.c</RelativeFileName>
+       <FileBarIndex>8</FileBarIndex>
+       <RectPosBottom>367</RectPosBottom>
+       <RectPosLeft>0</RectPosLeft>
+       <RectPosRight>949</RectPosRight>
+       <RectPosTop>0</RectPosTop>
+       <RelativeFileName>..\source\bsw\ecual\sd_mmc\sd_mmc_mem.c</RelativeFileName>
       </Editor.4>
       <Editor.5>
-       <FileBarIndex>0</FileBarIndex>
-       <RectPosBottom>441</RectPosBottom>
+       <FileBarIndex>9</FileBarIndex>
+       <RectPosBottom>367</RectPosBottom>
        <RectPosLeft>0</RectPosLeft>
-       <RectPosRight>750</RectPosRight>
+       <RectPosRight>949</RectPosRight>
        <RectPosTop>0</RectPosTop>
-       <RelativeFileName>..\source\infrastructure\os\FreeRtos_821\Source\portable\GCC\ARM_CM7\r0p1\port.c</RelativeFileName>
+       <RelativeFileName>..\source\bsw\mcal\exceptions\exceptions.c</RelativeFileName>
       </Editor.5>
       <Editor.6>
-       <FileBarIndex>5</FileBarIndex>
-       <RectPosBottom>529</RectPosBottom>
-       <RectPosLeft>75</RectPosLeft>
-       <RectPosRight>817</RectPosRight>
-       <RectPosTop>75</RectPosTop>
-       <RelativeFileName>..\source\infrastructure\os\FreeRtos_821\Source\tasks.c</RelativeFileName>
+       <FileBarIndex>10</FileBarIndex>
+       <RectPosBottom>399</RectPosBottom>
+       <RectPosLeft>32</RectPosLeft>
+       <RectPosRight>981</RectPosRight>
+       <RectPosTop>32</RectPosTop>
+       <RelativeFileName>..\source\bsw\mcal\hsmci\hsmci.c</RelativeFileName>
       </Editor.6>
       <Editor.7>
-       <FileBarIndex>4</FileBarIndex>
-       <RectPosBottom>537</RectPosBottom>
-       <RectPosLeft>96</RectPosLeft>
-       <RectPosRight>846</RectPosRight>
-       <RectPosTop>96</RectPosTop>
-       <RelativeFileName>..\source\infrastructure\toolset\gcc\startup_sam.c</RelativeFileName>
+       <FileBarIndex>1</FileBarIndex>
+       <RectPosBottom>527</RectPosBottom>
+       <RectPosLeft>160</RectPosLeft>
+       <RectPosRight>1109</RectPosRight>
+       <RectPosTop>160</RectPosTop>
+       <RelativeFileName>..\source\bsw\mcal\hsmci\hsmci.h</RelativeFileName>
       </Editor.7>
+      <Editor.8>
+       <FileBarIndex>11</FileBarIndex>
+       <RectPosBottom>463</RectPosBottom>
+       <RectPosLeft>96</RectPosLeft>
+       <RectPosRight>1045</RectPosRight>
+       <RectPosTop>96</RectPosTop>
+       <RelativeFileName>..\source\bsw\mcal\xdma\xdmac.c</RelativeFileName>
+      </Editor.8>
+      <Editor.9>
+       <FileBarIndex>0</FileBarIndex>
+       <RectPosBottom>527</RectPosBottom>
+       <RectPosLeft>160</RectPosLeft>
+       <RectPosRight>1109</RectPosRight>
+       <RectPosTop>160</RectPosTop>
+       <RelativeFileName>..\source\bsw\services\ioport\ioport.h</RelativeFileName>
+      </Editor.9>
       <EditorHistoryFile.0>
-       <RelativeFileName>..\source\bsw\mcal\afec_dma\afe_dma.c</RelativeFileName>
+       <RelativeFileName>..\source\infrastructure\os\FreeRtos_821\Source\portable\GCC\ARM_CM7\r0p1\port.c</RelativeFileName>
       </EditorHistoryFile.0>
       <EditorHistoryFile.1>
-       <RelativeFileName>..\source\bsw\mcal\spi_dma\spi_dma.h</RelativeFileName>
+       <RelativeFileName>..\source\bsw\ecual\sd_mmc\sd_mmc.c</RelativeFileName>
       </EditorHistoryFile.1>
       <EditorHistoryFile.2>
-       <RelativeFileName>..\source\bsw\mcal\spi_dma\spi_dma.c</RelativeFileName>
+       <RelativeFileName>..\source\bsw\mcal\xdma\xdmac.h</RelativeFileName>
       </EditorHistoryFile.2>
       <EditorHistoryFile.3>
-       <RelativeFileName>..\source\infrastructure\toolset\gcc\startup_sam.c</RelativeFileName>
+       <RelativeFileName>..\source\bsw\mcal\rtc\rtc.c</RelativeFileName>
       </EditorHistoryFile.3>
      </Documents.0>
      <Progress>
@@ -956,7 +991,7 @@
       </Misc.3>
       <WatchPane.0>
        <Watch.0>
-        <WatchName>ActiveTasks</WatchName>
+        <WatchName>cmd</WatchName>
         <ExpressionDisplay>
          <Color>0</Color>
          <ColorBack>16769216</ColorBack>
@@ -967,66 +1002,6 @@
          <Scale>0</Scale>
         </ExpressionDisplay>
        </Watch.0>
-       <Watch.1>
-        <WatchName>dwNpcs</WatchName>
-        <ExpressionDisplay>
-         <Color>0</Color>
-         <ColorBack>8421376</ColorBack>
-         <ColorText>0</ColorText>
-         <Enabled>0</Enabled>
-         <Hi type="D">100.0000000000000000</Hi>
-         <Lo type="D">0.0000000000000000</Lo>
-         <Scale>0</Scale>
-        </ExpressionDisplay>
-       </Watch.1>
-       <Watch.2>
-        <WatchName>SPI_WPMR</WatchName>
-        <ExpressionDisplay>
-         <Color>0</Color>
-         <ColorBack>16769216</ColorBack>
-         <ColorText>0</ColorText>
-         <Enabled>0</Enabled>
-         <Hi type="D">100.0000000000000000</Hi>
-         <Lo type="D">0.0000000000000000</Lo>
-         <Scale>0</Scale>
-        </ExpressionDisplay>
-       </Watch.2>
-       <Watch.3>
-        <WatchName>BitmapDataSize</WatchName>
-        <ExpressionDisplay>
-         <Color>0</Color>
-         <ColorBack>16769216</ColorBack>
-         <ColorText>0</ColorText>
-         <Enabled>0</Enabled>
-         <Hi type="D">100.0000000000000000</Hi>
-         <Lo type="D">0.0000000000000000</Lo>
-         <Scale>0</Scale>
-        </ExpressionDisplay>
-       </Watch.3>
-       <Watch.4>
-        <WatchName>DataSize</WatchName>
-        <ExpressionDisplay>
-         <Color>0</Color>
-         <ColorBack>16769216</ColorBack>
-         <ColorText>0</ColorText>
-         <Enabled>0</Enabled>
-         <Hi type="D">100.0000000000000000</Hi>
-         <Lo type="D">0.0000000000000000</Lo>
-         <Scale>0</Scale>
-        </ExpressionDisplay>
-       </Watch.4>
-       <Watch.5>
-        <WatchName>DataPointer</WatchName>
-        <ExpressionDisplay>
-         <Color>0</Color>
-         <ColorBack>16769216</ColorBack>
-         <ColorText>0</ColorText>
-         <Enabled>0</Enabled>
-         <Hi type="D">100.0000000000000000</Hi>
-         <Lo type="D">0.0000000000000000</Lo>
-         <Scale>0</Scale>
-        </ExpressionDisplay>
-       </Watch.5>
       </WatchPane.0>
       <WatchPane.2>
        <Watch.0>
@@ -1096,7 +1071,7 @@
       <TypeOfWnd>-1</TypeOfWnd>
       <DockRect.0>
        <AreHorz>0</AreHorz>
-       <Percent>687</Percent>
+       <Percent>560</Percent>
        <Type>0</Type>
        <TypeOfWnd>-1</TypeOfWnd>
        <DockRect.0>
@@ -1139,7 +1114,7 @@
        </DockRect.1>
        <DockRect.2>
         <AreHorz>1</AreHorz>
-        <Percent>285</Percent>
+        <Percent>339</Percent>
         <Type>0</Type>
         <TypeOfWnd>-1</TypeOfWnd>
         <DockRect.0>
@@ -1190,7 +1165,7 @@
        </DockRect.5>
        <DockRect.6>
         <AreHorz>1</AreHorz>
-        <Percent>946</Percent>
+        <Percent>1113</Percent>
         <Type>1</Type>
         <TypeOfWnd>-2</TypeOfWnd>
        </DockRect.6>
@@ -1202,7 +1177,7 @@
        </DockRect.7>
        <DockRect.8>
         <AreHorz>1</AreHorz>
-        <Percent>619</Percent>
+        <Percent>398</Percent>
         <strTypeOfWnd>Disassembly</strTypeOfWnd>
         <Type>0</Type>
         <TypeOfWnd>5</TypeOfWnd>
@@ -1236,12 +1211,12 @@
       </DockRect.1>
       <DockRect.2>
        <AreHorz>0</AreHorz>
-       <Percent>280</Percent>
+       <Percent>378</Percent>
        <Type>0</Type>
        <TypeOfWnd>-1</TypeOfWnd>
        <DockRect.0>
         <AreHorz>1</AreHorz>
-        <Percent>675</Percent>
+        <Percent>1363</Percent>
         <strTypeOfWnd>Output</strTypeOfWnd>
         <Type>0</Type>
         <TypeOfWnd>0</TypeOfWnd>
@@ -1254,7 +1229,7 @@
        </DockRect.1>
        <DockRect.2>
         <AreHorz>1</AreHorz>
-        <Percent>611</Percent>
+        <Percent>222</Percent>
         <strTypeOfWnd>Watch</strTypeOfWnd>
         <Type>0</Type>
         <TypeOfWnd>2</TypeOfWnd>
@@ -1264,19 +1239,19 @@
           <Width>0</Width>
          </Columns.0>
          <Columns.1>
-          <Pos type="D">30.9309309309309310</Pos>
+          <Pos type="D">38.1770145310435960</Pos>
           <Width>0</Width>
          </Columns.1>
          <Columns.2>
-          <Pos type="D">54.9549549549549570</Pos>
+          <Pos type="D">54.9537648612945870</Pos>
           <Width>0</Width>
          </Columns.2>
          <Columns.3>
-          <Pos type="D">69.9699699699699660</Pos>
+          <Pos type="D">69.8811096433289260</Pos>
           <Width>0</Width>
          </Columns.3>
          <Columns.4>
-          <Pos type="D">84.9849849849849900</Pos>
+          <Pos type="D">84.9405548216644630</Pos>
           <Width>0</Width>
          </Columns.4>
         </Data>
@@ -1289,7 +1264,7 @@
        </DockRect.3>
        <DockRect.4>
         <AreHorz>1</AreHorz>
-        <Percent>624</Percent>
+        <Percent>325</Percent>
         <strTypeOfWnd>SFR</strTypeOfWnd>
         <Type>0</Type>
         <TypeOfWnd>12</TypeOfWnd>
@@ -1329,58 +1304,6 @@
       <Fetch>
        <Beep>True</Beep>
        <DisplayMessage>True</DisplayMessage>
-       <BP.0>
-        <__>
-         <ActionEnabled>False</ActionEnabled>
-         <ActionScript></ActionScript>
-         <ActionScriptParams></ActionScriptParams>
-         <ActionShow>False</ActionShow>
-         <Active>False</Active>
-         <Condition></Condition>
-         <Condition_Count>0</Condition_Count>
-         <ConditionEnabled>False</ConditionEnabled>
-         <Name>&quot;..\source\bsw\mcal\spi\spi.c&quot;::118</Name>
-        </__>
-       </BP.0>
-       <BP.1>
-        <__>
-         <ActionEnabled>False</ActionEnabled>
-         <ActionScript></ActionScript>
-         <ActionScriptParams></ActionScriptParams>
-         <ActionShow>False</ActionShow>
-         <Active>False</Active>
-         <Condition></Condition>
-         <Condition_Count>0</Condition_Count>
-         <ConditionEnabled>False</ConditionEnabled>
-         <Name>&quot;..\source\bsw\mcal\spi\spi.c&quot;::120</Name>
-        </__>
-       </BP.1>
-       <BP.2>
-        <__>
-         <ActionEnabled>False</ActionEnabled>
-         <ActionScript></ActionScript>
-         <ActionScriptParams></ActionScriptParams>
-         <ActionShow>False</ActionShow>
-         <Active>False</Active>
-         <Condition></Condition>
-         <Condition_Count>0</Condition_Count>
-         <ConditionEnabled>False</ConditionEnabled>
-         <Name>&quot;..\source\bsw\mcal\spi\spi.c&quot;::123</Name>
-        </__>
-       </BP.2>
-       <BP.3>
-        <__>
-         <ActionEnabled>False</ActionEnabled>
-         <ActionScript></ActionScript>
-         <ActionScriptParams></ActionScriptParams>
-         <ActionShow>False</ActionShow>
-         <Active>False</Active>
-         <Condition></Condition>
-         <Condition_Count>0</Condition_Count>
-         <ConditionEnabled>False</ConditionEnabled>
-         <Name>&quot;..\source\appl\lcd_app.c&quot;::533</Name>
-        </__>
-       </BP.3>
       </Fetch>
      </Breakpoints>
      <CASETool>
@@ -2093,10 +2016,28 @@
          <Items.0>
           <__>
            <Name>appl</Name>
-           <Options>4</Options>
+           <Options>5</Options>
+           <Items.0>
+            <__>
+             <Name>IntQueueTimer.c</Name>
+             <Options>4</Options>
+            </__>
+           </Items.0>
           </__>
          </Items.0>
          <Items.1>
+          <__>
+           <Name>ecual</Name>
+           <Options>1</Options>
+           <Items.0>
+            <__>
+             <Name>eve.c</Name>
+             <Options>4</Options>
+            </__>
+           </Items.0>
+          </__>
+         </Items.1>
+         <Items.2>
           <__>
            <Name>mcal</Name>
            <Options>1</Options>
@@ -2107,19 +2048,13 @@
             </__>
            </Items.0>
           </__>
-         </Items.1>
-         <Items.2>
+         </Items.2>
+         <Items.3>
           <__>
            <Name>services</Name>
            <Options>1</Options>
-           <Items.0>
-            <__>
-             <Name>syscalls.c</Name>
-             <Options>4</Options>
-            </__>
-           </Items.0>
           </__>
-         </Items.2>
+         </Items.3>
         </__>
        </Items.0>
       </ProjectWindow>
@@ -2179,16 +2114,40 @@
             </Items.4>
             <Items.5>
              <__>
-              <Name>SPI0_CSR[3]</Name>
-              <Options>65537</Options>
+              <Name>SPI0_CSR[2]</Name>
+              <Options>0</Options>
              </__>
             </Items.5>
             <Items.6>
              <__>
+              <Name>SPI0_CSR[3]</Name>
+              <Options>65537</Options>
+              <Items.0>
+               <__>
+                <Name>CPOL</Name>
+                <Options>4</Options>
+               </__>
+              </Items.0>
+              <Items.1>
+               <__>
+                <Name>NCPHA</Name>
+                <Options>0</Options>
+               </__>
+              </Items.1>
+              <Items.2>
+               <__>
+                <Name>CSNAAT</Name>
+                <Options>0</Options>
+               </__>
+              </Items.2>
+             </__>
+            </Items.6>
+            <Items.7>
+             <__>
               <Name>SPI0_WPSR</Name>
               <Options>1</Options>
              </__>
-            </Items.6>
+            </Items.7>
            </__>
           </Items.2>
          </__>
