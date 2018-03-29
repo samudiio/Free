@@ -8,8 +8,8 @@
 #ifndef LCD_H_
 #define LCD_H_
 
-void LDC_Init(void);
-void LDC_ChangeClock(void);
+void LCD_Init(void);
+void LCD_ChangeClock(void);
 uint8_t LCD_SPIReadWrite(uint8_t DataToWrite);
 
 void LCD_CSlow(void);

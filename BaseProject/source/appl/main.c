@@ -7,9 +7,7 @@
 #include <string.h>
 
 /*SD/MMC Card*/
-#include "ctrl_access.h"
-#include "ff.h"
-
+#include "sd_mmc.h"
 
 #include "lcd_app.h"
 
@@ -60,11 +58,10 @@ extern void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName
 #endif /* #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 */
 
 
-#define TOTAL_SIZE 261120
+
 
 /*~~~~~~  Global variables ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-    /* Read buffer */
-    static uint8_t data_buffer[TOTAL_SIZE];
+
 
 /*----------------------------------------------------------------------------
  *        Local functions
@@ -82,13 +79,13 @@ static void prvSetupHardware( void )
     SCB_EnableICache();
     SCB_EnableDCache();
 
+    /* Initialize SD MMC stack */
+    sd_mmc_init();
+    APP_WaitforSDCard();
 
-
-
-    /*LDC_Init();
+    LCD_Init();
     APP_Init();
     LCD_ChangeClock();
-   */
 
     //APP_Calibrate();                                                          // NOTE:  Enable if using any touch demos
 
@@ -102,10 +99,10 @@ static void prvSetupHardware( void )
     //APP_Text();
 
 /******* Show Image ********/
-    //APP_ConvertedBitmap_FirstTime();
-    //APP_ConvertedBitmap();
+    APP_ConvertedBitmap_FirstTime();
+    APP_ConvertedBitmap();
 	
-	    /********           ********/
+/********           ********/
 
     //APP_DigitsFont();
     //APP_SliderandButton();
@@ -128,114 +125,8 @@ static void prvSetupHardware( void )
  */
 extern int main( void )
 {
-    char salomon_file_name[] = "0:salomon.raw";
-    char test_file_name[] = "0:sd_mmc_my_test.txt";
-    uint32_t     i;
-    char   *getstatus;
-
-    Ctrl_status status;
-    FRESULT res;
-    FATFS fs;
-    FIL file_object;
-
     /* Configure the hardware ready to run the demo. */
     prvSetupHardware();
-
-    /* Initialize SD MMC stack */
-    sd_mmc_init();
-
-
-    printf("\x0C\n\r-- SD/MMC/SDIO Card Example on FatFs --\n\r");
-
-    while (1) {
-    printf("Please plug an SD, MMC or SDIO card in slot.\n\r");
-
-    /* Wait card present and ready */
-    do {
-        status = sd_mmc_test_unit_ready(0);
-        if (CTRL_FAIL == status) {
-            printf("Card install FAIL\n\r");
-            printf("Please unplug and re-plug the card.\n\r");
-            while (CTRL_NO_PRESENT != sd_mmc_check(0)) {
-            }
-        }
-    } while (CTRL_GOOD != status);
-
-    printf("\n\rMount disk (f_mount)...\r\n");
-    memset(&fs, 0, sizeof(FATFS));
-    res = f_mount(LUN_ID_SD_MMC_0_MEM, &fs);
-    if (FR_INVALID_DRIVE == res) {
-        printf("[FAIL] res %d\r\n", res);
-        goto main_end_of_test;
-    }
-    printf("\n\r[OK]\r\n");
-
-//      printf("\n\rCreate a file (f_open)...\r\n");
-//      test_file_name[0] = LUN_ID_SD_MMC_0_MEM + '0';
-//      res = f_open(&file_object,
-//              (char const *)test_file_name,
-//              FA_CREATE_ALWAYS | FA_WRITE);
-//      if (res != FR_OK) {
-//          printf("[FAIL] res %d\r\n", res);
-//          goto main_end_of_test;
-//      }
-//      printf("\n\r[OK]\r\n");
-//
-//      printf("\n\rWrite to test file (f_puts)...\r\n");
-//      if (0 == f_puts("test SD/MMC stack LCD\n", &file_object)) {
-//          f_close(&file_object);
-//          printf("[FAIL]\r\n");
-//          goto main_end_of_test;
-//      }
-//      printf("\n\r[OK]\r\n");
-//      f_close(&file_object);
-
-
-    /***** Read My file ****/
-
-    /* Open the file */
-    printf("Open file (f_open)...\r\n");
-    res = f_open(&file_object, (char const *)salomon_file_name, FA_OPEN_EXISTING | FA_READ);
-    if (res != FR_OK) {
-        printf("[FAIL] res %d\r\n", res);
-        goto main_end_of_test;
-    }
-
-    /* Read file */
-    printf("Read file (f_read)...\r\n");
-    memset(data_buffer, 0, TOTAL_SIZE);
-
-    getstatus = f_gets(data_buffer, TOTAL_SIZE, &file_object);
-    if (getstatus != NULL) {
-        printf("Read file [OK]\r\n");
-    }
-
-    for (i = TOTAL_SIZE-10; i < TOTAL_SIZE; i++)
-    {
-        printf("Data[%d] = %d\r\n", i, data_buffer[i]);
-    }
-
-
-    /* Close the file*/
-    printf("Close file (f_close)...\r\n");
-    f_close(&file_object);
-
-
-    printf("Test is successful.\n\r");
-
-main_end_of_test:
-    printf("Please unplug the card.\n\r");
-    while (CTRL_NO_PRESENT != sd_mmc_check(0)) {
-    }
-}
-
-
-
-
-
-
-
-
 
     /*Free RTOS 8.2.1 Example*/
     printf("Free RTOS 8.2.1 Example \n\r");

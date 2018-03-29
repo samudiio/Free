@@ -14,6 +14,10 @@
 
 //#include "eve.h"
 
+/*SD/MMC Card*/
+#include "ctrl_access.h"
+#include "ff.h"
+
 /*------------------------------------------------------------------------------
  *         Defines
  *----------------------------------------------------------------------------*/
@@ -32,6 +36,8 @@ void APP_FlashingDot(void);
 void APP_VertexTranslate(void);
 void APP_Text(void);
 void APP_ConvertedBitmap(void);
+void APP_WaitforSDCard(void);
+FRESULT APP_ReadImagefromSD(uint8_t file_number);
 void APP_ConvertedBitmap_FirstTime(void);
 void APP_Calibrate(void);
 void APP_SliderandButton(void);

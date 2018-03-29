@@ -9,6 +9,8 @@
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
+#include <string.h>
+
 //#include "chip.h"
 #include "board.h"
 #include "eve.h"
@@ -16,7 +18,7 @@
 #include "lcd_app.h"
 //#include "EVE_RGB565.h"
 #include "DIGITfont.h"
-#include "Bosch.h"
+
 
 /*------------------------------------------------------------------------------
  *         Defines
@@ -43,6 +45,8 @@
 #define LCD_CSPREAD     1
 #define LCD_DITHER      1
 
+#define TOTAL_SIZE 261120       //Size of image arrays
+
 /*----------------------------------------------------------------------------
  *        Global variables
  *----------------------------------------------------------------------------*/
@@ -58,6 +62,13 @@ uint16_t SlideVal = 0;
 uint8_t TagVal = 0;
 uint8_t FT81x_GPIO;           // Used for FT800 GPIO register
 
+/*('file properties: ', 'resolution ', 480, 'x', 272, 'format ', 'RGB565', 'stride ', 960, ' total size ', 261120)*/
+/* Read buffer */
+uint8_t data_buffer[TOTAL_SIZE];
+
+const char salomon_file_name[] = "0:salomon.raw";
+const char specialized_file_name[] = "0:specialized.raw";
+const char marketing_file_name[] = "0:marketing.raw";
 
 /*----------------------------------------------------------------------------
  *        Exported functions
@@ -136,7 +147,7 @@ void APP_Init(void)
 
     EVE_MemWrite32(REG_DLSWAP, DLSWAP_FRAME);                           // Swap display list to make the edited one active
 
-    LDC_ChangeClock();
+    LCD_ChangeClock();
 }
 
 
@@ -374,6 +385,64 @@ void APP_Text(void)
     }*/
 }
 
+void APP_WaitforSDCard(void)
+{
+    Ctrl_status status;
+
+    printf("Please plug an SD card in slot.\n\r");
+
+    /* Wait card present and ready */
+    do {
+        status = sd_mmc_test_unit_ready(0);
+        if (CTRL_FAIL == status) {
+            printf("Card install FAIL\n\r");
+            printf("Please unplug and re-plug the card.\n\r");
+            while (CTRL_NO_PRESENT != sd_mmc_check(0)) {
+            }
+        }
+    } while (CTRL_GOOD != status);
+}
+
+
+FRESULT APP_ReadImagefromSD(uint8_t file_number)
+{
+   FATFS fs;
+   FRESULT res;
+   FIL file_object;
+
+   uint8_t * const file_names[5] =
+   {
+       (uint8_t*)salomon_file_name,
+       (uint8_t*)specialized_file_name,
+       (uint8_t*)marketing_file_name
+   };
+
+   memset(&fs, 0, sizeof(FATFS));
+   res = f_mount(LUN_ID_SD_MMC_0_MEM, &fs);
+   if (FR_INVALID_DRIVE == res) {
+       printf("Mount [FAIL] res %d\n\r", res);
+       return res;
+   }
+
+   /***** Start reading files procedure ****/
+   /* Open the file */
+   res = f_open(&file_object, (char const *)file_names[file_number], FA_OPEN_EXISTING | FA_READ);
+   if (res != FR_OK) {
+       printf("Open file [FAIL] res %d\n\r", res);
+       return res;
+   }
+
+   /* Read file */
+   memset(data_buffer, 0, TOTAL_SIZE);
+   f_gets(data_buffer, TOTAL_SIZE, &file_object);
+
+
+   /* Close the file*/
+   f_close(&file_object);
+
+   return FR_OK;
+}
+
 // ############################ DEMO - Bitmap ##################################
 
 void APP_ConvertedBitmap_FirstTime(void)
@@ -381,12 +450,8 @@ void APP_ConvertedBitmap_FirstTime(void)
     uint32_t DataPointer = 0;
     uint32_t DataSize = 261120;
     uint32_t BitmapDataSize = 0;
-    uint8_t * const Pictures[5] =
-    {
-        (uint8_t*)trail,
-        (uint8_t*)utct
-    };
 
+    APP_ReadImagefromSD(0);
     // ------------ Load image data -------------
 
     cmdOffset = EVE_WaitCmdFifoEmpty();                                         // Wait for command FIFO to be empty
@@ -398,8 +463,8 @@ void APP_ConvertedBitmap_FirstTime(void)
 
     while(DataPointer < DataSize)
     {
-        EVE_Write8(*( ( (uint8_t*) Pictures[0] ) + DataPointer) );                                       // Send data byte-by-byte from array
-        DataPointer ++;
+        EVE_Write8(data_buffer[DataPointer]);                                   // Send data byte-by-byte from array
+        DataPointer++;
     }
 
     BitmapDataSize = DataSize - DataPointer;                                    // Add 3, 2 or 1 bytes padding to make it  a multiple of 4 bytes
@@ -484,81 +549,68 @@ void APP_ConvertedBitmap(void)
     uint32_t BitmapDataSize = 0;
     uint8_t * const Pictures[5] =
     {
-        (uint8_t*)trail,
-        (uint8_t*)utct
+        //(uint8_t*)trail,
+        //(uint8_t*)utct
     };
 
     // ------------ Load image data -------------
 
     cmdOffset = EVE_WaitCmdFifoEmpty();                                         // Wait for command FIFO to be empty
 
-while(1)
-{
-    DataPointer = 0;
-
-    LCD_CSlow();                                                                // CS low begins SPI transaction
-    EVE_AddrForWr(RAM_G);                                                       // Send address to which first value will be written
-
-    if(index > 1)
+    while(1)
     {
-        index = 0;
+        DataPointer = 0;
+        if(index > 2)
+        {
+            index = 0;
+        }
+        APP_ReadImagefromSD(index);
+
+        LCD_CSlow();                                                                // CS low begins SPI transaction
+        EVE_AddrForWr(RAM_G);                                                       // Send address to which first value will be written
+
+        while(DataPointer < DataSize)
+        {
+            EVE_Write8(data_buffer[DataPointer]);                                   // Send data byte-by-byte from array
+            DataPointer++;
+        }
+        index++;
+
+        LCD_CShigh();                                                               // CS high after burst write of image data
+
+            // ------------ Now create screen to display image -------------
+
+        MCU_Delay_20ms();
+
+
+        LCD_CSlow();                                                                // CS low begins SPI transaction
+        EVE_AddrForWr(RAM_CMD + cmdOffset);                                         // Send address to which first value will be written
+
+        EVE_Write32(CMD_DLSTART);                                                   // Co-pro starts new DL at RAM_DL + 0
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);                                 // Keep count of bytes sent so that write pointer can be updated at end
+                                                                                    // Keeping CS low and FT8xx will auto increment address for 'burst write'
+
+        EVE_Write32(BEGIN(BITMAPS));                                                // Begin drawing bitmaps
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+        EVE_Write32(VERTEX2F(0,0));                                                 // Draw at (0,0)
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+        EVE_Write32(END());                                                         // End drawing images
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+        EVE_Write32(DISPLAY());                                                     // Instruct the graphics processor to show the list
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+        EVE_Write32(CMD_SWAP);                                                      // Make this list active
+        cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
+
+        LCD_CShigh();                                                               // Chip Select high concludes burst
+
+        EVE_MemWrite32(REG_CMD_WRITE, (cmdOffset));                                 // Update the ring buffer pointer
+                                                                                    // Co-processor will now execute all of the above commands and create a display list
+        cmdOffset = EVE_WaitCmdFifoEmpty();                                         // Await completion of processing and record starting address for next screen update
     }
-
-
-    while(DataPointer < DataSize)
-    {
-        EVE_Write8(*( ( (uint8_t*) Pictures[index] ) + DataPointer) );                                       // Send data byte-by-byte from array
-        DataPointer ++;
-    }
-    index++;
-
-    LCD_CShigh();                                                               // CS high after burst write of image data
-
-        // ------------ Now create screen to display image -------------
-
-    MCU_Delay_20ms();
-
-
-    LCD_CSlow();                                                                // CS low begins SPI transaction
-    EVE_AddrForWr(RAM_CMD + cmdOffset);                                         // Send address to which first value will be written
-
-    EVE_Write32(CMD_DLSTART);                                                   // Co-pro starts new DL at RAM_DL + 0
-    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);                                 // Keep count of bytes sent so that write pointer can be updated at end
-                                                                                // Keeping CS low and FT8xx will auto increment address for 'burst write'
-
-    EVE_Write32(BEGIN(BITMAPS));                                                // Begin drawing bitmaps
-    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
-
-    EVE_Write32(VERTEX2F(0,0));                                                 // Draw at (0,0)
-    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
-
-    EVE_Write32(END());                                                         // End drawing images
-    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
-
-    EVE_Write32(DISPLAY());                                                     // Instruct the graphics processor to show the list
-    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
-
-    EVE_Write32(CMD_SWAP);                                                      // Make this list active
-    cmdOffset = EVE_IncCMDOffset(cmdOffset, 4);
-
-    LCD_CShigh();                                                               // Chip Select high concludes burst
-
-    EVE_MemWrite32(REG_CMD_WRITE, (cmdOffset));                                 // Update the ring buffer pointer
-                                                                                // Co-processor will now execute all of the above commands and create a display list
-    cmdOffset = EVE_WaitCmdFifoEmpty();                                         // Await completion of processing and record starting address for next screen update
-
-    //APP_SnapShot2();
-
-    /*while(1)
-    {
-
-    }*/
-    for(i = 0; i<4; i++)
-    {
-        MCU_Delay_500ms();
-        MCU_Delay_500ms();
-    }
-}
 }
 
 

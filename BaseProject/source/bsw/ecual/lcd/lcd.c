@@ -35,7 +35,7 @@ static const Pin LCD_PinsId[] = { PIN_LCD_CS, PIN_LCD_PD };
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-void LDC_Init(void)
+void LCD_Init(void)
 {
     /* Configure /CD and /PD pins*/
     PIO_Configure( LCD_PinsId, PIO_LISTSIZE(LCD_PinsId) );
@@ -55,7 +55,7 @@ void LDC_Init(void)
 }
 
 /* Change clock frequency to 25mhz */
-void LDC_ChangeClock(void)
+void LCD_ChangeClock(void)
 {
     SPI_ChangeClock();
 }
