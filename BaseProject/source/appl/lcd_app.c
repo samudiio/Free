@@ -16,6 +16,7 @@
 #include "eve.h"
 #include "lcd.h"
 #include "lcd_app.h"
+#include "uart.h"
 //#include "EVE_RGB565.h"
 #include "DIGITfont.h"
 
@@ -66,9 +67,17 @@ uint8_t FT81x_GPIO;           // Used for FT800 GPIO register
 /* Read buffer */
 uint8_t data_buffer[TOTAL_SIZE];
 
-const char salomon_file_name[] = "0:salomon.raw";
-const char specialized_file_name[] = "0:specialized.raw";
-const char marketing_file_name[] = "0:marketing.raw";
+const char bosch_logo_file_name[] = "0:Bosch_logo.raw";
+const char cannondale_file_name[] = "0:cannondale.raw";
+const char computing_file_name[] =  "0:computing.raw";
+const char digital_file_name[] =    "0:digital.raw";
+const char foco_file_name[] =       "0:foco.raw";
+const char lightbulb_file_name[] =  "0:lightbulb.raw";
+const char marketing_file_name[] =  "0:marketing.raw";
+const char salomon_file_name[] =    "0:salomon.raw";
+const char specialized_file_name[]= "0:specialized.raw";
+const char trail_file_name[] =      "0:trail.raw";
+const char utct_file_name[] =       "0:utct.raw";
 
 /*----------------------------------------------------------------------------
  *        Exported functions
@@ -410,11 +419,19 @@ FRESULT APP_ReadImagefromSD(uint8_t file_number)
    FRESULT res;
    FIL file_object;
 
-   uint8_t * const file_names[5] =
+   uint8_t * const file_names[11] =
    {
+       (uint8_t*)cannondale_file_name,
+       (uint8_t*)computing_file_name,
+       (uint8_t*)digital_file_name,
+       (uint8_t*)foco_file_name,
+       (uint8_t*)lightbulb_file_name,
+       (uint8_t*)marketing_file_name,
        (uint8_t*)salomon_file_name,
        (uint8_t*)specialized_file_name,
-       (uint8_t*)marketing_file_name
+       (uint8_t*)trail_file_name,
+       (uint8_t*)utct_file_name,
+       (uint8_t*)bosch_logo_file_name
    };
 
    memset(&fs, 0, sizeof(FATFS));
@@ -541,17 +558,11 @@ void APP_ConvertedBitmap_FirstTime(void)
 
 void APP_ConvertedBitmap(void)
 {
-    static uint8_t index = 1;
     uint8_t i= 0;
 
     uint32_t DataPointer = 0;
     uint32_t DataSize = 261120;
-    uint32_t BitmapDataSize = 0;
-    uint8_t * const Pictures[5] =
-    {
-        //(uint8_t*)trail,
-        //(uint8_t*)utct
-    };
+
 
     // ------------ Load image data -------------
 
@@ -559,12 +570,9 @@ void APP_ConvertedBitmap(void)
 
     while(1)
     {
+        //printf("lcd image from uart %d \n\r", UpdImage);
         DataPointer = 0;
-        if(index > 2)
-        {
-            index = 0;
-        }
-        APP_ReadImagefromSD(index);
+        APP_ReadImagefromSD(UpdImage);
 
         LCD_CSlow();                                                                // CS low begins SPI transaction
         EVE_AddrForWr(RAM_G);                                                       // Send address to which first value will be written
@@ -574,7 +582,7 @@ void APP_ConvertedBitmap(void)
             EVE_Write8(data_buffer[DataPointer]);                                   // Send data byte-by-byte from array
             DataPointer++;
         }
-        index++;
+        //index++;
 
         LCD_CShigh();                                                               // CS high after burst write of image data
 

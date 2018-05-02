@@ -10,6 +10,7 @@
 #include "sd_mmc.h"
 
 #include "lcd_app.h"
+#include "uart.h"
 
 /* Scheduler include files. */
 #include "FreeRTOS.h"
@@ -87,6 +88,9 @@ static void prvSetupHardware( void )
     APP_Init();
     LCD_ChangeClock();
 
+    /* Initialize UART 3 */
+    Uart_Init();
+
     //APP_Calibrate();                                                          // NOTE:  Enable if using any touch demos
 
         // Important Note: Enable only one demo below at a time.
@@ -100,7 +104,7 @@ static void prvSetupHardware( void )
 
 /******* Show Image ********/
     APP_ConvertedBitmap_FirstTime();
-    APP_ConvertedBitmap();
+    //APP_ConvertedBitmap();
 	
 /********           ********/
 
@@ -139,7 +143,15 @@ extern int main( void )
     }
     #else
     {
-        main_full();
+        //main_full();
+        while(1)
+        {
+            if(RefreshImage)
+            {
+                RefreshImage = 0;
+                APP_ConvertedBitmap();
+            }
+        }
     }
     #endif
 

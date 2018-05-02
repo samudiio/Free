@@ -39,12 +39,81 @@
  *----------------------------------------------------------------------------*/
 #include "chip.h"
 
+#include "board.h"
+
 #include <assert.h>
 #include <string.h>
 
 /*------------------------------------------------------------------------------
+ *         Defines
+ *----------------------------------------------------------------------------*/
+
+#define DEFAULT_IMAGE   1
+
+/*------------------------------------------------------------------------------
+ *         Global variables
+ *----------------------------------------------------------------------------*/
+
+const Pin Uart_Default_Pins[] = {PINS_UART3};
+uint8_t RefreshImage;
+uint8_t UpdImage;
+
+
+/*------------------------------------------------------------------------------
  *         Exported functions
  *----------------------------------------------------------------------------*/
+
+/**f
+ *  \brief Handler for UART4.
+ *
+ *  Process UART4 interrupts
+ */
+void UART3_Handler(void)
+{
+    RefreshImage = 1;
+    /*Verify received character is a number from 1 to 10, otherwhise discart*/
+    //if()
+    //{
+        UpdImage = UART_DEFAULT->UART_RHR;
+        if(UpdImage == 98)
+        {
+            UpdImage = 10;
+        }
+        else
+        {
+            UpdImage -= 48;
+        }
+
+//    }
+//    else
+//    {
+//        /*do nothing*/
+//    }
+
+    //printf("%c", (char)UpdImage);
+}
+
+
+void Uart_Init(void)
+{
+    UpdImage = DEFAULT_IMAGE;
+    RefreshImage = 0;
+
+    PIO_Configure(Uart_Default_Pins, PIO_LISTSIZE(Uart_Default_Pins));
+    PMC_EnablePeripheral(UART_ID_DEFAULT);
+    UART_Configure(UART_DEFAULT, (UART_MR_CHMODE_NORMAL | UART_MR_BRSRCCK_PERIPH_CLK | UART_MR_PAR_NO), 115200, BOARD_MCK);
+
+    NVIC_ClearPendingIRQ(UART_IRQ_DEFAULT);
+    NVIC_SetPriority(UART_IRQ_DEFAULT ,1);
+
+    /* Enables the UART to transfer and receive data. */
+    //UART_SetTransmitterEnabled (UART_DEFAULT , ENABLE);
+    UART_SetReceiverEnabled (UART_DEFAULT , ENABLE);
+
+    UART_EnableIt(UART_DEFAULT, (UART_IER_RXRDY)); //UART_IER_TXRDY
+    /* Enable interrupt  */
+    NVIC_EnableIRQ(UART_IRQ_DEFAULT);
+}
 
 /**
  * \brief Configures an UART peripheral with the specified parameters.
